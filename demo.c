@@ -4,6 +4,6 @@
 #include <stdlib.h>
 #include "animate.h"
 
-void main(int argc, char** argv) {
+int main(int argc, char** argv) {
 	demo(argc,argv);
 }

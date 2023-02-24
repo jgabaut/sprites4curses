@@ -1,23 +1,62 @@
-from PIL import Image
-import sys
-import os
+"""! @brief Program that parses pngs from a passed spritesheet, to encode their color to a char per pixel."""
 
-# Expects the spritesheet filename as first argument, 
+##
+# @file sheet_converter.py
+#
+# @brief Program that parses pngs from a passed spritesheet, to encode their color to a char per pixel.
+#
+# @section description_spritesheet Description
+# The program supports 8 colors at the moment. The png parsing uses Pillow, and the mapping is done against a preset color list.
+# The list is described in palette.gpl to aid in exporting images with the correct color indexing.
+#
+# Program expects the spritesheet filename as first argument, 
 #   the sprite width as second arg, 
 #   the sprite height as third, 
 #   separator size (thickness) as fourth, 
 #   a 0 or 1 for starting coords of the first sprite (0 if sheet has no edge separator) as fifht argument.
+#
+# @section libraries_main Libraries/Moodules
+# - Pillow (https://pillow.readthedocs.io/en/stable/)
+#   - Access to image manipulation functions.
+# - sys standard library (https://docs.python.org/3/library/sys.html)
+#   - Access to command line arguments.
+# - os standard library (https://docs.python.org/3/library/os.html)
+#   - Access to program name.
+#
+# @section notes_spritesheet Notes
+# - Color map should have the same order as the palette used to index the sprites.
+#
+# @section todo_spritesheet TODO
+# - The limitation to 8 colors will be overcome soon.
+#
+# @section author_spritesheet Author(s)
+# - Created by jgabaut on 24/02/2022.
+# - Modified by jgabaut on 24/02/2022.
 
+# Imports
+from PIL import Image
+import sys
+import os
+
+# Functions
 def usage():
+    """! Prints correct invocation."""
     print("Wrong arguments. Needed: filename, sprite width, sprite height, separator size, 0/1 respectively if the edge (say 0,0) has separator.")
     print("0/1 is the starting position of first sprite.")
     print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <0/1>")
 
-def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, hasEdgeSeparator):
+def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, startCoords):
+    """! Converts a spritesheet to a 3D char array representation of pixel color and then prints it with the needed brackets and commas.
+    @param filename   The input spritesheet file.
+    @param spriteSizeX   The sprite width.
+    @param spriteSizeY   The sprite height.
+    @param separatorSize   Thickess of separator pixels.
+    @param startCoords  Coords (a,a) of left corner of first sprite.
+    """
 
     sprite_size = (spriteSizeX, spriteSizeY)  # size of each sprite
     separator_size = separatorSize  # size of separator between sprites
-    start_x, start_y = hasEdgeSeparator, hasEdgeSeparator  # starting coordinates of the first sprite
+    start_x, start_y = startCoords, startCoords  # starting coordinates of the first sprite
     
     
     img = Image.open(filename)
@@ -68,15 +107,20 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, hasEd
             print("\t\t\"" + row + "\",")
         print("\t}," + "\n")
     print("};")
-    
-if __name__ == "__main__":
-    if len(sys.argv) != 6:
+
+def main(argv):
+    """! Main program entry."""
+    if len(argv) != 6:
         usage()
     else:
-        filename = sys.argv[1]
-        spriteSizeX = int(sys.argv[2])
-        spriteSizeY = int(sys.argv[3])
-        separatorSize = int(sys.argv[4])
-        hasEdgeSeparator = bool(int(sys.argv[5]))
-        convert_spritesheet(filename,spriteSizeX,spriteSizeY,separatorSize,hasEdgeSeparator)
+        filename = argv[1]
+        spriteSizeX = int(argv[2])
+        spriteSizeY = int(argv[3])
+        separatorSize = int(argv[4])
+        startCoords = bool(int(argv[5]))
+        convert_spritesheet(filename,spriteSizeX,spriteSizeY,separatorSize,startCoords)
+
+if __name__ == "__main__":
+    main(argv)
+
 
