@@ -162,6 +162,7 @@ int demo(int argc, char** argv)
 	start_color();
 	cbreak();
 	noecho();
+
 	// Initialize all the colors
 	init_pair(RED, COLOR_RED, COLOR_BLACK);
 	init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
@@ -176,14 +177,6 @@ int demo(int argc, char** argv)
 	char sprites[NUM_FRAMES][ROWS][COLS]; 
 	load_sprites(sprites, argv[1]);
 
-    	// Set up the screen
-    	int row, col;
-    	getmaxyx(stdscr, row, col);
-    	int ball_y = row/2;
-    	int ball_x = 0;
-    	int ball_vy = 1;
-    	int ball_vx = 1;
-	
 	clear();
 
    	// Run the animation loop
