@@ -33,11 +33,12 @@ Info on how to use it are in the palette-Readme.md file.
 ## animate.c and animate.h
 
 This is a C program to display an animation read from a formatted text file.
+They offer the function animate\_file() useful to animate in a initialised WINDOW. 
 The format expected is compatible with sprites.py specs.
 
 ## demo.c
 
-This is a demo program that calls directly in its main, the demo() function from the animate library.
+This is a demo program directly using the demo() function from the library.
 
 
 # Usage

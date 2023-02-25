@@ -1,3 +1,4 @@
+#include <ncurses.h>
 //These define the colors for init_pair() without an order
 #define RED 1
 #define YELLOW 2
@@ -14,8 +15,10 @@
 
 #define FRAMETIME 67 /**< Defines for how many millisecs a sprite should stay on screen.*/
 
-void print_spriteline(char* line, int line_num);
-char *trim(char *str);
+static void print_spriteline(WINDOW* w, char* line, int line_num);
+static char *trim(char *str);
 void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename);
-void usage(char* progname);
-int demo(int argc, char** argv);
+static void animate_usage(char* progname);
+void init_color_pairs();
+void animate_file(WINDOW* w, char* filename);
+void demo(int argc, char** argv); 
