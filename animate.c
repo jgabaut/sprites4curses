@@ -83,20 +83,15 @@ static char *trim(char *str) {
 }
 
 /*
- * Takes an empty 3D char array (frame, height, width) and a filename to read the sprites from.
+ * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
  * File format should have a sprite line on each line.
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
- * @param filename The file to read the sprites from.
+ * @param f The file to read the sprites from.
  * @param rows The number of rows in each sprite.
  * @param columns The number of columns in each sprite.
  */
-void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], const char *filename, int rows, int columns) {
-    FILE *f = fopen(filename, "r");
-    if (!f) {
-        fprintf(stderr,"Error opening file %s\n",filename);
-        exit(EXIT_FAILURE);
-    }
+void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
 
     char line[1024];
     char *token;
@@ -155,21 +150,21 @@ void init_s4c_color_pairs() {
 }
 
 /*
- * Takes a WINDOW pointer to print into and a string for the filename with animation.
+ * Takes a WINDOW pointer to print into and a string for the file passed.
  * Loads sprites from the file and displays them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
  * Color-character map is define in print_spriteline().
  * Sets all the frames to the passed array.
  * @see print_spriteline()
  * @param w The window to print into.
- * @param filename The file to read the sprites from.
+ * @param file The file to read the sprites from.
  * @param repetition The number of times the animation will be cycled through.
  * @param frametime How many mseconds each frame is displayed.
  * @param num_frames How many frames the animation will have.
  * @param frameheight Height of the frame.
  * @param framewidth Width of the frame.
  */
-void animate_file(WINDOW* w, char* filename, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 
 	int rows = frameheight;
 	int cols = framewidth;	
@@ -184,7 +179,7 @@ void animate_file(WINDOW* w, char* filename, int repetitions, int frametime, int
 
     	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
-	load_sprites(sprites, filename, rows-1, cols-1);
+	load_sprites(sprites, file, rows-1, cols-1);
 
 	int r = 0;
    	// Run the animation loop

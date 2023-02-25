@@ -15,6 +15,6 @@
 
 static void print_spriteline(WINDOW* w, char* line, int line_num);
 static char *trim(char *str);
-void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], const char *filename, int rows, int columns);
+void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
 void init_s4c_color_pairs();
-void animate_file(WINDOW* w, char* filename, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
