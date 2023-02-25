@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """! @brief Program that parses pngs from a passed spritesheet, to encode their color to a char per pixel."""
 
 ##
@@ -67,6 +68,7 @@ def resize_sprites(directory, targetSizeX, targetSizeY):
                 im.save(os.path.join(directory, filename))
 
 def main(argv):
+    """! Main program entry."""
     if len(argv) != 4:
         usage()
     else:
@@ -77,5 +79,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    """! Main program entry."""
-    main(argv)
+    main(sys.argv)

@@ -61,9 +61,11 @@ To use the python scripts you need to install Pillow:
   #### `python png_resize.py <sprites directory> <sprite width> <sprite height>`
   ### This overwrites the source pngs, so be careful. 
 
+## The demo program is meant to show how to correctly call animate_file() from animate.h.
+
 + To run the C demo program, you do:
-  #### File format should be a valid char array declaration, or one sprite row per line.
-  #### `make; ./demo file.txt`
+  #### The demo is meant to run with the provided file.
+  #### `make; ./demo demofile.txt`
 
 + To be fancy you can use process substitution in bash to give the python output directly as an argument:
 

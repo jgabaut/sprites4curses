@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """! @brief Program that parses pngs from a passed directory, to encode their color to a char per pixel."""
 
 ##

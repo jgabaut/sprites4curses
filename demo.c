@@ -1,12 +1,9 @@
-#include <ncurses.h>
-#include <locale.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include "animate.h"
 
 int main(int argc, char** argv) {
-
-	demo(argc, argv);
+	if (argc != 2) {
+		animate_demo_usage(argv[0]);
+	}
+	demo(argv[1]);
 	return 0;
 }

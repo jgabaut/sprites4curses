@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """! @brief Program that parses pngs from a passed spritesheet, to encode their color to a char per pixel."""
 
 ##
@@ -121,6 +122,6 @@ def main(argv):
         convert_spritesheet(filename,spriteSizeX,spriteSizeY,separatorSize,startCoords)
 
 if __name__ == "__main__":
-    main(argv)
+    main(sys.argv)
 
 
