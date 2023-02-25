@@ -1,6 +1,4 @@
 #include <ncurses.h>
-#include <unistd.h>
-#include <locale.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -143,18 +141,9 @@ void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], const char *filenam
 }
 
 /*
- * Prints correct invocation arguments for the demo and exits.
- * @param progname The program's name.
- */
-void animate_demo_usage(char* progname) {
-    fprintf(stderr,"Usage: %s <animation_file.txt>\n",progname);
-    exit(EXIT_FAILURE);
-}
-
-/*
  * Initialises all the needed color pairs for curses.
  */
-void init_color_pairs() {
+void init_s4c_color_pairs() {
     init_pair(RED, COLOR_RED, COLOR_BLACK);
     init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
     init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
@@ -220,44 +209,3 @@ void animate_file(WINDOW* w, char* filename, int repetitions, int frametime, int
 	}
 }
 
-/*
- * Demo function showing how to call animate_file() correctly.
- * It initialises a window pointer and all needed curses settings, before callin animate_file().
- * @see init_color_pairs()
- * @see animate_file()
- */
-void demo(char* filename) {
-
-	// Initialisation: we need a large enough window and all the curses settings needed
-	// to be applied before calling animate_file().
-	WINDOW* w;
-
-	// Initialize curses
-	setlocale(LC_CTYPE, "it_IT.UTF-8");
-	initscr();
-	clear();
-	refresh();
-	start_color();
-	cbreak();
-	noecho();
-	keypad(stdscr, TRUE);
-
-	// Initialize all the colors
-	init_color_pairs();
-
-	int reps = 5;
-
-	int frametime = DEMOFRAMETIME;
-
-	int num_frames = DEMOFRAMES;
-
-	int frame_height = DEMOROWS;
-
-	int frame_width = DEMOCOLS;
-	
-	// Window must be big enough to fit the animation AND the boxing of the window.
-	w = newwin(frame_height+1, frame_width+1, 2, 2);
-
-	animate_file(w, filename, reps, frametime, num_frames, frame_height, frame_width);
-	endwin();
-}
