@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <unistd.h>
 #include <locale.h>
 #include <string.h>
 #include <ctype.h>
@@ -53,7 +54,7 @@ static void print_spriteline(WINDOW* win, char* line, int line_num) {
             }
         }
         wattron(win, COLOR_PAIR(color));
-        mvwaddch(win, 1+line_num, 1+i, ' '|A_REVERSE);
+        mvwaddch(win, line_num, 1+i, ' '|A_REVERSE);
         wattroff(win, COLOR_PAIR(color));
     }
 }
@@ -89,8 +90,10 @@ static char *trim(char *str) {
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
  * @param filename The file to read the sprites from.
+ * @param rows The number of rows in each sprite.
+ * @param columns The number of columns in each sprite.
  */
-void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename) {
+void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], const char *filename, int rows, int columns) {
     FILE *f = fopen(filename, "r");
     if (!f) {
         fprintf(stderr,"Error opening file %s\n",filename);
@@ -122,12 +125,12 @@ void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename) {
         token = strtok(line, "\"");
         while (token != NULL) {
             if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
-		strncpy(sprites[frame-1][row], token, COLS-1);
-		sprites[frame-1][row][COLS-1] = '\0'; // add null-terminator to end of string
+		strncpy(sprites[frame-1][row], token, columns);
+		sprites[frame-1][row][columns] = '\0'; // add null-terminator to end of string
 
                // strcpy(sprites[frame-1][row], token);
                 row++;
-                if (row == ROWS-1) {
+                if (row == rows) {
                     frame++;
                     row = 0;
                 }
@@ -140,10 +143,10 @@ void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename) {
 }
 
 /*
- * Prints correct invocation arguments and exits.
+ * Prints correct invocation arguments for the demo and exits.
  * @param progname The program's name.
  */
-static void animate_usage(char* progname) {
+void animate_demo_usage(char* progname) {
     fprintf(stderr,"Usage: %s <animation_file.txt>\n",progname);
     exit(EXIT_FAILURE);
 }
@@ -171,56 +174,65 @@ void init_color_pairs() {
  * @see print_spriteline()
  * @param w The window to print into.
  * @param filename The file to read the sprites from.
+ * @param repetition The number of times the animation will be cycled through.
+ * @param frametime How many mseconds each frame is displayed.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
  */
-void animate_file(WINDOW* w, char* filename) {
+void animate_file(WINDOW* w, char* filename, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 
-	//TODO
-	// Check if file is okay
-	//
+	int rows = frameheight;
+	int cols = framewidth;	
+
 	// Check if window is big enough
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
-	if (win_rows < ROWS || win_cols < COLS) {
+	if (win_rows < rows || win_cols < cols) {
 		fprintf(stderr, "Window is too small to display the sprite\n");
 		exit(EXIT_FAILURE);
 	}
 
     	// Prepare the frames
-	char sprites[NUM_FRAMES][ROWS][COLS]; 
-	load_sprites(sprites, filename);
+	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
+	load_sprites(sprites, filename, rows-1, cols-1);
 
+	int r = 0;
    	// Run the animation loop
-   	while (1) {
-		for (int i=0; i<NUM_FRAMES;i++) {
-			for (int j=0; j<ROWS-1; j++) {
+   	while ( r < repetitions ) {
+		for (int i=0; i<num_frames+1;i++) {
+			for (int j=0; j<rows; j++) {
 				// Print current frame
-				print_spriteline(w,sprites[i][j], j);
+				print_spriteline(w,sprites[i][j], j+1);
 				box(w,0,0);
 				wrefresh(w);
 			}
-			mvprintw(25,2, "Frame %i", i); //print current frame num
+			wrefresh(w);
 			// Refresh the screen
-			napms(FRAMETIME);
+			napms(frametime);
 			move(0,0);
 			clear();
 		};      	
+		r++;
+		if (r==repetitions) {
+			break;
+		}
 	}
 }
 
 /*
- * Demo function showing how to call load_animate() correctly.
- * It initialises a window pointer and all needed curses settings, before callin load_animate() with the window pointer and the filename passed as argument.
- * @param argc argc from the main calling the demo.
- * @param argv argv from the main calling the demo.
+ * Demo function showing how to call animate_file() correctly.
+ * It initialises a window pointer and all needed curses settings, before callin animate_file().
+ * @see init_color_pairs()
+ * @see animate_file()
  */
-void demo(int argc, char** argv) {
-	if (argc != 2) {
-		animate_usage(argv[0]);
-	}
+void demo(char* filename) {
 
+	// Initialisation: we need a large enough window and all the curses settings needed
+	// to be applied before calling animate_file().
 	WINDOW* w;
 
-	/* Initialize curses */
+	// Initialize curses
 	setlocale(LC_CTYPE, "it_IT.UTF-8");
 	initscr();
 	clear();
@@ -233,9 +245,19 @@ void demo(int argc, char** argv) {
 	// Initialize all the colors
 	init_color_pairs();
 
-	w = newwin(ROWS+1, COLS+1, 2, 2);
+	int reps = 5;
 
-	animate_file(w,argv[1]);
+	int frametime = DEMOFRAMETIME;
 
+	int num_frames = DEMOFRAMES;
+
+	int frame_height = DEMOROWS;
+
+	int frame_width = DEMOCOLS;
+	
+	// Window must be big enough to fit the animation AND the boxing of the window.
+	w = newwin(frame_height+1, frame_width+1, 2, 2);
+
+	animate_file(w, filename, reps, frametime, num_frames, frame_height, frame_width);
 	endwin();
 }
