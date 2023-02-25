@@ -23,7 +23,7 @@ void usage(char* progname) {
  * @see init_color_pairs()
  * @see animate_file()
  */
-void demo(char* filename) {
+void demo(FILE* file) {
 
 	// Initialisation: we need a large enough window and all the curses settings needed
 	// to be applied before calling animate_file().
@@ -55,7 +55,7 @@ void demo(char* filename) {
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	w = newwin(frame_height+1, frame_width+1, 2, 2);
 
-	animate_file(w, filename, reps, frametime, num_frames, frame_height, frame_width);
+	animate_file(w, file, reps, frametime, num_frames, frame_height, frame_width);
 	endwin();
 }
 
@@ -63,6 +63,11 @@ int main(int argc, char** argv) {
 	if (argc != 2) {
 		usage(argv[0]);
 	}
-	demo(argv[1]);
+    	FILE *f = fopen(argv[1], "r");
+    	if (!f) {
+        	fprintf(stderr,"Error opening file %s\n",argv[1]);
+		usage(argv[0]);
+    	}
+	demo(f);
 	return 0;
 }
