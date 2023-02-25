@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <locale.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -9,62 +10,60 @@
  * @param line The string to print
  * @param line_num The y value to print at in std_scr
  */
-void print_spriteline(char* line, int line_num) {
-	int color = -1;
+static void print_spriteline(WINDOW* win, char* line, int line_num) {
+    int color = -1;
 
-	for (int i=0; i<18; i++) {
-		char c = line[i];
-		switch (c) {
-			case '\n': {
-				return;
-				   }
-			case 'c': {
-				color = CYAN;
-				  }
-			break;
-			case 'b': {
-				color = BLUE;
-				  }
-			break;
-			case 'r': {
-				color = RED;
-				  }
-			break;
-			case 'k': {
-				color = BLACK;
-				  }
-			break;
-			case 'w': {
-				color = WHITE;
-				  }
-			break;
-			case 'm': {
-				color = MAGENTA;
-				  }
-			break;
-			case 'g': {
-				color = GREEN;
-				  }
-			break;
-			case 'y': {
-				color = YELLOW;
-				  }
-			break;
-				
-
-		}
-		attron(COLOR_PAIR(color));
-        	mvaddch(line_num, 2+i, ' '|A_REVERSE);
-		attroff(COLOR_PAIR(color));
-	}
-};
+    for (int i=0; i<18; i++) {
+        char c = line[i];
+        switch (c) {
+            case '\n': {
+                return;
+            }
+            case 'c': {
+                color = CYAN;
+                break;
+            }
+            case 'b': {
+                color = BLUE;
+                break;
+            }
+            case 'r': {
+                color = RED;
+                break;
+            }
+            case 'k': {
+                color = BLACK;
+                break;
+            }
+            case 'w': {
+                color = WHITE;
+                break;
+            }
+            case 'm': {
+                color = MAGENTA;
+                break;
+            }
+            case 'g': {
+                color = GREEN;
+                break;
+            }
+            case 'y': {
+                color = YELLOW;
+                break;
+            }
+        }
+        wattron(win, COLOR_PAIR(color));
+        mvwaddch(win, 1+line_num, 1+i, ' '|A_REVERSE);
+        wattroff(win, COLOR_PAIR(color));
+    }
+}
 
 /* 
  * Takes a string and trims whitespace at the edges.
  * @param str The string to trim.
  * @return str The trimmed string.
  */
-char *trim(char *str) {
+static char *trim(char *str) {
     char *end;
 
     // Trim leading whitespace
@@ -122,8 +121,11 @@ void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename) {
         // Parse the line
         token = strtok(line, "\"");
         while (token != NULL) {
-            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && (token[0] != '}' && token[1] != ',')) {
-                strcpy(sprites[frame-1][row], token);
+            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
+		strncpy(sprites[frame-1][row], token, COLS-1);
+		sprites[frame-1][row][COLS-1] = '\0'; // add null-terminator to end of string
+
+               // strcpy(sprites[frame-1][row], token);
                 row++;
                 if (row == ROWS-1) {
                     frame++;
@@ -137,65 +139,103 @@ void load_sprites(char sprites[NUM_FRAMES][ROWS][COLS], const char *filename) {
     fclose(f);
 }
 
-void usage(char* progname) {
+/*
+ * Prints correct invocation arguments and exits.
+ * @param progname The program's name.
+ */
+static void animate_usage(char* progname) {
     fprintf(stderr,"Usage: %s <animation_file.txt>\n",progname);
     exit(EXIT_FAILURE);
 }
 
 /*
- * Takes an integer for number of arguments and a string array with the first string being the file name containing the sprites.
- * Puts on a demo of the contained animation file.
+ * Initialises all the needed color pairs for curses.
+ */
+void init_color_pairs() {
+    init_pair(RED, COLOR_RED, COLOR_BLACK);
+    init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
+    init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
+    init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
+    init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
+    init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(BLACK, COLOR_BLACK, COLOR_WHITE);
+    init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+}
+
+/*
+ * Takes a WINDOW pointer to print into and a string for the filename with animation.
+ * Loads sprites from the file and displays them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
  * Color-character map is define in print_spriteline().
  * Sets all the frames to the passed array.
  * @see print_spriteline()
- * @param sprites The char array to fill with all the frames.
+ * @param w The window to print into.
  * @param filename The file to read the sprites from.
  */
-int demo(int argc, char** argv)
-{
-	if (argc != 2) {
-		usage(argv[0]);
-	}
-	// Initialize ncurses
-	initscr();
-	start_color();
-	cbreak();
-	noecho();
+void animate_file(WINDOW* w, char* filename) {
 
-	// Initialize all the colors
-	init_pair(RED, COLOR_RED, COLOR_BLACK);
-	init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
-	init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
-	init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
-	init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
-	init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
-	init_pair(BLACK, COLOR_BLACK, COLOR_WHITE);
-	init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+	//TODO
+	// Check if file is okay
+	//
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(w, win_rows, win_cols);
+	if (win_rows < ROWS || win_cols < COLS) {
+		fprintf(stderr, "Window is too small to display the sprite\n");
+		exit(EXIT_FAILURE);
+	}
 
     	// Prepare the frames
 	char sprites[NUM_FRAMES][ROWS][COLS]; 
-	load_sprites(sprites, argv[1]);
-
-	clear();
+	load_sprites(sprites, filename);
 
    	// Run the animation loop
    	while (1) {
 		for (int i=0; i<NUM_FRAMES;i++) {
-			for (int j=0; j<18; j++) {
+			for (int j=0; j<ROWS-1; j++) {
 				// Print current frame
-				print_spriteline(sprites[i][j], j);
+				print_spriteline(w,sprites[i][j], j);
+				box(w,0,0);
+				wrefresh(w);
 			}
-			//mvprintw(22,2, "Frame %i", i); //print current frame num
+			mvprintw(25,2, "Frame %i", i); //print current frame num
 			// Refresh the screen
-			refresh();
 			napms(FRAMETIME);
 			move(0,0);
 			clear();
 		};      	
-    }
+	}
+}
 
-    // Clean up ncurses
-    endwin();
-    return 0;
+/*
+ * Demo function showing how to call load_animate() correctly.
+ * It initialises a window pointer and all needed curses settings, before callin load_animate() with the window pointer and the filename passed as argument.
+ * @param argc argc from the main calling the demo.
+ * @param argv argv from the main calling the demo.
+ */
+void demo(int argc, char** argv) {
+	if (argc != 2) {
+		animate_usage(argv[0]);
+	}
+
+	WINDOW* w;
+
+	/* Initialize curses */
+	setlocale(LC_CTYPE, "it_IT.UTF-8");
+	initscr();
+	clear();
+	refresh();
+	start_color();
+	cbreak();
+	noecho();
+	keypad(stdscr, TRUE);
+
+	// Initialize all the colors
+	init_color_pairs();
+
+	w = newwin(ROWS+1, COLS+1, 2, 2);
+
+	animate_file(w,argv[1]);
+
+	endwin();
 }
