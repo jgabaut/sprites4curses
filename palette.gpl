@@ -1,13 +1,13 @@
 GIMP Palette
-Name: Senzanome
+Name: 0.1-8bit
 Columns: 0
 #
-  0   0   0	Senzanome
-255   0   0	Senzanome
-  0 255   0	Senzanome
-255 255   0	Senzanome
-  0   0 255	Senzanome
-255   0 255	Senzanome
-  0 255 255	Senzanome
-255 255 255	Senzanome
-  0   0   0	Senzanome
+  0   0   0	Black
+255   0   0	Red
+  0 255   0	Green
+255 255   0	Yellow
+  0   0 255	Blue
+255   0 255	Magenta
+  0 255 255	Cyan
+255 255 255	White
+  0   0   0	Unnamed

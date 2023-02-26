@@ -165,7 +165,8 @@ void init_s4c_color_pairs() {
  * @param framewidth Width of the frame.
  */
 void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
-
+	// We make the cursor invisible
+	curs_set(0);
 	int rows = frameheight;
 	int cols = framewidth;	
 
@@ -194,13 +195,11 @@ void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num
 			wrefresh(w);
 			// Refresh the screen
 			napms(frametime);
-			move(0,0);
 			clear();
 		};      	
 		r++;
-		if (r==repetitions) {
-			break;
-		}
 	}
+	// We make the cursor normal again
+	curs_set(1);
 }
 
