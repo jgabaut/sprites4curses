@@ -1,12 +1,12 @@
 #include <ncurses.h>
 //These define the colors for init_pair() without an order
-#define RED 1
-#define YELLOW 2
+#define BLACK 1
+#define RED 2
 #define GREEN 3
-#define CYAN 4
+#define YELLOW 4
 #define BLUE 5
 #define MAGENTA 6
-#define BLACK 7
+#define CYAN 7
 #define WHITE 8
 
 #define MAXFRAMES 121 /**< Defines the maximum number of sprites.*/
