@@ -23,6 +23,8 @@
 #   - Access to command line arguments.
 # - os standard library (https://docs.python.org/3/library/os.html)
 #   - Access to program name.
+# - math standard library (https://docs.python.org/3/library/math.html)
+#   - Access to sqrt.
 #
 # @section notes_spritesheet Notes
 # - Color map should have the same order as the palette used to index the sprites.
@@ -32,12 +34,13 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2022.
-# - Modified by jgabaut on 24/02/2022.
+# - Modified by jgabaut on 27/02/2022.
 
 # Imports
 from PIL import Image
 import sys
 import os
+import math
 
 # Functions
 def usage():
@@ -45,6 +48,18 @@ def usage():
     print("Wrong arguments. Needed: filename, sprite width, sprite height, separator size, 0/1 respectively if the edge (say 0,0) has separator.")
     print("0/1 is the starting position of first sprite.")
     print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <0/1>")
+    
+def color_distance(c1, c2):
+    """! Calculates the distance in color between two rgb tuples.
+    @param c1   The first input color to measure.
+    @param c2   The second input color to measure.
+    @return  The color distance between the two.
+
+    """
+    r1, g1, b1 = c1
+    r2, g2, b2 = c2
+    distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
+    return distance 
 
 def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, startCoords):
     """! Converts a spritesheet to a 3D char array representation of pixel color and then prints it with the needed brackets and commas.
@@ -75,16 +90,13 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
                 sprite = sprite.convert('P', palette=Image.ADAPTIVE, colors=256)
                 palette = sprite.getpalette()
                 rgb_palette = [(palette[n], palette[n+1], palette[n+2]) for n in range(0, len(palette), 3)]
-                CHAR_MAP = {
-                    (0, 0, 0): 'k',  # black
-                    (255, 0, 0): 'r',  # red
-                    (0, 255, 0): 'g',  # green
-                    (255, 255, 0): 'y',  # yellow
-                    (0, 0, 255): 'b',  # blue
-                    (255, 0, 255): 'm',  # magenta
-                    (0, 255, 255): 'c',  # cyan
-                    (255, 255, 255): 'w',  # white
-                }
+                # Create the CHAR_MAP dictionary based on the color values
+                CHAR_MAP = {}
+                char_index = 1
+                for color in rgb_palette:
+                    if color not in CHAR_MAP:
+                        CHAR_MAP[color] = chr(ord('a') + char_index)
+                        char_index += 1
                 chars = []
                 for y in range(sprite.size[1]):
                     line = ""
@@ -94,7 +106,8 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
                         if (r, g, b) in CHAR_MAP:
                             line += CHAR_MAP[(r, g, b)]
                         else:
-                            closest_color = min(CHAR_MAP, key=lambda c: sum([(r - c[0])**2, (g - c[1])**2, (b - c[2])**2])**0.5)
+                            # Get the closest color in the CHAR_MAP
+                            closest_color = min(CHAR_MAP, key=lambda c: color_distance(c, (r, g, b)))
                             line += CHAR_MAP[closest_color]
                     chars.append(line)
 

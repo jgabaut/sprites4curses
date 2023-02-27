@@ -21,6 +21,8 @@
 #   - Access to regular expressions. 
 # - os standard library (https://docs.python.org/3/library/os.html)
 #   - Access to program name.
+# - math standard library (https://docs.python.org/3/library/math.html)
+#   - Access to sqrt.
 #
 # @section notes_sprites Notes
 # - Color map should have the same order as the palette used to index the sprites.
@@ -30,7 +32,7 @@
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2022.
-# - Modified by jgabaut on 24/02/2022.
+# - Modified by jgabaut on 27/02/2022.
 
 # Imports
 from PIL import Image
@@ -38,6 +40,7 @@ import sys
 import glob
 import re
 import os
+import math
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
 
@@ -54,30 +57,16 @@ def color_distance(c1, c2):
     @param c2   The second input color to measure.
     @return  The color distance between the two.
     """
-    r1, g1, b1 = map(int, c1)
-    r2, g2, b2 = map(int, c2)
-    return sum([(r1 - r2)**2, (g1 - g2)**2, (b1 - b2)**2]) ** 0.5
-
-def create_palette(colors):
-    """! Creates a palette by adding the colors passed as an array, then pads the palette.
-    @param colors   The colors to put in the palette.
-    @return  The filled and padded palette.
-    """
-    # create a new palette with the given colors
-    palette = []
-    for color in colors:
-        palette += color
-
-    # pad the palette with zeros to make it a multiple of 3 bytes
-    if len(palette) % 3 != 0:
-        pad_size = 3 - (len(palette) % 3)
-        palette += [0] * pad_size
-
-    return palette
+    r1, g1, b1 = c1
+    r2, g2, b2 = c2
+    distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
+    return distance 
 
 def convert_sprite(file):
     """! Takes a image file and converts each pixel to a char representation of its color (closest match to CHAR_MAP).
+
     @param file   The image file to convert.
+
     @return  The converted sprite as a char matrix.
     """
     img = Image.open(file)
@@ -91,17 +80,13 @@ def convert_sprite(file):
     # Map the color indices to their RGB values in the palette
     rgb_palette = [(palette[i], palette[i+1], palette[i+2]) for i in range(0, len(palette), 3)]
 
-    # Map the RGB values to their corresponding characters
-    CHAR_MAP = {
-        (0, 0, 0): 'k',  # black
-        (255, 0, 0): 'r',  # red
-        (0, 255, 0): 'g',  # green
-        (255, 255, 0): 'y',  # yellow
-        (0, 0, 255): 'b',  # blue
-        (255, 0, 255): 'm',  # magenta
-        (0, 255, 255): 'c',  # cyan
-        (255, 255, 255): 'w',  # white
-    }
+    # Create the CHAR_MAP dictionary based on the color values
+    CHAR_MAP = {}
+    char_index = 1
+    for color in rgb_palette:
+        if color not in CHAR_MAP:
+            CHAR_MAP[color] = chr(ord('a') + char_index)
+            char_index += 1
 
     # Convert each pixel to its corresponding character representation
     chars = []
@@ -136,7 +121,7 @@ def print_converted_sprites(direc):
             print("\t//Frame {}, file {}".format(idx,file))
             print("\t{")
             for row in sprite:
-                print("\t\""+row+"\",")
+                print("\t\t\""+row+"\",")
             print("\t},"+ "\n")
             idx += 1
     print("};")
