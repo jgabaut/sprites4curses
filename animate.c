@@ -4,56 +4,73 @@
 #include <stdlib.h>
 #include "animate.h"
 
+static color_pair_t S4C_COLOR_PAIRS[MAX_COLORS];
+
+/*
+ * Initialises all the needed color pairs for animate, from the palette file. WIP.
+ */
+static void init_color_pairs_from_palette() {
+    // Open the palette file and read the color values and names
+    FILE* fp;
+    fp = fopen("palette.gpl", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Error: could not open palette file.\n");
+        return;
+    }
+
+    char line[MAX_LINE_LENGTH];
+    int color_index = 1;
+    while (fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
+        // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
+        if (strncmp(line, "#", 1) == 0 || strncmp(line, "GIMP Palette", 12) == 0 ||
+            strncmp(line, "Name:", 5) == 0 || strncmp(line, "Columns:", 8) == 0) {
+            // Skip the comment or irrelevant line
+            continue;
+        }
+
+        // Parse the color values and name
+        int r, g, b;
+        char name[MAX_COLOR_NAME_LEN];
+        if (sscanf(line, "%d %d %d %[^\n]", &r, &g, &b, name) != 4) {
+            fprintf(stderr, "Error: could not parse palette line: %s\n", line);
+            continue;
+        }
+
+        // Add the color pair to the COLOR_PAIRS array
+        S4C_COLOR_PAIRS[color_index-1].fg = color_index-1;
+        if (color_index-1 == BLACK) {
+            S4C_COLOR_PAIRS[color_index-1].bg = WHITE;
+        } else { 
+            S4C_COLOR_PAIRS[color_index-1].bg = BLACK;
+        }
+        strncpy(S4C_COLOR_PAIRS[color_index-1].name, name, MAX_COLOR_NAME_LEN - 1);
+        color_index++;
+    }
+
+    fclose(fp);
+
+    // Initialize the color pairs in curses
+    for (int i = 0; i < color_index+1; i++) {
+        init_pair(i, S4C_COLOR_PAIRS[i].fg, S4C_COLOR_PAIRS[i].bg);
+    }
+}
+
 /*
  * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
  * @param line The string to print
- * @param line_num The y value to print at in std_scr
+ * @param line_num The y value to print at in win
+ * @param line_len The length of line to print
  */
-static void print_spriteline(WINDOW* win, char* line, int line_num) {
-    int color = -1;
-
-    for (int i=0; i<18; i++) {
+static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length) {
+    for (int i = 0; i < line_length; i++) {
         char c = line[i];
-        switch (c) {
-            case '\n': {
-                return;
-            }
-            case 'c': {
-                color = CYAN;
-                break;
-            }
-            case 'b': {
-                color = BLUE;
-                break;
-            }
-            case 'r': {
-                color = RED;
-                break;
-            }
-            case 'k': {
-                color = BLACK;
-                break;
-            }
-            case 'w': {
-                color = WHITE;
-                break;
-            }
-            case 'm': {
-                color = MAGENTA;
-                break;
-            }
-            case 'g': {
-                color = GREEN;
-                break;
-            }
-            case 'y': {
-                color = YELLOW;
-                break;
-            }
+        int color_index = c - 'a';
+        if (color_index >= 0 && color_index < MAX_COLORS) {
+            wattron(win, COLOR_PAIR(color_index));
+            mvwaddch(win, curr_line_num, 1 + i, ' ' | A_REVERSE);
+            wattroff(win, COLOR_PAIR(color_index));
         }
-        wattron(win, COLOR_PAIR(color));
-        mvwaddch(win, line_num, 1+i, ' '|A_REVERSE);
-        wattroff(win, COLOR_PAIR(color));
+        
     }
 }
 
@@ -188,7 +205,7 @@ void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num
 		for (int i=0; i<num_frames+1;i++) {
 			for (int j=0; j<rows; j++) {
 				// Print current frame
-				print_spriteline(w,sprites[i][j], j+1);
+				print_spriteline(w,sprites[i][j], j+1, cols);
 				box(w,0,0);
 				wrefresh(w);
 			}

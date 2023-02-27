@@ -8,7 +8,12 @@ demo.o: demo.c animate.o
 	gcc -c demo.c 
 
 clean:
-	rm *.o demo
+	rm *.o demo demo_debug
 
 cleanob:
 	rm *.o
+
+debug:
+	gcc -c animate.c -ggdb -O0
+	gcc -c demo.c -ggdb -O0
+	gcc demo.o animate.o -o demo_debug -lncursesw

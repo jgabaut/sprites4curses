@@ -2,3 +2,5 @@
 *.o
 # ignore executable
 demo
+# ignore debug executable
+demo_debug
