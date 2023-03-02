@@ -27,12 +27,16 @@ typedef struct {
 #define MAXFRAMES 121 /**< Defines the maximum number of sprites.*/
 #define MAXROWS 26 /**< Defines the maximum number of rows per sprite.*/
 #define MAXCOLS 84 /**< Defines the maximum number of colums per sprite.*/
+		
+#define S4C_ERR_SMALL_WIN -1 /**< Defines the error value for a window too small for the animation.*/
+#define S4C_ERR_FILEVERSION -2 /**< Defines the error value for a file version mismatch.*/
+#define S4C_ERR_LOADSPRITES -3 /**< Defines the error value for a failure while loading sprites.*/
 
 void init_s4c_color_pairs();
 static void init_color_pairs_from_palette();
 static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length);
 static char *trim(char *str);
-void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
-void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
+int animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 
 #endif

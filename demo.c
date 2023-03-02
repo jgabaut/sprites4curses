@@ -22,8 +22,9 @@ void usage(char* progname) {
  * It initialises a window pointer and all needed curses settings, before callin animate_file().
  * @see init_color_pairs()
  * @see animate_file()
+ * @return Result of the animation.
  */
-void demo(FILE* file) {
+int demo(FILE* file) {
 
 	// Initialisation: we need a large enough window and all the curses settings needed
 	// to be applied before calling animate_file().
@@ -55,8 +56,28 @@ void demo(FILE* file) {
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	w = newwin(frame_height+1, frame_width+1, 2, 2);
 
-	animate_file(w, file, reps, frametime, num_frames, frame_height, frame_width);
+	int result = animate_file(w, file, reps, frametime, num_frames, frame_height, frame_width);
 	endwin();
+
+	// We can check the result to do some actions:
+	if (result < 0) {
+		switch (result) {
+			case S4C_ERR_SMALL_WIN: {
+        			fprintf(stderr,"S4C_ERR_SMALL_WIN : Window was too small.\n");
+			}
+			break;
+			case S4C_ERR_LOADSPRITES: {
+        			fprintf(stderr,"S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
+			}
+			break;
+			case S4C_ERR_FILEVERSION: {
+        			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");
+			}
+			break;
+		}
+	}
+
+	return result;
 }
 
 int main(int argc, char** argv) {
@@ -68,6 +89,5 @@ int main(int argc, char** argv) {
         	fprintf(stderr,"Error opening file %s\n",argv[1]);
 		usage(argv[0]);
     	}
-	demo(f);
-	return 0;
+	return demo(f);
 }

@@ -33,14 +33,17 @@
 # - The limitation to 8 colors will be overcome soon.
 #
 # @section author_spritesheet Author(s)
-# - Created by jgabaut on 24/02/2022.
-# - Modified by jgabaut on 27/02/2022.
+# - Created by jgabaut on 24/02/2023.
+# - Modified by jgabaut on 02/03/2023.
 
 # Imports
 from PIL import Image
 import sys
 import os
 import math
+
+## The file format version.
+FILE_VERSION = "0.1.1"
 
 # Functions
 def usage():
@@ -113,7 +116,8 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
 
                 sprites.append(chars)
 
-    print("\nchar sprites[{}][{}][{}] =".format(len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
+    print("{}".format(FILE_VERSION))
+    print("char sprites[{}][{}][{}] =".format(len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
     for i, sprite in enumerate(sprites):
         print("\t//Sprite {}, index {}".format(i + 1, i))
         print("\t{")
