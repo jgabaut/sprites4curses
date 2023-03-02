@@ -101,18 +101,37 @@ static char *trim(char *str) {
 
 /*
  * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
+ * Checks if the file version is compatible with the current reader version, otherwise returns -1.
  * File format should have a sprite line on each line.
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
  * @param f The file to read the sprites from.
  * @param rows The number of rows in each sprite.
  * @param columns The number of columns in each sprite.
+ * @return -1 if loading fails or the number of sprites read.
  */
-void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
+int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
 
     char line[1024];
-    char *token;
-    int row = 0, frame = 0;
+    char* file_version;
+    char* token;
+    char* READER_VERSION = "0.1.1";
+    int row = 0, frame = -1;
+
+    int check = -1;
+
+    // Read the first line of the file to get the version number
+    if (fgets(line, sizeof(line), f)) {
+        // Parse the version number
+        file_version = strtok(line, " \t\r\n");
+        if (file_version != NULL) {
+            if ( (check = strcmp(file_version,READER_VERSION)) == 0) {
+            } else {
+		    // The file format has changed, abort and return the error
+		    return S4C_ERR_FILEVERSION;
+	    }
+        }
+    }
 
     while (fgets(line, sizeof(line), f)) {
         // Skip empty lines
@@ -125,18 +144,18 @@ void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, 
             continue;
         }
 
-        // Skip the first line of the file
-        if (frame == 0 && row == 0) {
-            frame++;
-            continue;
+	// Skip heading line with the declaration
+	if (frame == -1 && row == 0) {
+		frame++;
+		continue;
         }
 
         // Parse the line
         token = strtok(line, "\"");
         while (token != NULL) {
             if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
-		strncpy(sprites[frame-1][row], token, columns);
-		sprites[frame-1][row][columns] = '\0'; // add null-terminator to end of string
+		strncpy(sprites[frame][row], token, columns);
+		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
 
                // strcpy(sprites[frame-1][row], token);
                 row++;
@@ -150,6 +169,12 @@ void load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, 
     }
 
     fclose(f);
+
+    //Check if we have a strictly positive frame number or return the error
+    if (!(frame > 0)) {
+	return S4C_ERR_LOADSPRITES;
+    }
+    return frame;
 }
 
 /*
@@ -180,8 +205,9 @@ void init_s4c_color_pairs() {
  * @param num_frames How many frames the animation will have.
  * @param frameheight Height of the frame.
  * @param framewidth Width of the frame.
+ * @return 1 if successful, a negative value for errors.
  */
-void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+int animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 	// We make the cursor invisible
 	curs_set(0);
 	int rows = frameheight;
@@ -192,16 +218,31 @@ void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num
 	getmaxyx(w, win_rows, win_cols);
 	if (win_rows < rows || win_cols < cols) {
 		fprintf(stderr, "Window is too small to display the sprite\n");
-		exit(EXIT_FAILURE);
+		return S4C_ERR_SMALL_WIN;
 	}
 
     	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
-	load_sprites(sprites, file, rows-1, cols-1);
+	int loadCheck = load_sprites(sprites, file, rows-1, cols-1);
 
-	int r = 0;
+	// Check for loading errors and return early
+	if (loadCheck < 0) {
+		switch (loadCheck) {
+			case S4C_ERR_FILEVERSION: {
+				fprintf(stderr, "File version mismatch.\n");
+			}
+			break;
+			case S4C_ERR_LOADSPRITES: {
+				fprintf(stderr, "Error while loading.\n");
+			}
+			break;
+		}
+		return loadCheck;
+	}
+
+	int current_rep = 0;
    	// Run the animation loop
-   	while ( r < repetitions ) {
+   	while ( current_rep < repetitions ) {
 		for (int i=0; i<num_frames+1;i++) {
 			for (int j=0; j<rows; j++) {
 				// Print current frame
@@ -214,9 +255,12 @@ void animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num
 			napms(frametime);
 			clear();
 		};      	
-		r++;
+		// We finished a whole cycle
+		current_rep++;
 	}
 	// We make the cursor normal again
 	curs_set(1);
+
+	return 1;
 }
 

@@ -31,8 +31,8 @@
 # - The limitation to 8 colors will be overcome soon.
 #
 # @section author_sprites Author(s)
-# - Created by jgabaut on 24/02/2022.
-# - Modified by jgabaut on 27/02/2022.
+# - Created by jgabaut on 24/02/2023.
+# - Modified by jgabaut on 02/03/2023.
 
 # Imports
 from PIL import Image
@@ -41,6 +41,10 @@ import glob
 import re
 import os
 import math
+
+## The file format version.
+FILE_VERSION = "0.1.1" 
+
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
 
@@ -113,7 +117,8 @@ def print_converted_sprites(direc):
     frames = 1 # We start the count from one so we account for one more cell for array declaration
     for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
            frames += 1
-    print("\nchar sprites[{}][18][18] =".format(frames) + "{\n")
+    print("{}".format(FILE_VERSION))
+    print("char sprites[{}][18][18] =".format(frames) + "{\n")
     idx = 1           
     for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
             # convert a sprite and print the result

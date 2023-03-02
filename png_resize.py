@@ -28,8 +28,8 @@
 # - Offer option to output to new files and not overwrite.
 #
 # @section author_spritesheet Author(s)
-# - Created by jgabaut on 24/02/2022.
-# - Modified by jgabaut on 24/02/2022.
+# - Created by jgabaut on 24/02/2023.
+# - Modified by jgabaut on 02/03/2023.
 
 # Imports
 from PIL import Image
