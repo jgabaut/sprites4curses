@@ -1,4 +1,4 @@
-0.1.1
+0.1.2
 char sprites[31][18][18] ={
 
 	//Frame 1, file chest-animation/image1.png
