@@ -12,7 +12,7 @@ void init_s4c_color_pairs(FILE* palette) {
 
     char line[MAX_LINE_LENGTH];
     int color_index = 1;
-    init_pair(0, COLOR_BLACK, COLOR_BLACK);
+    init_pair(0, COLOR_WHITE, COLOR_BLACK);
 
     while (fgets(line, MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
