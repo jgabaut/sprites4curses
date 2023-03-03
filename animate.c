@@ -4,23 +4,17 @@
 #include <stdlib.h>
 #include "animate.h"
 
-static color_pair_t S4C_COLOR_PAIRS[MAX_COLORS];
-
 /*
- * Initialises all the needed color pairs for animate, from the palette file. WIP.
+ * Initialises all the needed color pairs for animate, from the palette file.
+ * @param palette The palette file to read the colors from.
  */
-static void init_color_pairs_from_palette() {
-    // Open the palette file and read the color values and names
-    FILE* fp;
-    fp = fopen("palette.gpl", "r");
-    if (fp == NULL) {
-        fprintf(stderr, "Error: could not open palette file.\n");
-        return;
-    }
+void init_s4c_color_pairs(FILE* palette) {
 
     char line[MAX_LINE_LENGTH];
     int color_index = 1;
-    while (fgets(line, MAX_LINE_LENGTH, fp) != NULL) {
+    init_pair(0, COLOR_BLACK, COLOR_BLACK);
+
+    while (fgets(line, MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
         if (strncmp(line, "#", 1) == 0 || strncmp(line, "GIMP Palette", 12) == 0 ||
             strncmp(line, "Name:", 5) == 0 || strncmp(line, "Columns:", 8) == 0) {
@@ -36,22 +30,13 @@ static void init_color_pairs_from_palette() {
             continue;
         }
 
-        // Add the color pair to the COLOR_PAIRS array
-        S4C_COLOR_PAIRS[color_index-1].fg = color_index-1;
-        if (color_index-1 == BLACK) {
-            S4C_COLOR_PAIRS[color_index-1].bg = WHITE;
-        } else { 
-            S4C_COLOR_PAIRS[color_index-1].bg = BLACK;
-        }
-        strncpy(S4C_COLOR_PAIRS[color_index-1].name, name, MAX_COLOR_NAME_LEN - 1);
+	int proportional_r = (((float)r + 1.0) / 256)*1000;
+	int proportional_g = (((float)g + 1.0) / 256)*1000;
+	int proportional_b = (((float)b + 1.0) / 256)*1000;
+	init_color(color_index, proportional_r, proportional_g, proportional_b);
+   	init_pair(color_index, color_index, 0);
+
         color_index++;
-    }
-
-    fclose(fp);
-
-    // Initialize the color pairs in curses
-    for (int i = 0; i < color_index+1; i++) {
-        init_pair(i, S4C_COLOR_PAIRS[i].fg, S4C_COLOR_PAIRS[i].bg);
     }
 }
 
@@ -115,7 +100,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.1";
+    char* READER_VERSION = "0.1.2";
     int row = 0, frame = -1;
 
     int check = -1;
@@ -178,28 +163,14 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
 }
 
 /*
- * Initialises all the needed color pairs for curses.
- */
-void init_s4c_color_pairs() {
-    init_pair(RED, COLOR_RED, COLOR_BLACK);
-    init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
-    init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
-    init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
-    init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
-    init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(BLACK, COLOR_BLACK, COLOR_WHITE);
-    init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-}
-
-/*
  * Takes a WINDOW pointer to print into and a string for the file passed.
  * Loads sprites from the file and displays them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
  * Color-character map is define in print_spriteline().
  * Sets all the frames to the passed array.
  * @see print_spriteline()
+ * @param sprites The sprites array.
  * @param w The window to print into.
- * @param file The file to read the sprites from.
  * @param repetition The number of times the animation will be cycled through.
  * @param frametime How many mseconds each frame is displayed.
  * @param num_frames How many frames the animation will have.
@@ -207,7 +178,7 @@ void init_s4c_color_pairs() {
  * @param framewidth Width of the frame.
  * @return 1 if successful, a negative value for errors.
  */
-int animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 	// We make the cursor invisible
 	curs_set(0);
 	int rows = frameheight;
@@ -221,24 +192,6 @@ int animate_file(WINDOW* w, FILE* file, int repetitions, int frametime, int num_
 		return S4C_ERR_SMALL_WIN;
 	}
 
-    	// Prepare the frames
-	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
-	int loadCheck = load_sprites(sprites, file, rows-1, cols-1);
-
-	// Check for loading errors and return early
-	if (loadCheck < 0) {
-		switch (loadCheck) {
-			case S4C_ERR_FILEVERSION: {
-				fprintf(stderr, "File version mismatch.\n");
-			}
-			break;
-			case S4C_ERR_LOADSPRITES: {
-				fprintf(stderr, "Error while loading.\n");
-			}
-			break;
-		}
-		return loadCheck;
-	}
 
 	int current_rep = 0;
    	// Run the animation loop

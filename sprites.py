@@ -28,11 +28,10 @@
 # - Color map should have the same order as the palette used to index the sprites.
 #
 # @section todo_sprites TODO
-# - The limitation to 8 colors will be overcome soon.
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 02/03/2023.
+# - Modified by jgabaut on 03/03/2023.
 
 # Imports
 from PIL import Image
@@ -43,7 +42,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.1" 
+FILE_VERSION = "0.1.2" 
 
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".

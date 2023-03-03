@@ -40,8 +40,16 @@ int demo(FILE* file) {
 	noecho();
 	keypad(stdscr, TRUE);
 
+    	// Open the palette file and read the color values and names
+    	FILE* palette_file;
+    	palette_file = fopen("palette.gpl", "r");
+    	if (palette_file == NULL) {
+        	fprintf(stderr, "Error: could not open palette file.\n");
+       		return -1;
+    	}
+
 	// Initialize all the colors
-	init_s4c_color_pairs();
+	init_s4c_color_pairs(palette_file);
 
 	int reps = 5;
 
@@ -55,8 +63,30 @@ int demo(FILE* file) {
 	
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	w = newwin(frame_height+1, frame_width+1, 2, 2);
+    	
+	// Prepare the frames
+	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
+	int loadCheck = load_sprites(sprites, file, frame_height-1, frame_width-1);
 
-	int result = animate_file(w, file, reps, frametime, num_frames, frame_height, frame_width);
+	// Check for loading errors and in this case we return early if we couldn't load
+	if (loadCheck < 0) {
+		switch (loadCheck) {
+			case S4C_ERR_FILEVERSION: {
+        			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");
+			}
+			break;
+			case S4C_ERR_LOADSPRITES: {
+        			fprintf(stderr,"S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
+			}
+			break;
+		}
+		return loadCheck;
+	}
+
+
+	// We call the animation function with all the needed arguments
+
+	int result = animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
 	endwin();
 
 	// We can check the result to do some actions:
