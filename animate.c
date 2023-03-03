@@ -11,8 +11,7 @@
 void init_s4c_color_pairs(FILE* palette) {
 
     char line[MAX_LINE_LENGTH];
-    int color_index = 1;
-    init_pair(0, COLOR_WHITE, COLOR_BLACK);
+    int color_index = 9;
 
     while (fgets(line, MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
@@ -49,7 +48,7 @@ void init_s4c_color_pairs(FILE* palette) {
 static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
-        int color_index = c - 'a';
+        int color_index = c - 'a' + 8;
         if (color_index >= 0 && color_index < MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, 1 + i, ' ' | A_REVERSE);
