@@ -7,21 +7,21 @@
 #define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
 // These define constants for the colors prepared by init_s4c_color_pairs().
-#define S4C_BLACK 1
-#define S4C_RED 2
-#define S4C_BRIGHT_GREEN 3
-#define S4C_BRIGHT_YELLOW 4
-#define S4C_BLUE 5
-#define S4C_MAGENTA 6
-#define S4C_CYAN 7
-#define S4C_WHITE 8
-#define S4C_ORANGE 9
-#define S4C_LIGHT_BROWN 10
-#define S4C_DARK_BROWN 11
-#define S4C_PURPLE 12
-#define S4C_DARK_GREEN 13
-#define S4C_LIGHT_YELLOW 14
-#define S4C_LIGHT_BLUE 15
+#define S4C_BLACK 9
+#define S4C_RED 10
+#define S4C_BRIGHT_GREEN 11
+#define S4C_BRIGHT_YELLOW 12
+#define S4C_BLUE 13
+#define S4C_MAGENTA 14
+#define S4C_CYAN 15
+#define S4C_WHITE 16
+#define S4C_ORANGE 17
+#define S4C_LIGHT_BROWN 18
+#define S4C_DARK_BROWN 19
+#define S4C_PURPLE 20
+#define S4C_DARK_GREEN 21
+#define S4C_LIGHT_YELLOW 22
+#define S4C_LIGHT_BLUE 23
 
 #define MAX_LINE_LENGTH 1024
 
