@@ -7,14 +7,15 @@
 # @brief Program that parses pngs from a passed spritesheet, to encode their color to a char per pixel.
 #
 # @section description_spritesheet Description
-# The program supports 8 colors at the moment. The png parsing uses Pillow, and the mapping is done against a preset color list.
+# The png parsing uses Pillow, and the mapping is done against a preset color list.
 # The list is described in palette.gpl to aid in exporting images with the correct color indexing.
 #
-# Program expects the spritesheet filename as first argument,
-#   the sprite width as second arg,
-#   the sprite height as third,
-#   separator size (thickness) as fourth,
-#   a 0 or 1 for starting coords of the first sprite (0 if sheet has no edge separator) as fifht argument.
+# Program expects the spritesheet filename as first argument, then
+#   the sprite width,
+#   the sprite height,
+#   separator size (thickness),
+#   X coord of left corner of the first sprite (0 if sheet has no edge separator),
+#   Y coord of left corner of the first sprite (0 if sheet has no edge separator).
 #
 # @section libraries_main Libraries/Moodules
 # - Pillow (https://pillow.readthedocs.io/en/stable/)
@@ -49,7 +50,7 @@ FILE_VERSION = "0.1.2"
 def usage():
     """! Prints correct invocation."""
     print("Wrong arguments. Needed: filename, sprite width, sprite height, separator size, left corner of first sprite's X, then Y.")
-    print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <startX> <startY")
+    print("\nUsage:\tpython {} <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <startX> <startY".format(os.path.basename(__file__)))
 
 def color_distance(c1, c2):
     """! Calculates the distance in color between two rgb tuples.
