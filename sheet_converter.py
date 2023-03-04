@@ -30,6 +30,7 @@
 # - Color map should have the same order as the palette used to index the sprites.
 #
 # @section todo_spritesheet TODO
+# - Check if the encoded value is exceeding latin literals.
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
@@ -59,7 +60,10 @@ def color_distance(c1, c2):
     """
     r1, g1, b1 = c1
     r2, g2, b2 = c2
-    distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
+    red_distance = r1 - r2
+    green_distance = g1 - g2
+    blue_distance = b1 - b2
+    distance = math.sqrt(red_distance ** 2 + green_distance ** 2 + blue_distnce ** 2)
     return distance
 
 def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, startX, startY):
@@ -91,15 +95,22 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
     char_index = 1
     for color in rgb_palette:
         if color not in CHAR_MAP:
-            CHAR_MAP[color] = chr(ord('a') + char_index)
+            CHAR_MAP[color] = chr(
+                    ord('a')
+                    + char_index
+                    )
             char_index += 1
 
     #for i in range(height // (sprite_size[1] + separator_size * (sprites_per_column - 1))):
 
     for k in range(sprites_per_row):
         for j in range(sprites_per_column):
-            sprite_x = start_x + j * (sprite_size[0] + separator_size) #+ (separator_size if j > 0 else 0)
-            sprite_y = start_y + k * (sprite_size[1] + separator_size) #+ k * (sprite_size[1] + separator_size * (sprites_per_column - 1))# + (separator_size if k > 0 else 0)
+            sprite_x = start_x
+            + j * (sprite_size[0]
+                   + separator_size) #+ (separator_size if j > 0 else 0)
+            sprite_y = start_y
+            + k * (sprite_size[1]
+                   + separator_size) #+ k * (sprite_size[1] + separator_size * (sprites_per_column - 1))# + (separator_size if k > 0 else 0)
             sprite = img.crop((sprite_x, sprite_y, sprite_x + sprite_size[0], sprite_y + sprite_size[1]))
             chars = []
             for y in range(sprite.size[1]):
@@ -111,7 +122,9 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
                         line += CHAR_MAP[(r, g, b)]
                     else:
                         # Get the closest color in the CHAR_MAP
-                        closest_color = min(CHAR_MAP, key=lambda c: color_distance(c, (r, g, b)))
+                        closest_color = min(CHAR_MAP,
+                                            key=lambda c:
+                                            color_distance(c, (r, g, b)))
                         line += CHAR_MAP[closest_color]
                 chars.append(line)
 

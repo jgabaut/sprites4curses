@@ -28,6 +28,7 @@
 # - Color map should have the same order as the palette used to index the sprites.
 #
 # @section todo_sprites TODO
+# - Check if the encoded value is exceeding latin literals.
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
@@ -62,7 +63,10 @@ def color_distance(c1, c2):
     """
     r1, g1, b1 = c1
     r2, g2, b2 = c2
-    distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
+    red_distance = r1 - r2
+    green_distance = g1 - g2
+    blue_distance = b1 - b2
+    distance = math.sqrt(red_distance ** 2 + green_distance ** 2 + blue_distnce ** 2)
     return distance
 
 def convert_sprite(file):
@@ -88,7 +92,10 @@ def convert_sprite(file):
     char_index = 1
     for color in rgb_palette:
         if color not in CHAR_MAP:
-            CHAR_MAP[color] = chr(ord('a') + char_index)
+            CHAR_MAP[color] = chr(
+                    ord('a')
+                    + char_index
+                    )
             char_index += 1
 
     # Convert each pixel to its corresponding character representation
@@ -102,7 +109,9 @@ def convert_sprite(file):
                 line += CHAR_MAP[(r, g, b)]
             else:
                 # Get the closest color in the CHAR_MAP
-                closest_color = min(CHAR_MAP, key=lambda c: color_distance(c, (r, g, b)))
+                closest_color = min(CHAR_MAP,
+                                    key=lambda c:
+                                    color_distance(c, (r, g, b)))
                 line += CHAR_MAP[closest_color]
         chars.append(line)
 
@@ -116,7 +125,9 @@ def print_converted_sprites(direc):
     # We start the count from one so we account for one more cell for array declaration
     frames = 1
 
-    for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
+    for file in sorted(glob.glob('{}/*.png'.format(direc)),
+                       key=lambda f:
+                       int(re.search(r'\d+', f).group())):
            frames += 1
 
     # Start file output, beginning with version number
@@ -124,7 +135,9 @@ def print_converted_sprites(direc):
     print("{}".format(FILE_VERSION))
     print("char sprites[{}][18][18] =".format(frames) + "{\n")
     idx = 1
-    for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
+    for file in sorted(glob.glob('{}/*.png'.format(direc)),
+                       key=lambda f:
+                       int(re.search(r'\d+', f).group())):
             # convert a sprite and print the result
             sprite = convert_sprite(file)
             print("\t//Frame {}, file {}".format(idx,file))
