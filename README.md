@@ -18,6 +18,13 @@ The output text should be a valid C declaration for a 3D char array.
 It expects as arguments the spritesheet file name, the sprite width, the sprite height, the thickness of the separator between sprites, and the start coordinate or the first sprite's left corner.
 There's a dependency on Pillow to do the image conversion.
 
+### cut_sheet.py
+
+This is a python script that cuts a single PNG spritesheet to a number of sprites, and puts them in the passed directory.
+
+It expects as arguments the spritesheet file name, the output directory name, the sprite width, the sprite height, the thickness of the separator between sprites, and the start coordinate or the first sprite's left corner.
+There's a dependency on Pillow to do the image conversion.
+
 ### png_resize.py
 
 This is a python script that resizess PNG's to a desired size.
@@ -67,6 +74,10 @@ To use the python scripts you need to install Pillow:
 - To run the sheet converter script and redirect output on "file.txt", give all required arguments:
 
   #### `python sheet_converter.py <sheet file> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>   > file.txt`
+
+- To run the sheet cutter script, give the sheet png file and the output directory:
+
+  #### `python cut_sheet.py <sheet file> <output dir> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>`
 
 - To run the png resize script, give all required arguments:
 

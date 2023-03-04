@@ -9,9 +9,9 @@
 # @section description_png_resize Description
 # The program overwrites the passed pngs with the resized version.
 #
-# Program expects the spritesheet filename as first argument, 
-#   the sprite width as second arg,
-#   the sprite heigth as third arg.
+# Program expects the spritesheet filename as first argument, then
+#   the sprite width,
+#   the sprite heigth.
 #
 # @section libraries_main Libraries/Moodules
 # - Pillow (https://pillow.readthedocs.io/en/stable/)
@@ -29,7 +29,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 02/03/2023.
+# - Modified by jgabaut on 04/03/2023.
 
 # Imports
 from PIL import Image

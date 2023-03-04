@@ -7,7 +7,7 @@
 # @brief Program that parses pngs from a passed directory, to encode their color to a char per pixel.
 #
 # @section description_sprites Description
-# The program supports 8 colors at the moment. The png parsing uses Pillow, and the mapping is done against a preset color list.
+# The png parsing uses Pillow, and the mapping is done against a preset color list.
 # The list is described in palette.gpl to aid in exporting images with the correct color indexing.
 #
 # @section libraries_main Libraries/Modules
