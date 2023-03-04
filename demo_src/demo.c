@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "animate.h"
+#include "../animate_src/animate.h"
 
 #define DEMOFRAMES 30 /**< Defines the number of sprites in the demo.*/
 #define DEMOROWS 18 /**< Defines the maximum number of rows per sprite.*/
