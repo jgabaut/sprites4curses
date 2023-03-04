@@ -1,0 +1,3 @@
+# requirements.in
+requests
+Pillow==9.4.0
