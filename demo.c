@@ -69,13 +69,9 @@ int demo(FILE* file) {
 	init_s4c_color_pairs(palette_file);
 
 	int reps = 1;
-
 	int frametime = DEMOFRAMETIME;
-
 	int num_frames = DEMOFRAMES;
-
 	int frame_height = DEMOROWS;
-
 	int frame_width = DEMOCOLS;
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
@@ -105,8 +101,7 @@ int demo(FILE* file) {
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
 	wclear(w);
-
-	// We call the animation function with all the needed arguments
+	// Then we call the animation function with all the needed arguments
 
 	int result = animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
 
@@ -141,28 +136,7 @@ int demo(FILE* file) {
 	result = animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, 1, 1);
 	endwin();
 
-	// We check animate_sprites_at_coords() result to see if there were problems:
-	if (result < 0) {
-		switch (result) {
-			case S4C_ERR_SMALL_WIN: {
-        			fprintf(stderr,"animate => S4C_ERR_SMALL_WIN : Window was too small.\n");
-			}
-			break;
-			case S4C_ERR_LOADSPRITES: {
-        			fprintf(stderr,"animate => S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
-			}
-			break;
-			case S4C_ERR_FILEVERSION: {
-        			fprintf(stderr,"animate => S4C_ERR_FILEVERSION : Failed file version check.\n");
-			}
-			break;
-			case S4C_ERR_CURSOR: {
-        			fprintf(stderr,"animate => S4C_ERR_CURSOR : Failed to change the cursor.\n");
-			}
-			break;
-		}
-	}
-
+	// We should check animate_sprites_at_coords() result to see if there were problems, but we already did endwin() and in the demo we don't expect problems so we return the result.
 	return result;
 }
 

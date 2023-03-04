@@ -117,6 +117,8 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
 
             sprites.append(chars)
 
+    # Start file output, beginning with version number
+
     print("{}".format(FILE_VERSION))
     print("char sprites[{}][{}][{}] =".format(len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
     for i, sprite in enumerate(sprites):

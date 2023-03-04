@@ -18,7 +18,7 @@
 # - glob standard library (https://docs.python.org/3/library/glob.html)
 #   - Access to pattern expansion.
 # - re standard library (https://docs.python.org/3/library/re.html)
-#   - Access to regular expressions. 
+#   - Access to regular expressions.
 # - os standard library (https://docs.python.org/3/library/os.html)
 #   - Access to program name.
 # - math standard library (https://docs.python.org/3/library/math.html)
@@ -31,7 +31,7 @@
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 03/03/2023.
+# - Modified by jgabaut on 04/03/2023.
 
 # Imports
 from PIL import Image
@@ -42,7 +42,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.2" 
+FILE_VERSION = "0.1.2"
 
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
@@ -63,7 +63,7 @@ def color_distance(c1, c2):
     r1, g1, b1 = c1
     r2, g2, b2 = c2
     distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
-    return distance 
+    return distance
 
 def convert_sprite(file):
     """! Takes a image file and converts each pixel to a char representation of its color (closest match to CHAR_MAP).
@@ -107,18 +107,23 @@ def convert_sprite(file):
         chars.append(line)
 
     return chars
-    
+
 def print_converted_sprites(direc):
-    """! Takes a directory containing image file and calls convert_sprite on each one. Then it outputs all the converted sprites to stdout, including the necessary brackets to have a valid C array declaration.
+    """! Takes a directory containing image file and calls convert_sprite on each one.
+    Then it outputs all the converted sprites to stdout, including the necessary brackets to have a valid C array declaration.
     @param direc   The directory of image files to convert and print.
     """
+    # We start the count from one so we account for one more cell for array declaration
+    frames = 1
 
-    frames = 1 # We start the count from one so we account for one more cell for array declaration
     for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
            frames += 1
+
+    # Start file output, beginning with version number
+
     print("{}".format(FILE_VERSION))
     print("char sprites[{}][18][18] =".format(frames) + "{\n")
-    idx = 1           
+    idx = 1
     for file in sorted(glob.glob('{}/*.png'.format(direc)), key=lambda f: int(re.search(r'\d+', f).group())):
             # convert a sprite and print the result
             sprite = convert_sprite(file)

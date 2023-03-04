@@ -60,31 +60,6 @@ static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int lin
 }
 
 /*
- * Takes a string and trims whitespace at the edges.
- * @param str The string to trim.
- * @return str The trimmed string.
- */
-static char *trim(char *str) {
-    char *end;
-
-    // Trim leading whitespace
-    while (isspace((unsigned char)*str)) {
-        str++;
-    }
-
-    // Trim trailing whitespace
-    end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end)) {
-        end--;
-    }
-
-    // Add null terminator
-    *(end+1) = '\0';
-
-    return str;
-}
-
-/*
  * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
  * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
  * File format should have a sprite line on each line.
@@ -200,12 +175,10 @@ return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, 
  * @return 1 if successful, a negative value for errors.
  */
 int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
-	// We make the cursor invisible or return early with the error
-	int cursorCheck = curs_set(0);
+	int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
 
 	if (cursorCheck == ERR) {
-		//fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
-		return S4C_ERR_CURSOR;
+		return S4C_ERR_CURSOR; //fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
 	}
 
 	int rows = frameheight;
@@ -215,8 +188,7 @@ int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW*
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
 	if (win_rows < rows + startY || win_cols < cols + startX) {
-		//fprintf(stderr, "animate => Window is too small to display the sprite.\n");
-		return S4C_ERR_SMALL_WIN;
+		return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
 	}
 
 
