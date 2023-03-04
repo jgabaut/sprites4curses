@@ -26,11 +26,8 @@ void usage(char* progname) {
  */
 int demo(FILE* file) {
 
-	// Initialisation: we need a large enough window and all the curses settings needed
-	// to be applied before calling animate_file().
+	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
-
-	// Initialize curses
 	setlocale(LC_CTYPE, "it_IT.UTF-8");
 	initscr();
 	clear();
@@ -75,8 +72,7 @@ int demo(FILE* file) {
 	int frame_width = DEMOCOLS;
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
-	// The boxing done by animate is 1 pixel thick.
-	// In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
+	// The boxing done by animate is 1 pixel thick. In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
 	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 2, 2);
 
 	// Prepare the frames
