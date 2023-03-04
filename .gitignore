@@ -1,3 +1,5 @@
+# ignore venv dir
+.venv
 # ignore object files
 *.o
 # ignore executable
