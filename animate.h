@@ -37,9 +37,10 @@
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 
 void init_s4c_color_pairs(FILE* palette_file);
-static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length);
+static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 static char *trim(char *str);
 int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 #endif

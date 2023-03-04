@@ -44,14 +44,15 @@ void init_s4c_color_pairs(FILE* palette) {
  * @param line The string to print
  * @param line_num The y value to print at in win
  * @param line_len The length of line to print
+ * @param startX X coord of the win to start printing to.
  */
-static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length) {
+static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
         int color_index = c - 'a' + 8;
         if (color_index >= 0 && color_index < MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
-            mvwaddch(win, curr_line_num, 1 + i, ' ' | A_REVERSE);
+            mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
             wattroff(win, COLOR_PAIR(color_index));
         }
 
@@ -161,6 +162,24 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
 }
 
 /*
+ * Calls animate_sprites_at_coords() with 0,0 as starting coordinates.
+ * @see animate_sprites_at_coords()
+ * @param sprites The sprites array.
+ * @param w The window to print into.
+ * @param repetition The number of times the animation will be cycled through.
+ * @param frametime How many mseconds each frame is displayed.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @see S4C_ERR_CURSOR
+ * @see S4C_ERR_SMALL_WIN
+ * @return 1 if successful, a negative value for errors.
+ */
+int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
+};
+
+/*
  * Takes a WINDOW pointer to print into and a string for the file passed.
  * Loads sprites from the file and displays them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
@@ -174,11 +193,13 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
  * @param num_frames How many frames the animation will have.
  * @param frameheight Height of the frame.
  * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
  * @see S4C_ERR_CURSOR
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	// We make the cursor invisible or return early with the error
 	int cursorCheck = curs_set(0);
 
@@ -193,7 +214,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 	// Check if window is big enough
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
-	if (win_rows < rows || win_cols < cols) {
+	if (win_rows < rows + startY || win_cols < cols + startX) {
 		//fprintf(stderr, "animate => Window is too small to display the sprite.\n");
 		return S4C_ERR_SMALL_WIN;
 	}
@@ -205,7 +226,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 		for (int i=0; i<num_frames+1;i++) {
 			for (int j=0; j<rows; j++) {
 				// Print current frame
-				print_spriteline(w,sprites[i][j], j+1, cols);
+				print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
 				box(w,0,0);
 				wrefresh(w);
 			}

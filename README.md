@@ -35,12 +35,17 @@ Info on how to use it are in the palette-Readme.md file.
 ## animate.c and animate.h
 
 This is a C library offering some functions to display an animation read from a formatted text file.
-`animate\_file()` is useful to animate in a initialised WINDOW.
+
+`animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
+
+`animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
+
 
 You can look at the demo.c program to see how you can request the animation after setup.
 The file format expected is compatible with sprites.py specs.
 
 Since it needs support from terminal capabilities, it may return some errors if your terminal doesn't offer the needed options.
+
 At the moment your solution is to change terminal or help investigate your issues by forcing the check to pass, I may add an unsafe option to do this in a later version.
 
 ### demo.c

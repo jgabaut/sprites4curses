@@ -68,7 +68,7 @@ int demo(FILE* file) {
 	// Initialize all the colors using the palette file
 	init_s4c_color_pairs(palette_file);
 
-	int reps = 5;
+	int reps = 1;
 
 	int frametime = DEMOFRAMETIME;
 
@@ -79,7 +79,9 @@ int demo(FILE* file) {
 	int frame_width = DEMOCOLS;
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
-	w = newwin(frame_height+1, frame_width+1, 2, 2);
+	// The boxing done by animate is 1 pixel thick.
+	// In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
+	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 2, 2);
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
@@ -101,13 +103,45 @@ int demo(FILE* file) {
 		return loadCheck;
 	}
 
+	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
+	wclear(w);
 
 	// We call the animation function with all the needed arguments
 
 	int result = animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
-	endwin();
 
 	// We check animate_sprites() result to see if there were problems:
+	if (result < 0) {
+		endwin();
+		switch (result) {
+			case S4C_ERR_SMALL_WIN: {
+        			fprintf(stderr,"animate => S4C_ERR_SMALL_WIN : Window was too small.\n");
+			}
+			break;
+			case S4C_ERR_LOADSPRITES: {
+        			fprintf(stderr,"animate => S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
+			}
+			break;
+			case S4C_ERR_FILEVERSION: {
+        			fprintf(stderr,"animate => S4C_ERR_FILEVERSION : Failed file version check.\n");
+			}
+			break;
+			case S4C_ERR_CURSOR: {
+        			fprintf(stderr,"animate => S4C_ERR_CURSOR : Failed to change the cursor.\n");
+			}
+			break;
+		}
+	}
+
+	// We clear the window, and expect animate__() to refresh it
+	wclear(w);
+
+	// We call the animation to be displayed at 3,3
+
+	result = animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, 1, 1);
+	endwin();
+
+	// We check animate_sprites_at_coords() result to see if there were problems:
 	if (result < 0) {
 		switch (result) {
 			case S4C_ERR_SMALL_WIN: {
