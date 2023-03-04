@@ -54,11 +54,11 @@ static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int lin
             mvwaddch(win, curr_line_num, 1 + i, ' ' | A_REVERSE);
             wattroff(win, COLOR_PAIR(color_index));
         }
-        
+
     }
 }
 
-/* 
+/*
  * Takes a string and trims whitespace at the edges.
  * @param str The string to trim.
  * @return str The trimmed string.
@@ -85,14 +85,16 @@ static char *trim(char *str) {
 
 /*
  * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
- * Checks if the file version is compatible with the current reader version, otherwise returns -1.
+ * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
  * File format should have a sprite line on each line.
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
  * @param f The file to read the sprites from.
  * @param rows The number of rows in each sprite.
  * @param columns The number of columns in each sprite.
- * @return -1 if loading fails or the number of sprites read.
+ * @see S4C_ERR_FILEVERSION
+ * @see S4C_ERR_LOADSPRITES
+ * @return A negative error value if loading fails or the number of sprites read.
  */
 int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
 
@@ -108,14 +110,13 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
     if (fgets(line, sizeof(line), f)) {
         // Parse the version number
         file_version = strtok(line, " \t\r\n");
-        if (file_version != NULL) {
-            if ( (check = strcmp(file_version,READER_VERSION)) == 0) {
-            } else {
-		    // The file format has changed, abort and return the error
-		    return S4C_ERR_FILEVERSION;
-	    }
-        }
+
+	// Check if the file format has changed, abort and return the error
+        if ((file_version == NULL) || ( (check = strcmp(file_version,READER_VERSION)) != 0) ) {
+	    return S4C_ERR_FILEVERSION;
+	};
     }
+
 
     while (fgets(line, sizeof(line), f)) {
         // Skip empty lines
@@ -140,8 +141,6 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
             if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
 		strncpy(sprites[frame][row], token, columns);
 		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
-
-               // strcpy(sprites[frame-1][row], token);
                 row++;
                 if (row == rows) {
                     frame++;
@@ -175,19 +174,27 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
  * @param num_frames How many frames the animation will have.
  * @param frameheight Height of the frame.
  * @param framewidth Width of the frame.
+ * @see S4C_ERR_CURSOR
+ * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
-	// We make the cursor invisible
-	curs_set(0);
+	// We make the cursor invisible or return early with the error
+	int cursorCheck = curs_set(0);
+
+	if (cursorCheck == ERR) {
+		fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+		return S4C_ERR_CURSOR;
+	}
+
 	int rows = frameheight;
-	int cols = framewidth;	
+	int cols = framewidth;
 
 	// Check if window is big enough
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
 	if (win_rows < rows || win_cols < cols) {
-		fprintf(stderr, "Window is too small to display the sprite\n");
+		fprintf(stderr, "animate => Window is too small to display the sprite.\n");
 		return S4C_ERR_SMALL_WIN;
 	}
 
@@ -206,7 +213,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 			// Refresh the screen
 			napms(frametime);
 			clear();
-		};      	
+		};
 		// We finished a whole cycle
 		current_rep++;
 	}
