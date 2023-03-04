@@ -28,10 +28,13 @@
 #define MAXFRAMES 121 /**< Defines the maximum number of sprites.*/
 #define MAXROWS 26 /**< Defines the maximum number of rows per sprite.*/
 #define MAXCOLS 84 /**< Defines the maximum number of colums per sprite.*/
-		
+
 #define S4C_ERR_SMALL_WIN -1 /**< Defines the error value for a window too small for the animation.*/
 #define S4C_ERR_FILEVERSION -2 /**< Defines the error value for a file version mismatch.*/
 #define S4C_ERR_LOADSPRITES -3 /**< Defines the error value for a failure while loading sprites.*/
+#define	S4C_ERR_TERMCOLOR -4 /**< Defines the error value for when the terminal doesn't support colors.*/
+#define	S4C_ERR_TERMCHANGECOLOR -5 /**< Defines the error value for when the terminal doesn't support changing colors.*/
+#define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 
 void init_s4c_color_pairs(FILE* palette_file);
 static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length);

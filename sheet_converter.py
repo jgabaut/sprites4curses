@@ -10,10 +10,10 @@
 # The program supports 8 colors at the moment. The png parsing uses Pillow, and the mapping is done against a preset color list.
 # The list is described in palette.gpl to aid in exporting images with the correct color indexing.
 #
-# Program expects the spritesheet filename as first argument, 
-#   the sprite width as second arg, 
-#   the sprite height as third, 
-#   separator size (thickness) as fourth, 
+# Program expects the spritesheet filename as first argument,
+#   the sprite width as second arg,
+#   the sprite height as third,
+#   separator size (thickness) as fourth,
 #   a 0 or 1 for starting coords of the first sprite (0 if sheet has no edge separator) as fifht argument.
 #
 # @section libraries_main Libraries/Moodules
@@ -33,7 +33,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 03/03/2023.
+# - Modified by jgabaut on 04/03/2023.
 
 # Imports
 from PIL import Image
@@ -49,7 +49,7 @@ def usage():
     """! Prints correct invocation."""
     print("Wrong arguments. Needed: filename, sprite width, sprite height, separator size, left corner of first sprite's X, then Y.")
     print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <startX> <startY")
-    
+
 def color_distance(c1, c2):
     """! Calculates the distance in color between two rgb tuples.
     @param c1   The first input color to measure.
@@ -60,7 +60,7 @@ def color_distance(c1, c2):
     r1, g1, b1 = c1
     r2, g2, b2 = c2
     distance = math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
-    return distance 
+    return distance
 
 def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, startX, startY):
     """! Converts a spritesheet to a 3D char array representation of pixel color and then prints it with the needed brackets and commas.
@@ -68,20 +68,21 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
     @param spriteSizeX   The sprite width.
     @param spriteSizeY   The sprite height.
     @param separatorSize   Thickess of separator pixels.
-    @param startCoords  Coords (a,a) of left corner of first sprite.
+    @param startX    X coord of left corner of first sprite.
+    @param startY    Y coord of left corner of first sprite.
     """
 
     sprite_size = (spriteSizeX, spriteSizeY)  # size of each sprite
     separator_size = separatorSize  # size of separator between sprites
     start_x, start_y = startX, startY  # starting coordinates of the first sprite
-    
-    
+
+
     img = Image.open(filename)
     width, height = img.size
     sprites_per_row = (width - start_x + separator_size) // (sprite_size[0] + separator_size)
     sprites_per_column = (height - start_y + separator_size) // (sprite_size[1] + separator_size)
     sprites = []
-    
+
     img = img.convert('P', palette=Image.ADAPTIVE, colors=256)
     palette = img.getpalette()
     rgb_palette = [(palette[n], palette[n+1], palette[n+2]) for n in range(0, len(palette), 3)]

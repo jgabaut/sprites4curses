@@ -36,11 +36,28 @@ int demo(FILE* file) {
 	clear();
 	refresh();
 	start_color();
+	int colorCheck = has_colors();
+
+	if (colorCheck == FALSE	) {
+		fprintf(stderr,"Terminal can't use colors, abort.\n");
+		return S4C_ERR_TERMCOLOR;
+	};
+
+	colorCheck = can_change_color();
+
+	if (colorCheck == FALSE	) {
+		fprintf(stderr,"Terminal can't change colors, abort.\n");
+		return S4C_ERR_TERMCHANGECOLOR;
+	};
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
 
-    	// Open the palette file and read the color values and names
+    	// Open the palette file and read the color values and name
+	//
+	// This must be done everytime the color definitions are reset.
+	// See: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/color.html#COLORBASICS
+	// Curses initializes all the colors supported by terminal when start_color() is called.
     	FILE* palette_file;
     	palette_file = fopen("palette.gpl", "r");
     	if (palette_file == NULL) {
@@ -48,7 +65,7 @@ int demo(FILE* file) {
        		return -1;
     	}
 
-	// Initialize all the colors
+	// Initialize all the colors using the palette file
 	init_s4c_color_pairs(palette_file);
 
 	int reps = 5;
@@ -60,15 +77,15 @@ int demo(FILE* file) {
 	int frame_height = DEMOROWS;
 
 	int frame_width = DEMOCOLS;
-	
+
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	w = newwin(frame_height+1, frame_width+1, 2, 2);
-    	
+
 	// Prepare the frames
-	char sprites[MAXFRAMES][MAXROWS][MAXCOLS]; 
+	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
 	int loadCheck = load_sprites(sprites, file, frame_height-1, frame_width-1);
 
-	// Check for loading errors and in this case we return early if we couldn't load
+	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
 		switch (loadCheck) {
 			case S4C_ERR_FILEVERSION: {
@@ -89,19 +106,23 @@ int demo(FILE* file) {
 	int result = animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
 	endwin();
 
-	// We can check the result to do some actions:
+	// We check animate_sprites() result to see if there were problems:
 	if (result < 0) {
 		switch (result) {
 			case S4C_ERR_SMALL_WIN: {
-        			fprintf(stderr,"S4C_ERR_SMALL_WIN : Window was too small.\n");
+        			fprintf(stderr,"animate => S4C_ERR_SMALL_WIN : Window was too small.\n");
 			}
 			break;
 			case S4C_ERR_LOADSPRITES: {
-        			fprintf(stderr,"S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
+        			fprintf(stderr,"animate => S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
 			}
 			break;
 			case S4C_ERR_FILEVERSION: {
-        			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");
+        			fprintf(stderr,"animate => S4C_ERR_FILEVERSION : Failed file version check.\n");
+			}
+			break;
+			case S4C_ERR_CURSOR: {
+        			fprintf(stderr,"animate => S4C_ERR_CURSOR : Failed to change the cursor.\n");
 			}
 			break;
 		}
