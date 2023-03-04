@@ -87,6 +87,7 @@ int demo(FILE* file) {
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
+		endwin();
 		switch (loadCheck) {
 			case S4C_ERR_FILEVERSION: {
         			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");

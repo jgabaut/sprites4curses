@@ -183,7 +183,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 	int cursorCheck = curs_set(0);
 
 	if (cursorCheck == ERR) {
-		fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+		//fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
 		return S4C_ERR_CURSOR;
 	}
 
@@ -194,7 +194,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
 	if (win_rows < rows || win_cols < cols) {
-		fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+		//fprintf(stderr, "animate => Window is too small to display the sprite.\n");
 		return S4C_ERR_SMALL_WIN;
 	}
 
