@@ -1,7 +1,11 @@
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
 
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include <ncurses.h>
+#include <pthread.h>
 
 #define MAX_COLORS 256
 #define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
@@ -36,10 +40,27 @@
 #define	S4C_ERR_TERMCHANGECOLOR -5 /**< Defines the error value for when the terminal doesn't support changing colors.*/
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 
+/*
+ * Holds arguments for a call to animate_sprites_thread_at().
+ * WIP.
+ */
+typedef struct animate_args {
+    int stop_thread; /**< Stops the thread when false.*/
+    WINDOW* win;/**< WINDOW to animate to.*/
+    char sprites[MAXFRAMES][MAXROWS][MAXCOLS];/**< Array for the animation.*/
+    int frametime;/**< How many ms a frame will stay on screen after drawing.*/
+    int num_frames;/**< How many frames the animation has.*/
+    int frameheight;/**< Height of the frames.*/
+    int framewidth;/**< Width of the frames.*/
+    int startX;/**< Starting X value to print at.*/
+    int startY;/**< Starting Y value to print at.*/
+} animate_args;
+
 void init_s4c_color_pairs(FILE* palette_file);
 static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+void *animate_sprites_thread_at(void *animate_args);
 int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 #endif

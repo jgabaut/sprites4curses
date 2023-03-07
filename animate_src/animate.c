@@ -1,7 +1,3 @@
-#include <ncurses.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include "animate.h"
 
 /*
@@ -216,3 +212,69 @@ int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW*
 	return 1;
 }
 
+/*
+ * Takes a void pointer, to be cast to animate_args*, containing parameters to animate a sprite in a WINDOW, using a separate thread.
+ * @see animate_args
+ */
+void *animate_sprites_thread_at(void *args_ptr) {
+
+	animate_args* args = (animate_args *)args_ptr;
+	WINDOW* w = args->win;
+	int frametime = args->frametime;
+	int num_frames = args->num_frames;
+	int frameheight = args->frameheight;
+	int framewidth = args->framewidth;
+	int startX = args->startX;
+	int startY = args->startY;
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(w, win_rows, win_cols);
+	if (win_rows < rows + startY || win_cols < cols + startX) {
+		fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+		pthread_exit(NULL);
+	}
+	// Open the palette file and read the color values and names
+	FILE* palette_file;
+	palette_file = fopen("palette.gpl", "r");
+	if (palette_file == NULL) {
+	    fprintf(stderr, "Error: could not open palette file.\n");
+	    pthread_exit(NULL);
+	}
+
+	// Initialize all the colors
+	init_s4c_color_pairs(palette_file);
+	fclose(palette_file);
+
+   	// Run the animation thread loop
+   	do {
+        	wclear(w);
+        	wrefresh(w);
+        	refresh();
+		for (int i=0; i<num_frames+1;i++) {
+			box(w,0,0);
+            		if (args->stop_thread == 1) {
+                		break;
+            		}
+			for (int j=0; j<rows; j++) {
+               			if (args->stop_thread == 1) {
+                    			break;
+                		}
+				// Print current line for current frame
+				print_spriteline(w,(args->sprites)[i][j], j+startY+1, cols, startX);
+			}
+			wrefresh(w);
+			// Refresh the screen
+			napms(frametime);
+			wclear(w);
+			wrefresh(w);
+            		refresh();
+            		//YEAH lots of refreshes. WIP.
+		};
+	} while ( args->stop_thread != 1);
+
+    pthread_exit(NULL);
+};
