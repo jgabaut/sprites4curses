@@ -36,7 +36,7 @@
 #
 # @section author_cut_spritesheet Author(s)
 # - Created by jgabaut on 04/03/2023.
-# - Modified by jgabaut on 04/03/2023.
+# - Modified by jgabaut on 09/03/2023.
 
 # Imports
 # Imports
@@ -89,8 +89,8 @@ def cut_spritesheet(filename, output_directory, spriteSizeX, spriteSizeY, separa
     sprite_index = 1
     for i in range(sprites_per_row):
         for j in range(sprites_per_column):
-            sprite_x = start_x + i * (sprite_size[0] + separator_size)
-            sprite_y = start_y + j * (sprite_size[1] + separator_size)
+            sprite_x = start_x + j * (sprite_size[0] + separator_size)
+            sprite_y = start_y + i * (sprite_size[1] + separator_size)
             sprite = img.crop((sprite_x, sprite_y, sprite_x + sprite_size[0], sprite_y + sprite_size[1]))
             output_file = os.path.join(output_directory, f"image{i * sprites_per_column + j + 1}.png")
             sprite.save(output_file)

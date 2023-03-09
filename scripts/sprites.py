@@ -32,7 +32,7 @@
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 04/03/2023.
+# - Modified by jgabaut on 09/03/2023.
 
 # Imports
 from PIL import Image
@@ -89,7 +89,7 @@ def convert_sprite(file):
 
     # Create the CHAR_MAP dictionary based on the color values
     CHAR_MAP = {}
-    char_index = 1
+    char_index = 0
     for color in rgb_palette:
         if color not in CHAR_MAP:
             CHAR_MAP[color] = chr(
