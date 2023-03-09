@@ -251,9 +251,6 @@ void *animate_sprites_thread_at(void *args_ptr) {
 
    	// Run the animation thread loop
    	do {
-        	wclear(w);
-        	wrefresh(w);
-        	refresh();
 		for (int i=0; i<num_frames+1;i++) {
 			box(w,0,0);
             		if (args->stop_thread == 1) {
@@ -269,10 +266,6 @@ void *animate_sprites_thread_at(void *args_ptr) {
 			wrefresh(w);
 			// Refresh the screen
 			napms(frametime);
-			wclear(w);
-			wrefresh(w);
-            		refresh();
-            		//YEAH lots of refreshes. WIP.
 		};
 	} while ( args->stop_thread != 1);
 
