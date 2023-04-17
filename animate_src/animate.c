@@ -1,6 +1,17 @@
 #include "animate.h"
 
-/*
+/**
+ * Prints animate version.
+ */
+void s4c_printVersionToFile(FILE* f) {
+	if (!f) {
+		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(f,"sprites4curses/animate.h v%s\n",S4C_ANIMATE_VERSION);
+}
+
+/**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
  */
@@ -33,9 +44,12 @@ void init_s4c_color_pairs(FILE* palette) {
 
         color_index++;
     }
+
+    //We close the palette file ourselves
+    fclose(palette);
 }
 
-/*
+/**
  * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
  * @param line The string to print
  * @param line_num The y value to print at in win
@@ -55,9 +69,10 @@ static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int lin
     }
 }
 
-/*
+/**
  * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
  * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
+ * Closes file pointer before returning.
  * File format should have a sprite line on each line.
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
@@ -123,6 +138,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
         }
     }
 
+    //We close the file ourselves
     fclose(f);
 
     //Check if we have a strictly positive frame number or return the error
@@ -132,7 +148,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
     return frame;
 }
 
-/*
+/**
  * Calls animate_sprites_at_coords() with 0,0 as starting coordinates.
  * @see animate_sprites_at_coords()
  * @param sprites The sprites array.
@@ -150,7 +166,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
 };
 
-/*
+/**
  * Takes a WINDOW pointer to print into and a string for the file passed.
  * Loads sprites from the file and displays them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
@@ -212,7 +228,7 @@ int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW*
 	return 1;
 }
 
-/*
+/**
  * Takes a void pointer, to be cast to animate_args*, containing parameters to animate a sprite in a WINDOW, using a separate thread.
  * @see animate_args
  */
@@ -245,9 +261,8 @@ void *animate_sprites_thread_at(void *args_ptr) {
 	    pthread_exit(NULL);
 	}
 
-	// Initialize all the colors
+	// Initialize all the colors and close palette file
 	init_s4c_color_pairs(palette_file);
-	fclose(palette_file);
 
    	// Run the animation thread loop
    	do {

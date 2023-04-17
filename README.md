@@ -1,14 +1,17 @@
 # sprites4curses
 
-A library of scripts to deal with sprites in ncurses.
+A library of scripts and C functions to deal with sprites in ncurses.
 
-## sprites.py
+## Scripts
+
+All of them have a dependency on Pillow to process images.
+
+### sprites.py
 
 This is a python script that converts PNG's to a char representation.
 The output text should be a valid C declaration for a 3D char array.
 
 It expects as arguments a directory with the images to convert.
-There's a dependency on Pillow to do the image conversion.
 
 ### sheet_converter.py
 
@@ -16,28 +19,18 @@ This is a python script that converts a single PNG spritesheet to a char represe
 The output text should be a valid C declaration for a 3D char array.
 
 It expects as arguments the spritesheet file name, the sprite width, the sprite height, the thickness of the separator between sprites, and the start coordinate or the first sprite's left corner.
-There's a dependency on Pillow to do the image conversion.
 
 ### cut_sheet.py
 
 This is a python script that cuts a single PNG spritesheet to a number of sprites, and puts them in the passed directory.
 
 It expects as arguments the spritesheet file name, the output directory name, the sprite width, the sprite height, the thickness of the separator between sprites, and the start coordinate or the first sprite's left corner.
-There's a dependency on Pillow to do the image conversion.
 
 ### png_resize.py
 
 This is a python script that resizess PNG's to a desired size.
 
 It expects as arguments a directory with the images to resize, and two ints for width and height of the resulting PNGs.
-There's a dependency on Pillow to do the image conversion.
-
-## palette.gpl
-
-This is a GIMP palette file.
-It's used by the library to initialise the color pairs for curses to display the sprites.
-It's also useful in the first place for exporting PNG with the correct color alignment.
-Info on how to use it are in the palette-Readme.md file.
 
 ## animate.c and animate.h
 
@@ -57,10 +50,17 @@ At the moment your solution is to change terminal or help investigate your issue
 
 ### demo.c
 
-This is a demo program showing how to use the animate library functions.
+This is a demo program showing how to use the animate library functions. Check out its source code after running it!
 
+- To run the C demo program, do:
+  #### The demo is meant to run with the provided file.
+  #### `make; ./demo demofile.txt`
 
-# Usage
+- To be fancy you can use process substitution in bash to give the python output directly as an argument:
+
+  #### `make; ./demo <( python sprites.py <directory> )`
+
+# Scripts usage
 
 To use the python scripts you need to install Pillow:
 
@@ -84,14 +84,11 @@ To use the python scripts you need to install Pillow:
   #### `python png_resize.py <sprites directory> <sprite width> <sprite height>`
   ### This overwrites the source pngs, so be careful.
 
-  ## The demo program is meant to show how to correctly call animate_file() from animate.h.
+Possible animation glitches if the frame rate is too high, add in-between frames and longer frametime as needed.
 
-- To run the C demo program, you do:
-  #### The demo is meant to run with the provided file.
-  ####
-  #### `make; ./demo demofile.txt`
+## palette.gpl
 
-- To be fancy you can use process substitution in bash to give the python output directly as an argument:
-
-  #### `make; ./demo <( python sprites.py <directory> )`
-  #### Possible animation glitches if the frame rate is too high, add in-between frames as needed.
+This is a GIMP palette file.
+It's used by the library to initialise the color pairs for curses to display the sprites.
+It's also useful in the first place for exporting PNG with the correct color alignment.
+Info on how to use it are in the palette-README.md file.
