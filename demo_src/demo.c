@@ -24,7 +24,27 @@ void usage(char* progname) {
  * @see animate_file()
  * @return Result of the animation.
  */
-int demo(FILE* file) {
+int demo(FILE* mainthread_file, FILE* newthread_file) {
+
+	printf("\n\n\t\tDEMO for ");
+	S4C_PRINTVERSION();
+	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
+	printf("\n\t\t[Press Enter to start the demo]\n");
+	scanf("%*c");
+	system("clear");
+
+	// Open the palette file to read the color values and name
+	// Keep in mind that the file pointer will be closed by init_s4c_color_pairs(palette_file);
+	//
+	// This must be done everytime the color definitions are reset.
+	// See: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/color.html#COLORBASICS
+	// Curses initializes all the colors supported by terminal when start_color() is called.
+    	FILE* palette_file;
+    	palette_file = fopen("palette.gpl", "r");
+    	if (palette_file == NULL) {
+        	fprintf(stderr, "Error: could not open palette file.\n");
+       		return -1;
+    	}
 
 	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
@@ -38,31 +58,19 @@ int demo(FILE* file) {
 	if (colorCheck == FALSE	) {
 		fprintf(stderr,"Terminal can't use colors, abort.\n");
 		return S4C_ERR_TERMCOLOR;
-	};
+	}
 
 	colorCheck = can_change_color();
 
 	if (colorCheck == FALSE	) {
 		fprintf(stderr,"Terminal can't change colors, abort.\n");
 		return S4C_ERR_TERMCHANGECOLOR;
-	};
+	}
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
 
-    	// Open the palette file and read the color values and name
-	//
-	// This must be done everytime the color definitions are reset.
-	// See: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/color.html#COLORBASICS
-	// Curses initializes all the colors supported by terminal when start_color() is called.
-    	FILE* palette_file;
-    	palette_file = fopen("palette.gpl", "r");
-    	if (palette_file == NULL) {
-        	fprintf(stderr, "Error: could not open palette file.\n");
-       		return -1;
-    	}
-
-	// Initialize all the colors using the palette file
+	// Initialize all the colors using the palette file we opened at the start
 	init_s4c_color_pairs(palette_file);
 
 	int reps = 1;
@@ -73,11 +81,11 @@ int demo(FILE* file) {
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	// The boxing done by animate is 1 pixel thick. In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
-	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 2, 2);
+	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 0, 20);
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
-	int loadCheck = load_sprites(sprites, file, frame_height-1, frame_width-1);
+	int loadCheck = load_sprites(sprites, mainthread_file, frame_height-1, frame_width-1);
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
@@ -96,6 +104,18 @@ int demo(FILE* file) {
 	}
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
+	wclear(w);
+	wrefresh(w);
+
+	wclear(stdscr);
+	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Let's see animate_sprites:");
+	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (0,0).");
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
 	wclear(w);
 	// Then we call the animation function with all the needed arguments
 
@@ -126,24 +146,110 @@ int demo(FILE* file) {
 
 	// We clear the window, and expect animate__() to refresh it
 	wclear(w);
+	wrefresh(w);
+	int try_x = 1;
+	int try_y = 1;
+	wclear(stdscr);
+	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Now animate_sprites_at_coords:");
+	mvwprintw(stdscr,4,2, "This function puts UL animation corner at (y:%i,x:%i).", try_y, try_x);
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
 
 	// We call the animation to be displayed at 3,3
+	result = animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, try_y, try_x);
+	// We should check animate_sprites_at_coords() result to see if there were problems, but in the demo we don't expect problems so we ignore the specific error content of result and just exit.
 
-	result = animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, 1, 1);
+	if (result < 0) {
+		endwin();
+		fprintf(stderr,"Demo error while doing animate_sprites_at_coords()");
+		exit(EXIT_FAILURE);
+	}
+
+	wclear(w);
+	wrefresh(w);
+
+	wclear(stdscr);
+	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Now animate_sprites_thread_at, we ask for a new thread.");
+	mvwprintw(stdscr,4,2, "UL animation corner will be at (y:%i,x:%i).", try_y, try_x);
+	mvwprintw(stdscr,5,2, "Animation will loop until you press Enter on that screen.");
+	mvwprintw(stdscr,7,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+
+	pthread_mutex_t animation_mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_cond_t animation_cond = PTHREAD_COND_INITIALIZER;
+	animate_args* animation_thread_args = (animate_args*) malloc(sizeof(animate_args));
+	pthread_t animation_thread;
+
+	int stop_animation=0;
+
+	animation_thread_args->frametime = frametime;
+
+	animation_thread_args->num_frames = num_frames;
+
+	animation_thread_args->frameheight = frame_height;
+	animation_thread_args->framewidth = frame_width;
+	animation_thread_args->startX = try_x;
+	animation_thread_args->startY = try_y;
+
+	//We load the sprites to animation_thread_args
+	loadCheck = load_sprites(animation_thread_args->sprites, newthread_file, animation_thread_args->frameheight-1, animation_thread_args->framewidth-1);
+
+	//We check if the loading went ok
+
+	// Start animation thread
+	animation_thread_args->win = w;
+	animation_thread_args->stop_thread = stop_animation;
+	pthread_create(&animation_thread, NULL, animate_sprites_thread_at, animation_thread_args);
+	refresh();
+
+	//Wait for enter to stop animation
+	scanf("%*c");
+	stop_animation=1;
+
+	// Stop the animation
+	pthread_mutex_lock(&animation_mutex);
+	animation_thread_args->stop_thread = stop_animation;
+	pthread_cond_signal(&animation_cond);
+	// Wait for the animation thread to finish
+	pthread_join(animation_thread, NULL);
+	pthread_mutex_unlock(&animation_mutex);
+
+	//Free animation thread arguments and end demo
+	free(animation_thread_args);
 	endwin();
 
-	// We should check animate_sprites_at_coords() result to see if there were problems, but we already did endwin() and in the demo we don't expect problems so we return the result.
-	return result;
+	clear();
+	printf("\n\n\t\tEnd of demo.");
+	printf("\n\t\t[Press Enter to end the demo]\n");
+	scanf("%*c");
+	system("clear");
 }
 
 int main(int argc, char** argv) {
 	if (argc != 2) {
 		usage(argv[0]);
 	}
+
     	FILE *f = fopen(argv[1], "r");
+    	FILE *f2 = fopen(argv[1], "r");
     	if (!f) {
-        	fprintf(stderr,"Error opening file %s\n",argv[1]);
+        	fprintf(stderr,"Error opening file %s as f1.\n",argv[1]);
 		usage(argv[0]);
     	}
-	return demo(f);
+    	if (!f2) {
+        	fprintf(stderr,"Error opening file %s as f2.\n",argv[1]);
+		usage(argv[0]);
+    	}
+	int result = demo(f,f2);
+	//Since we passed f and f2 to load_sprites(), each one was already closed in that call after the sprites had been set
+
+	return result;
 }

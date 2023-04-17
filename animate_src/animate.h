@@ -1,5 +1,11 @@
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
+#include <stdio.h>
+
+#define S4C_ANIMATE_VERSION "0.2.4"
+void s4c_printVersionToFile(FILE* f);
+
+#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints version to stdout
 
 #include <string.h>
 #include <ctype.h>
