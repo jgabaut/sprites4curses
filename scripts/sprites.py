@@ -140,7 +140,7 @@ def print_converted_sprites(direc):
                        int(re.search(r'\d+', f).group())):
             # convert a sprite and print the result
             sprite = convert_sprite(file)
-            print("\t//Frame {}, file {}".format(idx,file))
+            print("\t//Frame {}".format(idx))
             print("\t{")
             for row in sprite:
                 print("\t\t\""+row+"\",")

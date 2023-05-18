@@ -2,7 +2,7 @@
 #define S4C_ANIMATE_H
 #include <stdio.h>
 
-#define S4C_ANIMATE_VERSION "0.2.4"
+#define S4C_ANIMATE_VERSION "0.2.5"
 void s4c_printVersionToFile(FILE* f);
 
 #define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints version to stdout
@@ -45,6 +45,7 @@ void s4c_printVersionToFile(FILE* f);
 #define	S4C_ERR_TERMCOLOR -4 /**< Defines the error value for when the terminal doesn't support colors.*/
 #define	S4C_ERR_TERMCHANGECOLOR -5 /**< Defines the error value for when the terminal doesn't support changing colors.*/
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
+#define	S4C_ERR_RANGE -7 /**< Defines the error value for invalid range requests for animate_rangeof_sprites_at_coords().*/
 
 /*
  * Holds arguments for a call to animate_sprites_thread_at().
@@ -68,5 +69,6 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 void *animate_sprites_thread_at(void *animate_args);
 int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 #endif

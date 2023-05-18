@@ -169,6 +169,30 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 		exit(EXIT_FAILURE);
 	}
 
+
+	// We clear the window, and expect animate__() to refresh it
+	wclear(w);
+	wrefresh(w);
+	wclear(stdscr);
+	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Now animate_rangeof_sprites_at_coords, using a frame range of (10-20), including 20th frame:");
+	mvwprintw(stdscr,4,2, "This function puts the requested frames of UL animation corner at (y:%i,x:%i).", try_y, try_x);
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+
+	// We call the animation to be displayed at 3,3
+	result = animate_rangeof_sprites_at_coords(sprites, w, 10, 20, reps, frametime*3, num_frames, frame_height, frame_width, try_y, try_x);
+	// We should check animate_sprites_at_coords() result to see if there were problems, but in the demo we don't expect problems so we ignore the specific error content of result and just exit.
+
+	if (result < 0) {
+		endwin();
+		fprintf(stderr,"Demo error while doing animate_rangeof_sprites_at_coords()");
+		exit(EXIT_FAILURE);
+	}
+
 	wclear(w);
 	wrefresh(w);
 
