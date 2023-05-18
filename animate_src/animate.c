@@ -286,3 +286,71 @@ void *animate_sprites_thread_at(void *args_ptr) {
 
     pthread_exit(NULL);
 };
+
+/**
+ * Takes a WINDOW pointer to print into and a string for the file passed.
+ * Loads sprites from the file and displays a range of them in the passed window if it is big enough.
+ * File format should have a sprite line on each line, or be a valid array definition.
+ * Color-character map is define in print_spriteline().
+ * Sets all the frames to the passed array.
+ * @see print_spriteline()
+ * @param sprites The sprites array.
+ * @param w The window to print into.
+ * @param repetition The number of times the animation will be cycled through.
+ * @param frametime How many mseconds each frame is displayed.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
+ * @see S4C_ERR_CURSOR
+ * @see S4C_ERR_SMALL_WIN
+ * @return 1 if successful, a negative value for errors.
+ */
+int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+	//Validate requested range
+	if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
+		return S4C_ERR_RANGE;
+	}
+
+	int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
+
+	if (cursorCheck == ERR) {
+		return S4C_ERR_CURSOR; //fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+	}
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(w, win_rows, win_cols);
+	if (win_rows < rows + startY || win_cols < cols + startX) {
+		return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+	}
+
+
+	int current_rep = 0;
+   	// Run the animation loop
+   	while ( current_rep < repetitions ) {
+		//+1 to include toFrame index
+		for (int i=fromFrame; i<toFrame+1 ;i++) {
+			for (int j=0; j<rows; j++) {
+				// Print current frame
+				print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
+				box(w,0,0);
+				wrefresh(w);
+			}
+			wrefresh(w);
+			// Refresh the screen
+			napms(frametime);
+			clear();
+		};
+		// We finished a whole cycle
+		current_rep++;
+	}
+	// We make the cursor normal again
+	curs_set(1);
+
+	return 1;
+}
