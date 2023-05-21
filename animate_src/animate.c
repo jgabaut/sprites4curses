@@ -289,6 +289,7 @@ void *animate_sprites_thread_at(void *args_ptr) {
 
 /**
  * Takes a WINDOW pointer to print into and a string for the file passed.
+ * Contrary to other of these functions, this one does not touch cursor settings.
  * Loads sprites from the file and displays a range of them in the passed window if it is big enough.
  * File format should have a sprite line on each line, or be a valid array definition.
  * Color-character map is define in print_spriteline().
@@ -303,7 +304,6 @@ void *animate_sprites_thread_at(void *args_ptr) {
  * @param framewidth Width of the frame.
  * @param startY Y coord of the window to start printing to.
  * @param startY X coord of the window to start printing to.
- * @see S4C_ERR_CURSOR
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
@@ -311,12 +311,6 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 	//Validate requested range
 	if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
 		return S4C_ERR_RANGE;
-	}
-
-	int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
-
-	if (cursorCheck == ERR) {
-		return S4C_ERR_CURSOR; //fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
 	}
 
 	int rows = frameheight;
@@ -349,8 +343,5 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 		// We finished a whole cycle
 		current_rep++;
 	}
-	// We make the cursor normal again
-	curs_set(1);
-
 	return 1;
 }
