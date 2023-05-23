@@ -1,5 +1,5 @@
 demo: .demo.o
-	gcc .demo.o .animate.o -o demo -lncursesw
+	gcc .demo.o .animate.o -o demo -lncursesw -pthread
 
 .animate.o: animate_src/animate.c animate_src/animate.h
 	gcc -c animate_src/animate.c -o .animate.o
@@ -8,10 +8,10 @@ demo: .demo.o
 	gcc -c demo_src/demo.c -o .demo.o
 
 clean:
-	rm *.o demo demo_debug
+	rm \.*.o demo demo_debug
 
 cleanob:
-	rm *.o
+	rm \.*.o
 
 debug:
 	gcc -c animate_src/animate.c -ggdb -O0 -o .animate.o

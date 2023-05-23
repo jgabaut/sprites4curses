@@ -32,7 +32,7 @@
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 09/03/2023.
+# - Modified by jgabaut on 23/05/2023.
 
 # Imports
 from PIL import Image
@@ -43,7 +43,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.2"
+FILE_VERSION = "0.1.3"
 
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
