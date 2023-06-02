@@ -251,6 +251,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	endwin();
 
 	clear();
+	refresh();
 	printf("\n\n\t\tEnd of demo.");
 	printf("\n\t\t[Press Enter to end the demo]\n");
 	scanf("%*c");
