@@ -21,7 +21,7 @@ A library of scripts and C functions to deal with sprites in ncurses.
 
 ## Prerequisites <a name = "prerequisites_scripts"></a>
 
-To use the python scripts you need to install Pillow:
+To use the python scripts you need to install Pillow, using `pip`:
 
 #### `pip install Pillow`
 

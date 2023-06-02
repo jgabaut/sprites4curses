@@ -1,14 +1,25 @@
 #include "animate.h"
 
 /**
- * Prints animate version.
+ * Prints formatted animate version.
  */
 void s4c_printVersionToFile(FILE* f) {
+	if (!f) {
+		fprintf(stderr,"Error while trying to print formatted s4c version, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(f,"sprites4curses/animate.h v%s\n",S4C_ANIMATE_VERSION);
+}
+
+/**
+ * Prints animate version.
+ */
+void s4c_echoVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
 	}
-	fprintf(f,"sprites4curses/animate.h v%s\n",S4C_ANIMATE_VERSION);
+	fprintf(f,"%s\n",S4C_ANIMATE_VERSION);
 }
 
 /**
@@ -163,7 +174,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
  * @return 1 if successful, a negative value for errors.
  */
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
-return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
+	return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
 };
 
 /**
