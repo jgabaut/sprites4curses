@@ -43,20 +43,9 @@ jobs:
       - name: Compile tex with make
         run: |
           ls &&
-          cd ./documentation/latex &&
-          ls &&
           make && echo -e "\nDone\n"
           
       - name: Stat output
         run: |
           ls -R . &&
           stat "./documentation/latex/refman.pdf"
-
-      - name: Change dir to documentation/latex/
-        run: "cd documentation/latex"
-        
-      - name: Compile texfile
-        run: ../../.github/workflows/rec "*\.tex$" "xelatex -pdf"
-        
-      - name: Stat output
-        run: "stat docs.pdf$"
