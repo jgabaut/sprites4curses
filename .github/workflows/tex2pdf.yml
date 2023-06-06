@@ -47,5 +47,5 @@ jobs:
           
       - name: Stat output
         run: |
-          ls -R . &&
-          stat "./documentation/latex/refman.pdf"
+          ls ./latex &&
+          stat "./latex/refman.pdf"
