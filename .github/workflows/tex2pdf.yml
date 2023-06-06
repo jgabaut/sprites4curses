@@ -27,24 +27,23 @@ jobs:
           
       - name: Install doxygen
         run: sudo apt install doxygen -y
-        
-      - name: Change dir to documentation/
-        run: |
-          ls
-          cd documentation
           
       - name: Generate texfile
-        run: doxygen "s4c.doxyfile"
-
-      - name: Change dir to documentation/latex/
         run: |
           ls
-          cd documentation/latex
+          cd ./documentation
+          echo "Switched dir"
+          ls
+          doxygen "s4c.doxyfile"
+
         
       - name: Compile texfile with make
-        run: make
-        
+        run: |
+          ls
+          cd ./documentation/latex
+          make
+          
       - name: Stat output
         run: |
           ls
-          "stat docs.pdf$"
+          "stat ./documentation/docs.pdf$"
