@@ -15,28 +15,28 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     name: Convert pdfs out of tex files
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      
+
       - name: Run sudo apt update
         run: sudo apt update -y
-          
+
       - name: Install doxygen
         run: sudo apt install doxygen -y
-                  
+
       - name: Install texlive
         run: sudo apt install texlive-latex-base -y
-          
+
       - name: Generate tex
         run: |
           ls &&
           doxygen "./documentation/s4c.doxyfile"
 
-        
+
       - name: Compile tex with make
         run: |
           ls &&
@@ -44,7 +44,7 @@ jobs:
           cd ./doxygen/latex &&
           make && ls -R &&
           echo -e "\nDone\n"
-          
+
       - name: Tree
         run: |
           ls -R &&

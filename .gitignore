@@ -6,3 +6,5 @@
 demo
 # ignore debug executable
 demo_debug
+# ignore doxygen directory
+doxygen
