@@ -28,3 +28,6 @@ jobs:
 
       - name: Recursively compile tex files
         run: rec "\.tex$" "xelatex -pdf"
+        
+      - name: Stat output
+        run: stat "\.pdf$"
