@@ -1,4 +1,4 @@
-name: Compile tex files to pdf
+name: (repo)->  (doxygen)->(latex)->  (make)->  docs.pdf
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: Convert pdfs out of tex files
+    name: Generate docs.pdf into ./documentation/
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,18 +34,19 @@ jobs:
 
       - name: Generate tex
         run: |
-          ls &&
           doxygen "./documentation/s4c.doxyfile"
 
       - name: Compile tex with make
         run: |
-          ls &&
           echo "Switching dir to ./doxygen/latex" &&
+          pwd &&
           cd ./doxygen/latex &&
-          make
-
+          pwd &&
+          make 
+          
       - name: Move refman.pdf to documentation/docs.pdf
         run: |
-          ls ./doxygen/latex/refman.pdf &&
-          echo -e "\n\033[1;32m  ./doxygen/latex/refman.pdf -> ./documentation/docs.pdf\e[0m\n"
+          ls -l ./doxygen/latex/refman.pdf
+          echo -e "\n\n\033[1;32m  ./doxygen/latex/refman.pdf -> ./documentation/docs.pdf\e[0m\n"
           mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
+          ls -l ./documentation/docs.pdf
