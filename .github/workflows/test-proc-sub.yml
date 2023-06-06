@@ -34,6 +34,9 @@ jobs:
         run: |
           make
 
-      - name: Generate demofile.txt
+      - name: Try (sprites.py ./sample-sprites/alt-chest-animation) -> demofile.txt
         run: |
-          python ./scripts/sprites.py "./sample-sprites/alt-chest-animation"
+          python ./scripts/sprites.py "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
+      - name: Run with process substitution (./demo <(sprites.py ./sample-sprites/alt-chest-animation))
+        run: |
+          ./demo <(python ./scripts/sprites.py "./sample-sprites/alt-chest-animation") && echo -e "\n\033[1;32mSuccess.\e[0m\n" <<<"\n\n\n\n\n\n\n\n\n\n\n\n\n"
