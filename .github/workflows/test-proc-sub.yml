@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Pillow
         run: |
-          sudo pip install Pillow -y
+          sudo pip install Pillow
           
       - name: Build ./demo
         run: |
