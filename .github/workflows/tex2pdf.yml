@@ -42,10 +42,9 @@ jobs:
           ls &&
           echo "Switching dir to ./doxygen/latex" &&
           cd ./doxygen/latex &&
-          make && ls -R &&
-          echo -e "\nDone\n"
+          make
 
-      - name: Tree
+      - name: Move ./doxygen/latex/refman.pdf to ./documentation/docs.pdf
         run: |
-          ls -R &&
-          echo -e "\nDone\n"
+          ls ./doxygen/latex/refman.pdf &&
+          mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
