@@ -1,0 +1,39 @@
+name: (make) -> ./demo && ./demo <( python ./scripts/sprites.py)
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: Generate ./demofile.txt
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Run sudo apt update
+        run: sudo apt update -y
+
+      - name: Install pip
+        run: sudo apt install pip -y
+
+      - name: Install Pillow
+        run: |
+          sudo pip install Pillow
+          
+      - name: Build ./demo
+        run: |
+          make
+
+      - name: Try (sprites.py ./sample-sprites/alt-chest-animation) -> demofile.txt
+        run: |
+          python ./scripts/sprites.py "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
