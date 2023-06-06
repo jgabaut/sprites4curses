@@ -30,4 +30,4 @@ jobs:
         run: rec "\.tex$" "xelatex -pdf"
         
       - name: Stat output
-        run: stat "\.pdf$"
+        run: "stat docs.pdf$"
