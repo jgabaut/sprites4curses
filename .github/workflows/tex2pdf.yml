@@ -27,8 +27,11 @@ jobs:
           
       - name: Install doxygen
         run: sudo apt install doxygen -y
+                  
+      - name: Install texlive
+        run: sudo apt install texlive-latex-base -y
           
-      - name: Generate texfile
+      - name: Generate tex
         run: |
           ls
           cd ./documentation && 
@@ -37,14 +40,14 @@ jobs:
           doxygen "s4c.doxyfile"
 
         
-      - name: Compile texfile with make
+      - name: Compile tex with make
         run: |
           ls &&
-          cd ./latex &&
+          cd ./documentation/latex &&
           ls &&
-          make 
+          make && echo -e "\nDone\n"
           
       - name: Stat output
         run: |
-          ls &&
-          "stat ./documentation/docs.pdf$"
+          ls -R . &&
+          stat "./documentation/latex/refman.pdf"
