@@ -44,7 +44,8 @@ jobs:
           cd ./doxygen/latex &&
           make
 
-      - name: Move ./doxygen/latex/refman.pdf to ./documentation/docs.pdf
+      - name: Move refman.pdf to documentation/docs.pdf
         run: |
           ls ./doxygen/latex/refman.pdf &&
+          echo -e "\n\033[1;32m  ./doxygen/latex/refman.pdf -> ./documentation/docs.pdf\e[0m\n"
           mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
