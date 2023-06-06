@@ -1,4 +1,4 @@
-name: Compile tex files to pdf
+name: (doxygen ./documentation/s4c.doxyfile) ->    (cd ./doxygen/latex && make) ->    docs.pdf
 on:
   push:
     branches: [main]
@@ -15,48 +15,38 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    name: Convert pdfs out of tex files
+
+    name: Generate ./documentation/docs.pdf
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      
+
       - name: Run sudo apt update
         run: sudo apt update -y
-          
+
       - name: Install doxygen
         run: sudo apt install doxygen -y
-                  
-      - name: Install texlive
-        run: sudo apt install texlive-latex-base -y
-          
+
+      - name: Install doxygen-latex
+        run: |
+          sudo apt install doxygen-latex -y
+
       - name: Generate tex
         run: |
-          ls
-          cd ./documentation && 
-          echo "Switched dir" &&
-          ls &&
-          doxygen "s4c.doxyfile"
+          doxygen "./documentation/s4c.doxyfile"
 
-        
       - name: Compile tex with make
         run: |
-          ls &&
-          cd ./documentation/latex &&
-          ls &&
-          make && echo -e "\nDone\n"
+          echo "Switching dir to ./doxygen/latex" &&
+          pwd &&
+          cd ./doxygen/latex &&
+          pwd &&
+          make 
           
-      - name: Stat output
+      - name: Move refman.pdf to documentation/docs.pdf
         run: |
-          ls -R . &&
-          stat "./documentation/latex/refman.pdf"
-
-      - name: Change dir to documentation/latex/
-        run: "cd documentation/latex"
-        
-      - name: Compile texfile
-        run: ../../.github/workflows/rec "*\.tex$" "xelatex -pdf"
-        
-      - name: Stat output
-        run: "stat docs.pdf$"
+          ls -l ./doxygen/latex/refman.pdf
+          echo -e "\n\n\033[1;32m  ./doxygen/latex/refman.pdf -> ./documentation/docs.pdf\e[0m\n"
+          mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
+          test -e ./documentation/docs.pdf
