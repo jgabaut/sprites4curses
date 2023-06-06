@@ -33,15 +33,15 @@ jobs:
           
       - name: Generate tex
         run: |
-          ls
-          cd ./documentation && 
-          echo "Switched dir" &&
           ls &&
-          doxygen "s4c.doxyfile"
+          doxygen "./documentation/s4c.doxyfile"
 
         
       - name: Compile tex with make
         run: |
+          ls &&
+          echo -e "\ncd to ./latex\n"
+          cd ./latex &&
           ls &&
           make && echo -e "\nDone\n"
           
