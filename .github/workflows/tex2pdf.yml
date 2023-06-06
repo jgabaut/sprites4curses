@@ -15,9 +15,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     name: Convert pdfs out of tex files
-    container:
-      image: ghcr.io/csunibo/build-image:latest
     steps:
       - uses: actions/checkout@v1
         with:
@@ -28,9 +27,30 @@ jobs:
           
       - name: Install doxygen
         run: sudo apt install doxygen -y
+                  
+      - name: Install texlive
+        run: sudo apt install texlive-latex-base -y
           
-      - name: Generate texfile
-        run: doxygen "documentation/s4c.doxyfile"
+      - name: Generate tex
+        run: |
+          ls
+          cd ./documentation && 
+          echo "Switched dir" &&
+          ls &&
+          doxygen "s4c.doxyfile"
+
+        
+      - name: Compile tex with make
+        run: |
+          ls &&
+          cd ./documentation/latex &&
+          ls &&
+          make && echo -e "\nDone\n"
+          
+      - name: Stat output
+        run: |
+          ls -R . &&
+          stat "./documentation/latex/refman.pdf"
 
       - name: Change dir to documentation/latex/
         run: "cd documentation/latex"
