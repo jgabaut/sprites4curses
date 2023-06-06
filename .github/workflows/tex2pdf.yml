@@ -1,4 +1,4 @@
-name: repo->    (doxygen ./documentation/s4c.doxyfile )->    (make)->    docs.pdf
+name: (doxygen ./documentation/s4c.doxyfile) ->    (cd ./doxygen/latex && make) ->    docs.pdf
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: Generate docs.pdf into ./documentation/
+    name: Generate ./documentation/docs.pdf
     steps:
       - uses: actions/checkout@v3
         with:
@@ -49,4 +49,4 @@ jobs:
           ls -l ./doxygen/latex/refman.pdf
           echo -e "\n\n\033[1;32m  ./doxygen/latex/refman.pdf -> ./documentation/docs.pdf\e[0m\n"
           mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
-          ls -l ./documentation/docs.pdf
+          test -e ./documentation/docs.pdf
