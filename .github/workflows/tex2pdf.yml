@@ -40,8 +40,9 @@ jobs:
       - name: Compile texfile with make
         run: |
           ls &&
-          cd ./documentation/latex &&
-          make
+          cd ./latex &&
+          ls &&
+          make 
           
       - name: Stat output
         run: |
