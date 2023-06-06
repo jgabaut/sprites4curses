@@ -31,19 +31,19 @@ jobs:
       - name: Generate texfile
         run: |
           ls
-          cd ./documentation
-          echo "Switched dir"
-          ls
+          cd ./documentation && 
+          echo "Switched dir" &&
+          ls &&
           doxygen "s4c.doxyfile"
 
         
       - name: Compile texfile with make
         run: |
-          ls
-          cd ./documentation/latex
+          ls &&
+          cd ./documentation/latex &&
           make
           
       - name: Stat output
         run: |
-          ls
+          ls &&
           "stat ./documentation/docs.pdf$"
