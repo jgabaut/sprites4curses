@@ -30,8 +30,9 @@ jobs:
 
       - name: Install texlive
         run: |
-          sudo apt install texlive-latex-recommended -y
           sudo apt install texlive-latex-base -y
+          sudo apt install texlive-latex-recommended -y
+          sudo apt install texlive-binaries -y
 
       - name: Generate tex
         run: |
