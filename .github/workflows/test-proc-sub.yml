@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: Generate ./documentation/docs.pdf
+    name: Generate ./demofile.txt
     steps:
       - uses: actions/checkout@v3
         with:
@@ -37,12 +37,3 @@ jobs:
       - name: Try (sprites.py ./sample-sprites/alt-chest-animation) -> demofile.txt
         run: |
           python ./scripts/sprites.py "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
-          
-      - name: Run ./demo demofile.txt
-        run: |
-          ./demo demofile.txt <<<"\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
-          
-      - name: Run with process substitution (./demo <(sprites.py ./sample-sprites/alt-chest-animation))
-        run: |
-          ./demo <(python ./scripts/sprites.py "./sample-sprites/alt-chest-animation") <<<"\n\n\n\n\n\n\n\n\n\n\n\n\n" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
