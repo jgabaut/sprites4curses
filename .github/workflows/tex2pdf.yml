@@ -1,0 +1,30 @@
+name: Compile tex files to pdf
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGEX_INCLUDE: "\\.(pdf|link|txt|png|md|jl|html)$"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Convert pdfs out of tex files
+    container:
+      image: ghcr.io/csunibo/build-image:latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Recursively compile tex files
+        run: rec "\.tex$" "xelatex -pdf"
