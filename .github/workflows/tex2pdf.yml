@@ -15,9 +15,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     name: Convert pdfs out of tex files
-    container:
-      image: ghcr.io/csunibo/build-image:latest
     steps:
       - uses: actions/checkout@v1
         with:
@@ -35,8 +34,8 @@ jobs:
       - name: Change dir to documentation/latex/
         run: "cd documentation/latex"
         
-      - name: Compile texfile
-        run: ../../.github/workflows/rec "*\.tex$" "xelatex -pdf"
+      - name: Compile texfile with make
+        run: make
         
       - name: Stat output
         run: "stat docs.pdf$"
