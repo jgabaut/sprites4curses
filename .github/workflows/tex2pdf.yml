@@ -26,14 +26,14 @@ jobs:
         with:
           fetch-depth: 1
       
+      - name: Run sudo apt update
+        run: sudo apt update
+          
       - name: Install doxygen
-        run: |
-          sudo apt update
-          sudo apt install doxygen
+        run: sudo apt install doxygen      
           
       - name: Generate texfile
-        run: |
-          doxygen "documentation/s4c.doxyfile"
+        run: doxygen "documentation/s4c.doxyfile"
 
       - name: Change dir to documentation/latex/
         run: "cd documentation/latex"
@@ -42,4 +42,4 @@ jobs:
         run: ../../.github/workflows/rec "*\.tex$" "xelatex -pdf"
         
       - name: Stat output
-        run: rec "stat docs.pdf$"
+        run: "stat docs.pdf$"
