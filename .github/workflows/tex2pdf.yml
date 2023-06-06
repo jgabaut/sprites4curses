@@ -40,12 +40,12 @@ jobs:
       - name: Compile tex with make
         run: |
           ls &&
-          echo -e "\ncd to ./latex\n"
-          cd ./latex &&
+          echo -e "\ncd to \.\/documentation\/doxygen\/latex\n"
+          cd ./documentation/doxygen/latex &&
           ls &&
           make && echo -e "\nDone\n"
           
-      - name: Stat output
+      - name: Stat output file
         run: |
-          ls ./latex &&
-          stat "./latex/refman.pdf"
+          ls &&
+          stat "./refman.pdf"
