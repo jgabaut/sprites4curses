@@ -29,13 +29,14 @@ jobs:
         run: sudo apt install doxygen -y
 
       - name: Install texlive
-        run: sudo apt install texlive-latex-base -y
+        run: |
+          sudo apt install texlive-latex-recommended -y
+          sudo apt install texlive-latex-base -y
 
       - name: Generate tex
         run: |
           ls &&
           doxygen "./documentation/s4c.doxyfile"
-
 
       - name: Compile tex with make
         run: |
