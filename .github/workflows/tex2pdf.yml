@@ -1,4 +1,4 @@
-name: (repo)->  (doxygen)->(latex)->  (make)->  docs.pdf
+name: repo->    (doxygen ./documentation/s4c.doxyfile )->    (make)->    docs.pdf
 on:
   push:
     branches: [main]
