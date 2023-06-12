@@ -1,4 +1,4 @@
-name: (doxygen ./documentation/s4c.doxyfile) ->    (cd ./doxygen/latex && make) ->    docs.pdf
+name: Generate ./documentation/docs.pdf
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: Generate ./documentation/docs.pdf
+    name: (doxygen ./documentation/s4c.doxyfile) ->    (cd ./doxygen/latex && make) ->    docs.pdf
     steps:
       - uses: actions/checkout@v3
         with:
@@ -32,11 +32,11 @@ jobs:
         run: |
           sudo apt install doxygen-latex -y
 
-      - name: Generate tex
+      - name: Generate tex (doxygen s4c.doxyfile)
         run: |
           doxygen "./documentation/s4c.doxyfile"
 
-      - name: Compile tex with make
+      - name: Compile tex with make (cd ./doxygen/latex ; make)
         run: |
           echo "Switching dir to ./doxygen/latex" &&
           pwd &&
