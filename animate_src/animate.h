@@ -2,7 +2,7 @@
 #define S4C_ANIMATE_H
 #include <stdio.h>
 
-#define S4C_ANIMATE_VERSION "0.2.5.3"
+#define S4C_ANIMATE_VERSION "0.2.5.4"
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
 
@@ -66,7 +66,7 @@ typedef struct animate_args {
 } animate_args;
 
 void init_s4c_color_pairs(FILE* palette_file);
-static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
+void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 void *animate_sprites_thread_at(void *animate_args);

@@ -67,7 +67,7 @@ void init_s4c_color_pairs(FILE* palette) {
  * @param line_len The length of line to print
  * @param startX X coord of the win to start printing to.
  */
-static void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
+void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
         int color_index = c - 'a' + 8;
@@ -175,7 +175,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
  */
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 	return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
-};
+}
 
 /**
  * Takes a WINDOW pointer to print into and a string for the file passed.
@@ -296,7 +296,7 @@ void *animate_sprites_thread_at(void *args_ptr) {
 	} while ( args->stop_thread != 1);
 
     pthread_exit(NULL);
-};
+}
 
 /**
  * Takes a WINDOW pointer to print into and a string for the file passed.
