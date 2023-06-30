@@ -256,6 +256,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	printf("\n\t\t[Press Enter to end the demo]\n");
 	scanf("%*c");
 	system("clear");
+
+	return EXIT_SUCCESS;
 }
 
 int main(int argc, char** argv) {

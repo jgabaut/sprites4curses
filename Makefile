@@ -1,21 +1,23 @@
 export SHELL=/bin/bash
+
+FLAGS = -Werror -Wall -Wpedantic -Wfatal-errors
 all: demo
 	@echo -e "\033[1;32mEnd of build.\e[0m\n"
 .PHONY: all
 
 demo: .demo.o
 	@echo -en "Building demo:  "
-	gcc .demo.o .animate.o -o demo -lncurses -pthread
+	gcc $(FLAGS) .demo.o .animate.o -o demo -lncurses -pthread
 	@echo -e "Done.\n"
 
 .animate.o: animate_src/animate.c animate_src/animate.h
 	@echo -en "Building animate.o:  "
-	gcc -c animate_src/animate.c -o .animate.o
+	gcc $(FLAGS) -c animate_src/animate.c -o .animate.o
 	@echo -e "Done."
 
 .demo.o: demo_src/demo.c .animate.o
 	@echo -en "Building demo.o:  "
-	gcc -c demo_src/demo.c -o .demo.o
+	gcc $(FLAGS) -c demo_src/demo.c -o .demo.o
 	@echo -e "Done."
 
 clean:
