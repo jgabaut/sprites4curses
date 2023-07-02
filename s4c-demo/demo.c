@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "../animate_src/animate.h"
+#include "../s4c-animate/animate.h"
 
 #define DEMOFRAMES 30 /**< Defines the number of sprites in the demo.*/
 #define DEMOROWS 18 /**< Defines the maximum number of rows per sprite.*/
@@ -18,8 +18,8 @@ void usage(char* progname) {
 }
 
 /*
- * Demo function showing how to call animate_file() correctly.
- * It initialises a window pointer and all needed curses settings, before callin animate_file().
+ * Demo function showing how to call s4c-animate functions correctly.
+ * It initialises a window pointer and all needed curses settings, before calling the animation functions.
  * @see init_color_pairs()
  * @see animate_file()
  * @return Result of the animation.
