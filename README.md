@@ -53,7 +53,18 @@ It expects as arguments a directory with the images to resize, and two ints for 
 
 ## animate.c and animate.h <a name = "animate"></a>
 
-This is a C library offering some functions to display an animation read from a formatted text file.
+This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
+
+```
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                1             44            130            203
+C/C++ Header                     1             10              5             61
+-------------------------------------------------------------------------------
+SUM:                             2             54            135            264
+-------------------------------------------------------------------------------
+```
 
 `animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
 
