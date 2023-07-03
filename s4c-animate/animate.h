@@ -2,7 +2,7 @@
 #define S4C_ANIMATE_H
 #include <stdio.h>
 
-#define S4C_ANIMATE_VERSION "0.2.5.4"
+#define S4C_ANIMATE_VERSION "0.2.6"
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
 
@@ -72,5 +72,5 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 void *animate_sprites_thread_at(void *animate_args);
 int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
-
+void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS]);
 #endif

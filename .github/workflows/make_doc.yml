@@ -1,0 +1,37 @@
+name: Use "make doc" to compile ./documentation/docs.pdf
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: Generate ./documentation/docs.pdf
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Run sudo apt update
+        run: sudo apt update -y
+
+      - name: Install doxygen
+        run: sudo apt install doxygen -y
+
+      - name: Install doxygen-latex
+        run: |
+          sudo apt install doxygen-latex -y
+
+      - name: Generate docs (make doc)
+        run: |
+          make doc

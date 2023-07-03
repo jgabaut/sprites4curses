@@ -356,3 +356,22 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 	}
 	return 1;
 }
+
+/**
+ * Takes a source animation vector matrix and a destination to copy to.
+ * @param source The source sprites array.
+ * @param dest The destination sprites array.
+ */
+void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS]) {
+  //Copy all frames
+  for (int i = 0 ; i < MAXFRAMES+1; i++ ) {
+    //Copy all rows for frame i
+    for (int j = 0 ; j < MAXROWS+1; j++) {
+      //Copy all columns for row j
+     for (int k = 0 ; j < MAXCOLS+1; j++) {
+       //Assign current pixel, frame i row j col k
+       dest[i][j][k] = source[i][j][k];
+     }
+    }
+  }
+}
