@@ -8,3 +8,5 @@ demo
 demo_debug
 # ignore doxygen directory
 doxygen
+# ignore docs file
+documentation/docs.pdf

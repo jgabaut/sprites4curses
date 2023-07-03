@@ -23,6 +23,24 @@ demo: .demo.o
 	gcc $(FLAGS) -c s4c-demo/demo.c -o .demo.o
 	@echo -e "Done."
 
+doc:
+	@echo -e "Using doxygen to create tex + html for $(VERSION):    "
+	doxygen ./documentation/s4c.doxyfile
+	@echo -e "\n\033[1;33mDone.\e[0m\n"
+	sleep 1
+	clear
+	@echo -e "Listing ./doxygen directory contents:\n"
+	ls -R ./doxygen
+	@echo -e "\n\033[1;32mDone.\e[0m"
+	@echo -e "\ncd to ./doxygen/latex and make tex into pdf:\n"
+	cd ./doxygen/latex ; make | grep "Output written"
+	@echo -e "\n\033[1;32mDone.\e[0m"
+	@echo -e "\nmv ./doxygen/latex/refman.pdf to (../../documentation/docs.pdf) :\n"
+	mv ./doxygen/latex/refman.pdf ./documentation/docs.pdf
+	@echo -e "\n\033[1;32mDone.\e[0m"
+	@echo -en "\nRemove ./doxygen/:    "
+	yes | rm -rd ./doxygen/
+	@echo -e "\n\033[1;32mDone.\e[0m"
 clean:
 	@echo -en "Cleaning build artifacts:  "
 	rm \.*.o demo
