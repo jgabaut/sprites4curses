@@ -368,7 +368,7 @@ void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAME
     //Copy all rows for frame i
     for (int j = 0 ; j < MAXROWS+1; j++) {
       //Copy all columns for row j
-     for (int k = 0 ; k < MAXCOLS+1; k++) {
+     for (int k = 0 ; k < MAXCOLS; k++) {
        //Assign current pixel, frame i row j col k
        dest[i][j][k] = source[i][j][k];
      }

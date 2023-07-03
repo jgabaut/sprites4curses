@@ -1,7 +1,7 @@
 export SHELL=/bin/bash
 
-VERSION= v0.2.6.1
-FLAGS = -Werror -Wall -Wpedantic -Wfatal-errors
+VERSION= v0.2.6.2
+FLAGS = -O1 -Werror -Wall -Wpedantic -Wfatal-errors
 
 all: demo
 	@echo -e "End of build.\n"
