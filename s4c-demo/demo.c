@@ -109,6 +109,18 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	wclear(stdscr);
 	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Let's see a demo of the colors supported by the provided palette.gpl file:");
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+	// Then we call the demo function with all the needed arguments
+	test_s4c_color_pairs(stdscr,palette_file);
+	napms(2000);
+
+	wclear(stdscr);
+	wrefresh(stdscr);
 	mvwprintw(stdscr,3,2, "Let's see animate_sprites:");
 	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (0,0).");
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");

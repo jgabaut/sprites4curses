@@ -61,6 +61,26 @@ void init_s4c_color_pairs(FILE* palette) {
 }
 
 /**
+ * Demoes all colors supported by the passed palette file in the passed WINDOW. Not guaranteed to work.
+ * Since it uses indexes defined by default from animate.h, it should work only when your passed palette file has color pairs for the expected index range.
+ * @param win The window to print the demo to.
+ * @param palette_file The palette file used to initialise s4c.
+ */
+void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
+    for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
+        int color_index = i;
+        if (color_index >= 0 && color_index < MAX_COLORS) {
+            wattron(win, COLOR_PAIR(color_index));
+            mvwaddch(win, 2, 2+i-S4C_MIN_COLOR_INDEX, ' ' | A_REVERSE);
+            wattroff(win, COLOR_PAIR(color_index));
+        }
+    }
+
+    wrefresh(win);
+    refresh();
+}
+
+/**
  * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
  * @param line The string to print
  * @param line_num The y value to print at in win
