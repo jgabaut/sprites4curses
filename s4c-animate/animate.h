@@ -1,25 +1,30 @@
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
 #include <stdio.h>
-
-#define S4C_ANIMATE_VERSION "0.2.6.2"
-void s4c_printVersionToFile(FILE* f);
-void s4c_echoVersionToFile(FILE* f);
-
-#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
-#define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
-
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <pthread.h>
 
+#define S4C_ANIMATE_VERSION "0.2.7"
+#define S4C_ANIMATE_MAJOR_VERSION 0
+#define S4C_ANIMATE_MINOR_VERSION 2
+#define S4C_ANIMATE_PATCH_VERSION 7
+
+void s4c_printVersionToFile(FILE* f);
+void s4c_echoVersionToFile(FILE* f);
+
+#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
+#define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
+
+
 #define MAX_COLORS 256
 #define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
 // These define constants for the colors prepared by init_s4c_color_pairs().
 #define S4C_BLACK 9
+#define S4C_MIN_COLOR_INDEX S4C_BLACK
 #define S4C_RED 10
 #define S4C_BRIGHT_GREEN 11
 #define S4C_BRIGHT_YELLOW 12
@@ -34,6 +39,7 @@ void s4c_echoVersionToFile(FILE* f);
 #define S4C_DARK_GREEN 21
 #define S4C_LIGHT_YELLOW 22
 #define S4C_LIGHT_BLUE 23
+#define S4C_MAX_COLOR_INDEX S4C_LIGHT_BLUE
 
 #define MAX_LINE_LENGTH 1024
 
@@ -66,11 +72,20 @@ typedef struct animate_args {
 } animate_args;
 
 void init_s4c_color_pairs(FILE* palette_file);
+
+void test_s4c_color_pairs(WINDOW* win, FILE* palette_file);
+
 void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
+
 int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
+
 int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+
 void *animate_sprites_thread_at(void *animate_args);
+
 int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+
 int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+
 void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS]);
 #endif
