@@ -1,6 +1,6 @@
 export SHELL=/bin/bash
 
-VERSION= v0.2.7
+VERSION= v0.2.8
 FLAGS = -Werror -Wall -Wpedantic -Wfatal-errors
 
 all: demo
@@ -62,5 +62,7 @@ debug:
 	gcc -c s4c-demo/demo.c -ggdb -O0 -o .demo.o
 	gcc .demo.o .animate.o -o demo_debug -lncurses
 	@echo -e "Done.\nUse gdb to debug the executable.\n"
+
+rebuild: clean all
 
 $(V).SILENT:

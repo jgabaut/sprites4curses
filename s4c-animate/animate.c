@@ -119,7 +119,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.3";
+    char* READER_VERSION = "0.1.4";
     int row = 0, frame = -1;
 
     int check = -1;
@@ -199,8 +199,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
 
 /**
  * Takes a WINDOW pointer to print into and a string for the file passed.
- * Loads sprites from the file and displays them in the passed window if it is big enough.
- * File format should have a sprite line on each line, or be a valid array definition.
+ * Takes a pre-initialised array of sprites, valid format output by sprites.py or sheet_converter.py.
  * Color-character map is define in print_spriteline().
  * Sets all the frames to the passed array.
  * @see print_spriteline()
@@ -319,12 +318,10 @@ void *animate_sprites_thread_at(void *args_ptr) {
 }
 
 /**
- * Takes a WINDOW pointer to print into and a string for the file passed.
+ * Takes a WINDOW pointer to print into.
  * Contrary to other of these functions, this one does not touch cursor settings.
- * Loads sprites from the file and displays a range of them in the passed window if it is big enough.
- * File format should have a sprite line on each line, or be a valid array definition.
+ * Uses the passed sprites and displays a range of them in the passed window if it is big enough.
  * Color-character map is define in print_spriteline().
- * Sets all the frames to the passed array.
  * @see print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -374,6 +371,47 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 		// We finished a whole cycle
 		current_rep++;
 	}
+	return 1;
+}
+
+/**
+ * Takes a WINDOW pointer to print into and an animation array, plus the index of requested frame to print.
+ * Contrary to other of these functions, this one does not touch cursor settings.
+ * Color-character map is define in print_spriteline().
+ * Sets all the frames to the passed array.
+ * @see print_spriteline()
+ * @param sprites The sprites array.
+ * @param sprite_index The index of requested sprite.
+ * @param w The window to print into.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
+ * @see S4C_ERR_SMALL_WIN
+ * @return 1 if successful, a negative value for errors.
+ */
+int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+	//Validate requested range
+	if (sprite_index < 0 || sprite_index > num_frames ) {
+		return S4C_ERR_RANGE;
+	}
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(w, win_rows, win_cols);
+	if (win_rows < rows + startY || win_cols < cols + startX) {
+		return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+	}
+	for (int j=0; j<rows; j++) {
+		// Print current frame
+		print_spriteline(w,sprites[sprite_index][j], j+startY+1, cols, startX);
+	}
+	box(w,0,0);
+	wrefresh(w);
 	return 1;
 }
 
