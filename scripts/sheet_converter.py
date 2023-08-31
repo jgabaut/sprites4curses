@@ -49,8 +49,9 @@ FILE_VERSION = "0.1.5"
 # Functions
 def usage():
     """! Prints correct invocation."""
-    print("Wrong arguments. Needed: filename, sprite width, sprite height, separator size, left corner of first sprite's X, then Y.")
-    print("\nUsage:\tpython {} <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <startX> <startY".format(os.path.basename(__file__)))
+    print("Wrong arguments. Needed: mode, filename, sprite width, sprite height, separator size, left corner of first sprite's X, then Y.")
+    print("\nUsage:\tpython {} <mode> <sheet_file> <sprite_width> <sprite_heigth> <separator_size> <startX> <startY".format(os.path.basename(__file__)))
+    print("\n    mode:\n\t  s4c-file\n\t  C-header\n\t  C-impl")
 
 def color_distance(c1, c2):
     """! Calculates the distance in color between two rgb tuples.
@@ -67,8 +68,10 @@ def color_distance(c1, c2):
     distance = math.sqrt(red_distance ** 2 + green_distance ** 2 + blue_distnce ** 2)
     return distance
 
-def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, startX, startY):
+def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize, startX, startY):
     """! Converts a spritesheet to a 3D char array representation of pixel color and then prints it with the needed brackets and commas.
+      Depending on mode (s4c-file, C-header, C-impl) there will be a different output.
+    @param mode    The mode for output generation.
     @param filename   The input spritesheet file.
     @param spriteSizeX   The sprite width.
     @param spriteSizeY   The sprite height.
@@ -76,7 +79,7 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
     @param startX    X coord of left corner of first sprite.
     @param startY    Y coord of left corner of first sprite.
     """
-    target_name = os.path.splitext(os.path.basename(filename))[0]
+    target_name = os.path.splitext(os.path.basename(filename))[0].replace("-","_")
 
     sprite_size = (spriteSizeX, spriteSizeY)  # size of each sprite
     separator_size = separatorSize  # size of separator between sprites
@@ -134,7 +137,22 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
 
     # Start file output, beginning with version number
 
-    print("{}".format(FILE_VERSION))
+    if mode == "s4c" :
+        print("{}".format(FILE_VERSION))
+    elif mode == "header":
+        print("#ifndef {}_S4C_H_".format(target_name.upper()))
+        print("#define {}_S4C_H_".format(target_name.upper()))
+        print("#define {}_S4C_H_VERSION \"{}\"".format(target_name.upper(),FILE_VERSION))
+        print("")
+        print("/**")
+        print(" * Declares animation matrix vector for {}.".format(target_name))
+        print(" */")
+        print("extern char {}[{}][{}][{}];".format(target_name,len(sprites) +1, spriteSizeY+1, spriteSizeX +1))
+        print("\n#endif")
+        return 0
+    elif mode == "cfile":
+        print("#include \"{}.h\"\n".format(target_name))
+
     print("char {}[{}][{}][{}] = ".format(target_name,len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
     for i, sprite in enumerate(sprites):
         print("\t//Sprite {}, index {}".format(i + 1, i))
@@ -146,16 +164,27 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 7:
+    if len(argv) != 8:
         usage()
     else:
-        filename = argv[1]
-        spriteSizeX = int(argv[2])
-        spriteSizeY = int(argv[3])
-        separatorSize = int(argv[4])
-        startX = int(argv[5])
-        startY = int(argv[6])
-        convert_spritesheet(filename,spriteSizeX,spriteSizeY,separatorSize,startX,startY)
+        mode = argv[1]
+        if mode == "s4c-file":
+            mode = "s4c"
+        elif mode == "C-header":
+            mode = "header"
+        elif mode == "C-impl":
+            mode = "cfile"
+        else :
+            print("Error: wrong mode request")
+            usage()
+
+        filename = argv[2]
+        spriteSizeX = int(argv[3])
+        spriteSizeY = int(argv[4])
+        separatorSize = int(argv[5])
+        startX = int(argv[6])
+        startY = int(argv[7])
+        convert_spritesheet(mode,filename,spriteSizeX,spriteSizeY,separatorSize,startX,startY)
 
 if __name__ == "__main__":
     main(sys.argv)
