@@ -7,10 +7,10 @@
 #include <ncurses.h>
 #include <pthread.h>
 
-#define S4C_ANIMATE_VERSION "0.2.10"
+#define S4C_ANIMATE_VERSION "0.2.11"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 2
-#define S4C_ANIMATE_PATCH_VERSION 10
+#define S4C_ANIMATE_PATCH_VERSION 11
 
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
@@ -89,5 +89,5 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 
 int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
-void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS]);
+void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 #endif
