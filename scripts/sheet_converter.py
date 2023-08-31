@@ -44,7 +44,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.4"
+FILE_VERSION = "0.1.5"
 
 # Functions
 def usage():
@@ -76,6 +76,7 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
     @param startX    X coord of left corner of first sprite.
     @param startY    Y coord of left corner of first sprite.
     """
+    target_name = os.path.splitext(os.path.basename(filename))[0]
 
     sprite_size = (spriteSizeX, spriteSizeY)  # size of each sprite
     separator_size = separatorSize  # size of separator between sprites
@@ -134,7 +135,7 @@ def convert_spritesheet(filename, spriteSizeX, spriteSizeY, separatorSize, start
     # Start file output, beginning with version number
 
     print("{}".format(FILE_VERSION))
-    print("char sprites[{}][{}][{}] = ".format(len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
+    print("char {}[{}][{}][{}] = ".format(target_name,len(sprites) +1, spriteSizeY+1, spriteSizeX+1) + "{\n")
     for i, sprite in enumerate(sprites):
         print("\t//Sprite {}, index {}".format(i + 1, i))
         print("\t{")

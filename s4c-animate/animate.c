@@ -119,7 +119,7 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.4";
+    char* READER_VERSION = "0.1.5";
     int row = 0, frame = -1;
 
     int check = -1;
