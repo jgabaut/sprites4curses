@@ -417,16 +417,20 @@ int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int spri
 
 /**
  * Takes a source animation vector matrix and a destination to copy to.
+ * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
+ * @param frames How many frames to copy.
+ * @param rows How many rows to copy.
+ * @param cols How many cols to copy.
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS]) {
+void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
   //Copy all frames
-  for (int i = 0 ; i < MAXFRAMES+1; i++ ) {
+  for (int i = 0 ; i < frames+1; i++ ) {
     //Copy all rows for frame i
-    for (int j = 0 ; j < MAXROWS+1; j++) {
+    for (int j = 0 ; j < rows+1; j++) {
       //Copy all columns for row j
-     for (int k = 0 ; k < MAXCOLS; k++) {
+     for (int k = 0 ; k < cols; k++) {
        //Assign current pixel, frame i row j col k
        dest[i][j][k] = source[i][j][k];
      }

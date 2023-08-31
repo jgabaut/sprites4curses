@@ -1,6 +1,6 @@
 export SHELL=/bin/bash
 
-VERSION= v0.2.10
+VERSION= v0.2.11
 FLAGS = -Werror -Wall -Wpedantic -Wfatal-errors
 
 all: demo
