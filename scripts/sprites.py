@@ -43,7 +43,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.4"
+FILE_VERSION = "0.1.5"
 
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
@@ -124,29 +124,35 @@ def print_converted_sprites(direc):
     """
     # We start the count from one so we account for one more cell for array declaration
     frames = 1
+    target_name = os.path.basename(os.path.normpath(direc))
 
     for file in sorted(glob.glob('{}/*.png'.format(direc)),
                        key=lambda f:
                        int(re.search(r'\d+', f).group())):
+           if frames == 1 :
+               ref_img = Image.open(file) #Open reference file to get output dimension. WIP
+               xsize = ref_img.size[0]+1
+               ysize = ref_img.size[1]+1
            frames += 1
 
     # Start file output, beginning with version number
 
     print("{}".format(FILE_VERSION))
-    print("char sprites[{}][18][18] = ".format(frames) + "{\n")
+    print("char {}[{}][{}][{}] = ".format(target_name,frames,ysize,xsize) + "{\n")
     idx = 1
     for file in sorted(glob.glob('{}/*.png'.format(direc)),
-                       key=lambda f:
-                       int(re.search(r'\d+', f).group())):
-            # convert a sprite and print the result
-            sprite = convert_sprite(file)
-            print("\t//Frame {}".format(idx))
-            print("\t{")
-            for row in sprite:
-                print("\t\t\""+row+"\",")
-            print("\t},"+ "\n")
-            idx += 1
+                      key=lambda f:
+                      int(re.search(r'\d+', f).group())):
+           # convert a sprite and print the result
+           sprite = convert_sprite(file)
+           print("\t//Frame {}".format(idx))
+           print("\t{")
+           for row in sprite:
+               print("\t\t\""+row+"\",")
+           print("\t},"+ "\n")
+           idx += 1
     print("};")
+
 
 def main(argv):
     """! Main program entry."""
