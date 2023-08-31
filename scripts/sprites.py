@@ -51,8 +51,10 @@ FILE_VERSION = "0.1.5"
 # Functions
 def usage():
     """! Prints correct invocation."""
-    print("Wrong arguments. Needed: sprites directory")
-    print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <sprites_directory>")
+    print("Wrong arguments. Needed: mode, sprites directory")
+    print("\nUsage:\tpython {}".format(os.path.basename(__file__)) + " <mode> <sprites_directory>")
+    print("\n  mode:  \n\ts4c-file\n\tC-header\n\tC-impl")
+    exit(1)
 
 
 def color_distance(c1, c2):
@@ -117,14 +119,18 @@ def convert_sprite(file):
 
     return chars
 
-def print_converted_sprites(direc):
-    """! Takes a directory containing image file and calls convert_sprite on each one.
+def print_converted_sprites(mode, direc):
+    """! Takes a mode between (s4c, header, cfile) and a directory containing image file and calls convert_sprite on each one.
     Then it outputs all the converted sprites to stdout, including the necessary brackets to have a valid C array declaration.
+    According to the passed mode, the C header, the C file, or the version-tagged s4c-file may be generated.
     @param direc   The directory of image files to convert and print.
     """
+    if mode != "s4c" and mode != "header" and mode != "cfile" :
+        print("Unexpected mode value in print_converted_sprites: {}".format(mode))
+        usage()
     # We start the count from one so we account for one more cell for array declaration
     frames = 1
-    target_name = os.path.basename(os.path.normpath(direc))
+    target_name = os.path.basename(os.path.normpath(direc)).replace("-","_")
 
     for file in sorted(glob.glob('{}/*.png'.format(direc)),
                        key=lambda f:
@@ -137,7 +143,22 @@ def print_converted_sprites(direc):
 
     # Start file output, beginning with version number
 
-    print("{}".format(FILE_VERSION))
+    if mode == "s4c" :
+        print("{}".format(FILE_VERSION))
+    elif mode == "header":
+        print("#ifndef {}_S4C_H_".format(target_name.upper()))
+        print("#define {}_S4C_H_".format(target_name.upper()))
+        print("#define {}_S4C_H_VERSION \"{}\"".format(target_name.upper(),FILE_VERSION))
+        print("")
+        print("/**")
+        print(" * Declares animation matrix vector for {}.".format(target_name))
+        print(" */")
+        print("extern char {}[{}][{}][{}];".format(target_name,frames,ysize,xsize))
+        print("\n#endif")
+        return 0
+    elif mode == "cfile":
+        print("#include \"{}.h\"\n".format(target_name))
+
     print("char {}[{}][{}][{}] = ".format(target_name,frames,ysize,xsize) + "{\n")
     idx = 1
     for file in sorted(glob.glob('{}/*.png'.format(direc)),
@@ -156,11 +177,21 @@ def print_converted_sprites(direc):
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 2:
+    if len(argv) != 3:
         usage()
     else:
-        directory = argv[1]
-        print_converted_sprites(directory)
+        mode = argv[1]
+        if mode == "s4c-file":
+            mode = "s4c"
+        elif mode == "C-header":
+            mode = "header"
+        elif mode == "C-impl":
+            mode = "cfile"
+        else :
+            print("Error: wrong mode request")
+            usage()
+        directory = argv[2]
+        print_converted_sprites(mode, directory)
 
 if __name__ == '__main__':
     main(sys.argv)
