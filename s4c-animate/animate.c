@@ -23,6 +23,20 @@ void s4c_echoVersionToFile(FILE* f) {
 }
 
 /**
+ * Takes a S4C_Color pointer and a FILE pointer to print to.
+ *
+ * @param color The color to debug.
+ * @param fp The file to debug to.
+ */
+void debug_s4c_color_2file(S4C_Color* color, FILE* fp) {
+	if (!fp) {
+		fprintf(stderr,"Error while trying to debug an S4C_Color, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(fp,"[S4C_Color] => { red: [%i], green: [%i], blue: [%i], name: [%s] }\n", color->red, color->green, color->blue, color->name);
+}
+
+/**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
  */

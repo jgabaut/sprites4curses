@@ -10,3 +10,8 @@ demo_debug
 doxygen
 # ignore docs file
 documentation/docs.pdf
+
+# ignore generated palette header
+s4c-animate/palette.h
+# ignore generated palette C file
+s4c-animate/palette.c
