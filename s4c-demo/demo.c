@@ -82,8 +82,15 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	noecho();
 	keypad(stdscr, TRUE);
 
-	// Initialize all the colors using the palette file we opened at the start
-	init_s4c_color_pairs(palette_file);
+
+	// HINT:
+	// Initialize all the colors using the palette.gpl file we opened at the start
+	//init_s4c_color_pairs(palette_file);
+
+	// Initialize all the colors using the generated palette.h file
+	for (int i = 0; i < PALETTE_S4C_H_TOTCOLORS; i++) {
+		init_s4c_color_pair(&palette[i],9+i);
+	}
 
 	int reps = 1;
 	int frametime = DEMOFRAMETIME;

@@ -86,6 +86,8 @@ typedef struct animate_args {
 
 void init_s4c_color_pairs(FILE* palette_file);
 
+void init_s4c_color_pair(S4C_Color* color, int color_index);
+
 void test_s4c_color_pairs(WINDOW* win, FILE* palette_file);
 
 void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
