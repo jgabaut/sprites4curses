@@ -37,6 +37,15 @@ void debug_s4c_color_2file(S4C_Color* color, FILE* fp) {
 }
 
 /**
+ * Takes a S4C_Color pointer and prints it to stdout.
+ *
+ * @param color The color to debug.
+ */
+void debug_s4c_color(S4C_Color* color) {
+	debug_s4c_color_2file(color,stdout);
+}
+
+/**
  * Initialises a color pair from a passed S4C_Color pointer.
  * @param palette The S4C_Color pointer array at hand.
  * @param color_index The resulting color index for defined colorpair.

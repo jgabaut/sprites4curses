@@ -39,7 +39,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	scanf("%*c");
 	system("clear");
 	for (int i = 0; i < PALETTE_S4C_H_TOTCOLORS; i++) {
-		debug_s4c_color_2file(&palette[i],stdout);
+		debug_s4c_color(&palette[i]);
 	}
 	printf("\n\t\t[Press Enter to continue]\n");
 	scanf("%*c");

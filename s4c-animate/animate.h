@@ -34,6 +34,7 @@ typedef struct S4C_Color {
 } S4C_Color;
 
 void debug_s4c_color_2file(S4C_Color* color, FILE* fp);
+void debug_s4c_color(S4C_Color* color);
 
 // These define constants for the colors prepared by init_s4c_color_pairs().
 #define S4C_BLACK 9
