@@ -7,10 +7,10 @@
 #include <ncurses.h>
 #include <pthread.h>
 
-#define S4C_ANIMATE_VERSION "0.2.11"
+#define S4C_ANIMATE_VERSION "0.2.12"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 2
-#define S4C_ANIMATE_PATCH_VERSION 11
+#define S4C_ANIMATE_PATCH_VERSION 12
 
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
@@ -21,6 +21,20 @@ void s4c_echoVersionToFile(FILE* f);
 
 #define MAX_COLORS 256
 #define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
+
+/*
+ * Defines a color.
+ * WIP.
+ */
+typedef struct S4C_Color {
+    int red; /**< Red component.*/
+    int green; /**< Green component.*/
+    int blue; /**< Blue component.*/
+    char name[50]; /**< Name for the color.*/
+} S4C_Color;
+
+void debug_s4c_color_2file(S4C_Color* color, FILE* fp);
+void debug_s4c_color(S4C_Color* color);
 
 // These define constants for the colors prepared by init_s4c_color_pairs().
 #define S4C_BLACK 9
@@ -72,6 +86,8 @@ typedef struct animate_args {
 } animate_args;
 
 void init_s4c_color_pairs(FILE* palette_file);
+
+void init_s4c_color_pair(S4C_Color* color, int color_index);
 
 void test_s4c_color_pairs(WINDOW* win, FILE* palette_file);
 

@@ -23,6 +23,56 @@ void s4c_echoVersionToFile(FILE* f) {
 }
 
 /**
+ * Takes a S4C_Color pointer and a FILE pointer to print to.
+ *
+ * @param color The color to debug.
+ * @param fp The file to debug to.
+ */
+void debug_s4c_color_2file(S4C_Color* color, FILE* fp) {
+	if (!fp) {
+		fprintf(stderr,"Error while trying to debug an S4C_Color, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(fp,"[S4C_Color] => { red: [%i], green: [%i], blue: [%i], name: [%s] }\n", color->red, color->green, color->blue, color->name);
+}
+
+/**
+ * Takes a S4C_Color pointer and prints it to stdout.
+ *
+ * @param color The color to debug.
+ */
+void debug_s4c_color(S4C_Color* color) {
+	debug_s4c_color_2file(color,stdout);
+}
+
+/**
+ * Initialises a color pair from a passed S4C_Color pointer.
+ * @param palette The S4C_Color pointer array at hand.
+ * @param color_index The resulting color index for defined colorpair.
+ */
+void init_s4c_color_pair(S4C_Color* color, int color_index) {
+
+	if (color == NULL) {
+		fprintf(stderr,"Error: invalid S4C_Color at in init_s4c_color_pair().");
+		exit(EXIT_FAILURE);
+	}
+
+        int r, g, b;
+	char color_name[50];
+
+	r = color->red;
+	g = color->green;
+	b = color->blue;
+	strcpy(color_name,color->name);
+
+	int proportional_r = (((float)r + 1.0) / 256)*1000;
+	int proportional_g = (((float)g + 1.0) / 256)*1000;
+	int proportional_b = (((float)b + 1.0) / 256)*1000;
+	init_color(color_index, proportional_r, proportional_g, proportional_b);
+   	init_pair(color_index, color_index, 0);
+}
+
+/**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
  */

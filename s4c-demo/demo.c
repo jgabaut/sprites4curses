@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include "../s4c-animate/animate.h"
+#include "../s4c-animate/palette.h"
 
 #define DEMOFRAMES 30 /**< Defines the number of sprites in the demo.*/
 #define DEMOROWS 18 /**< Defines the maximum number of rows per sprite.*/
@@ -30,6 +31,17 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	S4C_PRINTVERSION();
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
 	printf("\n\t\t[Press Enter to start the demo]\n");
+	scanf("%*c");
+	system("clear");
+
+	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
+	printf("\n\t\t[Press Enter to continue]\n");
+	scanf("%*c");
+	system("clear");
+	for (int i = 0; i < PALETTE_S4C_H_TOTCOLORS; i++) {
+		debug_s4c_color(&palette[i]);
+	}
+	printf("\n\t\t[Press Enter to continue]\n");
 	scanf("%*c");
 	system("clear");
 
@@ -70,8 +82,15 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	noecho();
 	keypad(stdscr, TRUE);
 
-	// Initialize all the colors using the palette file we opened at the start
-	init_s4c_color_pairs(palette_file);
+
+	// HINT:
+	// Initialize all the colors using the palette.gpl file we opened at the start
+	//init_s4c_color_pairs(palette_file);
+
+	// Initialize all the colors using the generated palette.h file
+	for (int i = 0; i < PALETTE_S4C_H_TOTCOLORS; i++) {
+		init_s4c_color_pair(&palette[i],9+i);
+	}
 
 	int reps = 1;
 	int frametime = DEMOFRAMETIME;
