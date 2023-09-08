@@ -367,6 +367,9 @@ void *animate_sprites_thread_at(void *args_ptr) {
     pthread_exit(NULL);
     //FIXME
     //Is this a bug? Do we have to return NULL here?
+    #ifdef MINGW32_BUILD
+    return NULL;
+    #endif
 }
 
 /**
