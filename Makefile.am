@@ -45,7 +45,7 @@ s4c-animate/palette.c:
 
 doc:
 	@echo -e "Using doxygen to create tex + html from $(VERSION) src/:    "
-	doxygen ./docs/s4c.doxyfile
+	doxygen ./documentation/s4c.doxyfile
 	@echo -e "\n\033[1;33mDone.\e[0m\n"
 	sleep 1
 	clear
@@ -91,6 +91,8 @@ pack: rebuild
 	[[ -d ~/s4c-local/share ]] || mkdir ~/s4c-local/share
 	[[ -d ~/s4c-local/share/$(PACK_NAME) ]] || mkdir ~/s4c-local/share/$(PACK_NAME)
 	[[ -d ~/s4c-local/share/$(PACK_NAME)/src ]] || mkdir ~/s4c-local/share/$(PACK_NAME)/src
+	[[ -d ~/s4c-local/share/$(PACK_NAME)/demo-src ]] || mkdir ~/s4c-local/share/$(PACK_NAME)/demo-src
+	[[ -d ~/s4c-local/share/$(PACK_NAME)/scripts ]] || mkdir ~/s4c-local/share/$(PACK_NAME)/scripts
 
 	@echo -e "\033[1;32m[TREE] Removing '~/s4c-local/share/$(PACK_NAME).zip':\e[0m"
 	touch ~/s4c-local/share/$(PACK_NAME).zip
@@ -99,8 +101,12 @@ pack: rebuild
 	@echo -e "\033[1;35m[PACK] Installing:\e[0m"
 	install $(TARGET) ~/s4c-local/share/$(PACK_NAME)
 	install ./demofile.txt ~/s4c-local/share/$(PACK_NAME)
+	install ./palette.gpl ~/s4c-local/share/$(PACK_NAME)
 	install ./s4c-animate/animate.c ~/s4c-local/share/$(PACK_NAME)/src
 	install ./s4c-animate/animate.h ~/s4c-local/share/$(PACK_NAME)/src
+	install ./s4c-demo/demo.c ~/s4c-local/share/$(PACK_NAME)/demo-src
+	install ./scripts/*.py ~/s4c-local/share/$(PACK_NAME)/scripts
+	install ./requirements.txt ~/s4c-local/share/$(PACK_NAME)
 
 	@echo -e "\033[1;35m[PACK] Done.\e[0m"
 	@echo -e "\033[1;32m[ZIP] Compressing $(PACK_NAME):\e[0m"
