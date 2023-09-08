@@ -29,16 +29,20 @@ jobs:
       - name: Install Pillow
         run: |
           sudo pip install Pillow
-          
+
       - name: Build ./demo
         run: |
+          aclocal
+          autoconf
+          automake --add-missing
+          ./configure
           make
 
       - name: Generate demofile.txt with sprites.py
         run: |
           python ./scripts/sprites.py "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
-          
+
       - name: Run ./demo with demofile.txt
         run: |
           ./demo demofile.txt <<< cat "\n\n\n\n\n\n\n\n\n\n\n\n" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
-          
+
