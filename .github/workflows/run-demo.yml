@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate demofile.txt with sprites.py
         run: |
-          python ./scripts/sprites.py "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
+          python ./scripts/sprites.py s4c-file "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
 
       - name: Run ./demo with demofile.txt
         run: |
