@@ -25,6 +25,13 @@ To use the python scripts you need to install Pillow, using `pip`:
 
 #### `pip install Pillow`
 
+To produce the `Makefile` needed to compile `./demo`, you will need:
+
+  - `automake`
+  - `autoconf`
+  - `make`
+  - `python`, to generate `./s4c-animate/palette.h` and `./s4c-animate/palette.c` from `./palette.gpl`
+
 ### sprites.py <a name = "sprites_py"></a>
 
 This is a python script that converts PNG's to a char representation.
@@ -59,10 +66,10 @@ This is a C library offering some functions to display an animation read from a 
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-C                                1             49            153            233
-C/C++ Header                     1             20              5             68
+C                                2             57            173            279
+C/C++ Header                     2             28             12             88
 -------------------------------------------------------------------------------
-SUM:                             2             69            158            301
+SUM:                             4             85            185            367
 -------------------------------------------------------------------------------
 ```
 
@@ -88,10 +95,13 @@ You can find a doxyfile to generate documentation in `documentation`.
 This is a demo program showing how to use the animate library functions. Check out its source code after running it!
 
 - To run the C demo program, do:
-  #### The demo is meant to run with the provided file.
-  #### `make; ./demo demofile.txt`
+  ### The demo is meant to run with the provided file.
 
-- To be fancy you can use process substitution in bash to give the python output directly as an argument:
+    `autoreconf; automake --add-missing; autoreconf; automake --add-missing`
+    `autoreconf; ./configure`
+    `make; ./demo demofile.txt`
+
+- To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
   #### `make; ./demo <( python sprites.py <directory> )`
 

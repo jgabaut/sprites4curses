@@ -32,6 +32,13 @@ jobs:
         run: |
           sudo apt install doxygen-latex -y
 
-      - name: Generate docs (make doc)
-        run: |
-          make doc
+      - name: Run aclocal
+        run: aclocal
+      - name: Run autoconf
+        run: autoconf
+      - name: Run automake --add-missing
+        run: automake --add-missing
+      - name: Run ./configure
+        run: ./configure
+      - name: Run make doc
+        run: make doc

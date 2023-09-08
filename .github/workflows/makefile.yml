@@ -2,9 +2,9 @@ name: Build CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" , "devel" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master" , "devel" ]
 
 jobs:
   build:
@@ -13,5 +13,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Test make
+    - name: Run aclocal
+      run: aclocal
+    - name: Run autoconf
+      run: autoconf
+    - name: Run automake --add-missing
+      run: automake --add-missing
+    - name: Run ./configure
+      run: ./configure
+    - name: Run make
       run: make

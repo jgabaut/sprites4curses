@@ -31,19 +31,19 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	S4C_PRINTVERSION();
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
 	printf("\n\t\t[Press Enter to start the demo]\n");
-	scanf("%*c");
-	system("clear");
+	int drop_res = scanf("%*c");
+	drop_res = system("clear");
 
 	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
 	printf("\n\t\t[Press Enter to continue]\n");
-	scanf("%*c");
-	system("clear");
+	drop_res = scanf("%*c");
+	drop_res = system("clear");
 	for (int i = 0; i < PALETTE_S4C_H_TOTCOLORS; i++) {
 		debug_s4c_color(&palette[i]);
 	}
 	printf("\n\t\t[Press Enter to continue]\n");
-	scanf("%*c");
-	system("clear");
+	drop_res = scanf("%*c");
+	drop_res = system("clear");
 
 	// Open the palette file to read the color values and name
 	// Keep in mind that the file pointer will be closed by init_s4c_color_pairs(palette_file);
@@ -131,7 +131,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,3,2, "Let's see a demo of the colors supported by the provided palette.gpl file:");
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 	// Then we call the demo function with all the needed arguments
@@ -144,7 +144,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (0,0).");
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 	wclear(w);
@@ -186,7 +186,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,4,2, "This function puts UL animation corner at (y:%i,x:%i).", try_y, try_x);
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 
@@ -209,7 +209,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,4,2, "This function puts the requested frame of UL animation corner at (y:%i,x:%i).", try_y, try_x);
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 
@@ -225,7 +225,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 
@@ -244,7 +244,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,4,2, "This function puts the requested frames of UL animation corner at (y:%i,x:%i).", try_y, try_x);
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 
@@ -268,7 +268,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	mvwprintw(stdscr,5,2, "Animation will loop until you press Enter on that screen.");
 	mvwprintw(stdscr,7,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
 
@@ -300,7 +300,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	refresh();
 
 	//Wait for enter to stop animation
-	scanf("%*c");
+	drop_res = scanf("%*c");
 	stop_animation=1;
 
 	// Stop the animation
@@ -319,10 +319,10 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	endwin();
 	printf("\n\n\t\tEnd of demo.");
 	printf("\n\t\t[Press Enter to end the demo]\n");
-	scanf("%*c");
-	system("clear");
+	drop_res = scanf("%*c");
+	drop_res = system("clear");
 
-	return EXIT_SUCCESS;
+	return drop_res;
 }
 
 int main(int argc, char** argv) {

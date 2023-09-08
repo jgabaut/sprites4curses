@@ -4,13 +4,19 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+
+#ifndef MINGW32_BUILD
 #include <ncurses.h>
+#else
+#include <ncursesw/ncurses.h>
+#endif
 #include <pthread.h>
 
-#define S4C_ANIMATE_VERSION "0.2.12"
+
+#define S4C_ANIMATE_VERSION "0.2.13"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 2
-#define S4C_ANIMATE_PATCH_VERSION 12
+#define S4C_ANIMATE_PATCH_VERSION 13
 
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);

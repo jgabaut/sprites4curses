@@ -365,6 +365,8 @@ void *animate_sprites_thread_at(void *args_ptr) {
 	} while ( args->stop_thread != 1);
 
     pthread_exit(NULL);
+    //FIXME
+    //Is this a bug? Do we have to return NULL here?
 }
 
 /**
