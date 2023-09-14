@@ -1,6 +1,6 @@
 # sprites4curses
 
-A library of scripts and C functions to deal with sprites in ncurses.
+  A library of scripts and C functions to deal with sprites in ncurses.
 
 ## Table of Contents
 
@@ -22,11 +22,11 @@ A library of scripts and C functions to deal with sprites in ncurses.
 
 ## Prerequisites <a name = "prerequisites_scripts"></a>
 
-To use the python scripts you need to install Pillow, using `pip`:
+  To use the python scripts you need to install Pillow, using `pip`:
 
 #### `pip install Pillow`
 
-To produce the `Makefile` needed to compile `./demo`, you will need:
+  To produce the `Makefile` needed to compile `./demo`, you will need:
 
   - `automake`
   - `autoconf`
@@ -35,20 +35,20 @@ To produce the `Makefile` needed to compile `./demo`, you will need:
 
 ### sprites.py <a name = "sprites_py"></a>
 
-This is a python script that converts PNG's to a char representation.
-The output text should be a valid C declaration for a 3D char array.
+  This is a python script that converts PNG's to a char representation.
+  The output text should be a valid C declaration for a 3D char array.
 
-It expects as arguments:
+  It expects as arguments:
 
   - A mode of operation: `s4c-file`, `C-impl` , `C-header`.
   - A directory with the images to convert.
 
 ### sheet_converter.py <a name = "sheet_converter_py"></a>
 
-This is a python script that converts a single PNG spritesheet to a char representation.
-The output text should be a valid C declaration for a 3D char array.
+  This is a python script that converts a single PNG spritesheet to a char representation.
+  The output text should be a valid C declaration for a 3D char array.
 
-It expects as arguments:
+  It expects as arguments:
 
   - A mode of operation: `s4c-file`, `C-impl` , `C-header`.
   - The spritesheet file name
@@ -59,9 +59,9 @@ It expects as arguments:
 
 ### cut_sheet.py <a name = "cut_sheet_py"></a>
 
-This is a python script that cuts a single PNG spritesheet to a number of sprites, and puts them in the passed directory.
+  This is a python script that cuts a single PNG spritesheet to a number of sprites, and puts them in the passed directory.
 
-It expects as arguments:
+  It expects as arguments:
 
   - The spritesheet file name
   - The output directory name
@@ -72,18 +72,19 @@ It expects as arguments:
 
 ### png_resize.py <a name = "png_resize_py"></a>
 
-This is a python script that resizess PNG's to a desired size.
+  This is a python script that resizess PNG's to a desired size.
 
-It expects as arguments:
+  It expects as arguments:
+
   - A directory with the images to resize
   - Two ints for width and height of the resulting PNGs.
 
 
 ### palette.py <a name = "palette_py"></a>
 
-This is a python script that generates C files from a `palette.gpl` file.
+  This is a python script that generates C files from a `palette.gpl` file.
 
-It expects as arguments:
+  It expects as arguments:
 
   - A mode of operation: `C-impl` , `C-header`.
   - The palette file
@@ -91,73 +92,75 @@ It expects as arguments:
 
 ## animate.c and animate.h <a name = "animate"></a>
 
-This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
+  This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
 
-```
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-C                                2             69            211            341
-C/C++ Header                     2             30             22             96
--------------------------------------------------------------------------------
-SUM:                             4             99            233            437
--------------------------------------------------------------------------------
-```
+  ```
+  -------------------------------------------------------------------------------
+  Language                     files          blank        comment           code
+  -------------------------------------------------------------------------------
+  C                                2             69            211            341
+  C/C++ Header                     2             30             22             96
+  -------------------------------------------------------------------------------
+  SUM:                             4             99            233            437
+  -------------------------------------------------------------------------------
+  ```
 
-`s4c_animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
+  `s4c_animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
 
-`s4c_animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
+  `s4c_animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
 
-You can look at the `demo.c` program to see how you can request the animation after setup.
+  You can look at the `demo.c` program to see how you can request the animation after setup.
 The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
 
 ### Prerequisites <a name = "prerequisites_animate"></a>
 
 ### Terminal capabilities <a name = "terminal_capabilities"></a>
 
-Since it needs support from terminal capabilities, it may return some errors if your terminal doesn't offer the needed options.
+  Since it needs support from terminal capabilities, it may return some errors if your terminal doesn't offer the needed options.
 
-At the moment your solution is to change terminal or help investigate your issues by forcing the check to pass, I may add an unsafe option to do this in a later version.
+  At the moment your solution is to change terminal or help investigate your issues by forcing the check to pass, I may add an unsafe option to do this in a later version.
 
-You can find a doxyfile to generate documentation in `documentation`.
+  You can find a doxyfile to generate documentation in `documentation`.
 
 ### demo.c <a name = "demo_c"></a>
 
-This is a demo program showing how to use the animate library functions. Check out its source code after running it!
+  This is a demo program showing how to use the animate library functions. Check out its source code after running it!
 
-- To run the C demo program, do:
+  - To run the C demo program, do:
+
     *The demo is meant to run with the provided file, since a different-sized animation would require little tweaks to the code.*
 
     `autoreconf; automake --add-missing; autoreconf; automake --add-missing`
     `autoreconf; ./configure`
     `make; ./demo demofile.txt`
 
-- To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
+  - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
-  `make; ./demo <( python sprites.py <directory> )`
+    `make; ./demo <( python sprites.py <directory> )`
 
 # Scripts usage <a name = "scripts_usage"></a>
 
   - To run the sprites script and redirect output on "file.txt", give a directory to get the png's from:
 
-  *File names in the directory should follow a imageX.png, imageX+1.png pattern.*
+    *File names in the directory should follow a imageX.png, imageX+1.png pattern.*
 
-  `python sprites.py <mode> <directory>   > file.txt`
+    `python sprites.py <mode> <directory>   > file.txt`
 
-- To run the sheet converter script and redirect output on "file.txt", give all required arguments:
+  - To run the sheet converter script and redirect output on "file.txt", give all required arguments:
 
-  `python sheet_converter.py <mode> <sheet file> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>   > file.txt`
+    `python sheet_converter.py <mode> <sheet file> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>   > file.txt`
 
-- To run the sheet cutter script, give the sheet png file and the output directory:
+  - To run the sheet cutter script, give the sheet png file and the output directory:
 
-  `python cut_sheet.py <sheet file> <output dir> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>`
+    `python cut_sheet.py <sheet file> <output dir> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>`
 
-- To run the png resize script, give all required arguments:
+  - To run the png resize script, give all required arguments:
 
-  *This overwrites the source pngs, so be careful.*
-  `python png_resize.py <sprites directory> <sprite width> <sprite height>`
+    *This overwrites the source pngs, so be careful.*
 
-Possible animation glitches if the frame rate is too high, add in-between frames and longer frametime as needed.
+    `python png_resize.py <sprites directory> <sprite width> <sprite height>`
+
+  Possible animation glitches if the frame rate is too high, add in-between frames and longer frametime as needed.
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
