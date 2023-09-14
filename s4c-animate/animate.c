@@ -158,13 +158,18 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
  * Sets all the frames to the passed array.
  * @param sprites The char array to fill with all the frames.
  * @param f The file to read the sprites from.
+ * @param frames The number of frames to load.
  * @param rows The number of rows in each sprite.
  * @param columns The number of columns in each sprite.
  * @see S4C_ERR_FILEVERSION
  * @see S4C_ERR_LOADSPRITES
  * @return A negative error value if loading fails or the number of sprites read.
  */
-int s4c_load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
+int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
+
+    if (frames == 0) {
+	return 0;
+    }
 
     char line[1024];
     char* file_version;
@@ -187,6 +192,11 @@ int s4c_load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int row
 
 
     while (fgets(line, sizeof(line), f)) {
+
+	if (frame == frames) {
+		break;
+	}
+
         // Skip empty lines
         if (line[strspn(line, " \t\r\n")] == '\0') {
             continue;
@@ -243,7 +253,7 @@ int s4c_load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int row
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
 	return s4c_animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
 }
 
@@ -266,7 +276,7 @@ int s4c_animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, in
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
 
 	if (cursorCheck == ERR) {
@@ -390,7 +400,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	//Validate requested range
 	if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
 		return S4C_ERR_RANGE;
@@ -445,7 +455,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCO
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	//Validate requested range
 	if (sprite_index < 0 || sprite_index > num_frames ) {
 		return S4C_ERR_RANGE;
@@ -520,7 +530,7 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void s4c_copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
   //Copy all frames
   for (int i = 0 ; i < frames+1; i++ ) {
     //Copy all rows for frame i
@@ -544,7 +554,15 @@ void s4c_copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXF
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void s4c_copy_animation_alloc(S4C_Animation* dest, char source[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+    if (rows > MAXROWS) {
+	fprintf(stderr,"{s4c} Error at [%s]: rows number was bigger than MAXROWS: [%i > %i]\n",__func__,rows,MAXROWS);
+	exit(EXIT_FAILURE);
+    }
+    if (cols > MAXCOLS) {
+	fprintf(stderr,"{s4c} Error at [%s]: cols number was bigger than MAXCOLS: [%i > %i]\n",__func__,cols,MAXCOLS);
+	exit(EXIT_FAILURE);
+    }
     *dest = malloc(frames * sizeof(char**));
     for (int i = 0; i < frames; i++) {
         (*dest)[i] = malloc(rows * sizeof(char*));

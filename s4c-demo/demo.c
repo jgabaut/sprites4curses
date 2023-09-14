@@ -104,7 +104,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
-	int loadCheck = s4c_load_sprites(sprites, mainthread_file, frame_height-1, frame_width-1);
+	int loadCheck = s4c_load_sprites(sprites, mainthread_file, num_frames, frame_height-1, frame_width-1);
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
@@ -126,6 +126,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(w);
 	wrefresh(w);
 
+	mvwprintw(stdscr,5,20, "Loaded [%i] frames.",loadCheck);
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
 	wrefresh(stdscr);
 	drop_res = scanf("%*c");
@@ -350,7 +351,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	animation_thread_args->startY = try_y;
 
 	//We load the sprites to animation_thread_args
-	loadCheck = s4c_load_sprites(animation_thread_args->sprites, newthread_file, animation_thread_args->frameheight-1, animation_thread_args->framewidth-1);
+	loadCheck = s4c_load_sprites(animation_thread_args->sprites, newthread_file, animation_thread_args->num_frames, animation_thread_args->frameheight-1, animation_thread_args->framewidth-1);
 	//We check if the loading went ok
 
 	// Start animation thread
