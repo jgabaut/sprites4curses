@@ -104,7 +104,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
-	int loadCheck = load_sprites(sprites, mainthread_file, frame_height-1, frame_width-1);
+	int loadCheck = s4c_load_sprites(sprites, mainthread_file, frame_height-1, frame_width-1);
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
@@ -126,6 +126,10 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(w);
 	wrefresh(w);
 
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	drop_res = scanf("%*c");
+
 	wclear(stdscr);
 	wrefresh(stdscr);
 	mvwprintw(stdscr,3,2, "Let's see a demo of the colors supported by the provided palette.gpl file:");
@@ -137,6 +141,63 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	// Then we call the demo function with all the needed arguments
 	test_s4c_color_pairs(stdscr,palette_file);
 	napms(2000);
+
+	S4C_Animation* animation = malloc(sizeof(S4C_Animation));
+
+	s4c_copy_animation_alloc(animation,sprites,DEMOFRAMES,DEMOROWS,DEMOCOLS);
+
+	int test_x = 1;
+	int test_y = 1;
+
+	wclear(stdscr);
+	wrefresh(stdscr);
+	mvwprintw(stdscr,3,2, "Let's see s4c_display_frame():");
+	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (%i,%i).",test_x,test_y);
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	wrefresh(stdscr);
+	drop_res = scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+	wclear(w);
+	// Then we call the animation function with all the needed arguments
+
+	int result = s4c_display_frame(animation, 3, w, DEMOFRAMES, DEMOROWS, DEMOCOLS, test_x, test_y);
+
+	mvwprintw(stdscr,6,20, "[Press Enter to continue] (And free the allocated animation.)");
+	wrefresh(stdscr);
+	drop_res = scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+	wclear(w);
+
+
+	//We can free the dinamic animation as the rest of the demo won't use it.
+	//NEVER forget to free the dinamic animations you use.
+
+	s4c_free_animation(animation, DEMOFRAMES, DEMOROWS);
+
+	// We check s4c_display_frame() result to see if there were problems:
+	if (result < 0) {
+		endwin();
+		switch (result) {
+			case S4C_ERR_SMALL_WIN: {
+        			fprintf(stderr,"animate => S4C_ERR_SMALL_WIN : Window was too small.\n");
+			}
+			break;
+			case S4C_ERR_LOADSPRITES: {
+        			fprintf(stderr,"animate => S4C_ERR_LOADSPRITES : Failed loading the sprites.\n");
+			}
+			break;
+			case S4C_ERR_FILEVERSION: {
+        			fprintf(stderr,"animate => S4C_ERR_FILEVERSION : Failed file version check.\n");
+			}
+			break;
+			case S4C_ERR_CURSOR: {
+        			fprintf(stderr,"animate => S4C_ERR_CURSOR : Failed to change the cursor.\n");
+			}
+			break;
+		}
+	}
 
 	wclear(stdscr);
 	wrefresh(stdscr);
@@ -150,7 +211,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(w);
 	// Then we call the animation function with all the needed arguments
 
-	int result = animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
+	result = s4c_animate_sprites(sprites, w, reps, frametime, num_frames, frame_height, frame_width);
 
 	// We check animate_sprites() result to see if there were problems:
 	if (result < 0) {
@@ -191,7 +252,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wrefresh(stdscr);
 
 	// We call the animation to be displayed at 3,3
-	result = animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, try_y, try_x);
+	result = s4c_animate_sprites_at_coords(sprites, w, reps, frametime, num_frames, frame_height, frame_width, try_y, try_x);
 	// We should check animate_sprites_at_coords() result to see if there were problems, but in the demo we don't expect problems so we ignore the specific error content of result and just exit.
 
 	if (result < 0) {
@@ -214,7 +275,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wrefresh(stdscr);
 
 	// We call the animation to be displayed at 3,3
-	result = display_sprite_at_coords(sprites, 13, w, num_frames, frame_height, frame_width, try_y, try_x);
+	result = s4c_display_sprite_at_coords(sprites, 13, w, num_frames, frame_height, frame_width, try_y, try_x);
 	// We should check animate_sprites_at_coords() result to see if there were problems, but in the demo we don't expect problems so we ignore the specific error content of result and just exit.
 
 	if (result < 0) {
@@ -249,7 +310,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wrefresh(stdscr);
 
 	// We call the animation to be displayed at 3,3
-	result = animate_rangeof_sprites_at_coords(sprites, w, 10, 20, reps, frametime*3, num_frames, frame_height, frame_width, try_y, try_x);
+	result = s4c_animate_rangeof_sprites_at_coords(sprites, w, 10, 20, reps, frametime*3, num_frames, frame_height, frame_width, try_y, try_x);
 	// We should check animate_sprites_at_coords() result to see if there were problems, but in the demo we don't expect problems so we ignore the specific error content of result and just exit.
 
 	if (result < 0) {
@@ -289,14 +350,13 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	animation_thread_args->startY = try_y;
 
 	//We load the sprites to animation_thread_args
-	loadCheck = load_sprites(animation_thread_args->sprites, newthread_file, animation_thread_args->frameheight-1, animation_thread_args->framewidth-1);
-
+	loadCheck = s4c_load_sprites(animation_thread_args->sprites, newthread_file, animation_thread_args->frameheight-1, animation_thread_args->framewidth-1);
 	//We check if the loading went ok
 
 	// Start animation thread
 	animation_thread_args->win = w;
 	animation_thread_args->stop_thread = stop_animation;
-	pthread_create(&animation_thread, NULL, animate_sprites_thread_at, animation_thread_args);
+	pthread_create(&animation_thread, NULL, s4c_animate_sprites_thread_at, animation_thread_args);
 	refresh();
 
 	//Wait for enter to stop animation

@@ -76,6 +76,7 @@ clean:
 	-rm s4c-animate/palette.h
 	-rm s4c-animate/palette.c
 	-rm s4c-demo/*.o
+	-rm ./*.o
 	@echo -e "\033[1;33mDone.\e[0m"
 
 cleanob:

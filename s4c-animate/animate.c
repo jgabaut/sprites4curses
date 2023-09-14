@@ -137,7 +137,7 @@ void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
  * @param line_len The length of line to print
  * @param startX X coord of the win to start printing to.
  */
-void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
+void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
         int color_index = c - 'a' + 8;
@@ -164,7 +164,7 @@ void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_lengt
  * @see S4C_ERR_LOADSPRITES
  * @return A negative error value if loading fails or the number of sprites read.
  */
-int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
+int s4c_load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, int columns) {
 
     char line[1024];
     char* file_version;
@@ -230,8 +230,8 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
 }
 
 /**
- * Calls animate_sprites_at_coords() with 0,0 as starting coordinates.
- * @see animate_sprites_at_coords()
+ * Calls s4c_animate_sprites_at_coords() with 0,0 as starting coordinates.
+ * @see s4c_animate_sprites_at_coords()
  * @param sprites The sprites array.
  * @param w The window to print into.
  * @param repetition The number of times the animation will be cycled through.
@@ -243,16 +243,16 @@ int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* f, int rows, i
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
-	return animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
+int s4c_animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth) {
+	return s4c_animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
 }
 
 /**
  * Takes a WINDOW pointer to print into and a string for the file passed.
  * Takes a pre-initialised array of sprites, valid format output by sprites.py or sheet_converter.py.
- * Color-character map is define in print_spriteline().
+ * Color-character map is define in s4c_print_spriteline().
  * Sets all the frames to the passed array.
- * @see print_spriteline()
+ * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
  * @param repetition The number of times the animation will be cycled through.
@@ -266,7 +266,7 @@ int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int re
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
 
 	if (cursorCheck == ERR) {
@@ -290,7 +290,7 @@ int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW*
 		for (int i=0; i<num_frames+1;i++) {
 			for (int j=0; j<rows; j++) {
 				// Print current frame
-				print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
+				s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
 				box(w,0,0);
 				wrefresh(w);
 			}
@@ -312,7 +312,7 @@ int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW*
  * Takes a void pointer, to be cast to animate_args*, containing parameters to animate a sprite in a WINDOW, using a separate thread.
  * @see animate_args
  */
-void *animate_sprites_thread_at(void *args_ptr) {
+void *s4c_animate_sprites_thread_at(void *args_ptr) {
 
 	animate_args* args = (animate_args *)args_ptr;
 	WINDOW* w = args->win;
@@ -356,7 +356,7 @@ void *animate_sprites_thread_at(void *args_ptr) {
                     			break;
                 		}
 				// Print current line for current frame
-				print_spriteline(w,(args->sprites)[i][j], j+startY+1, cols, startX);
+				s4c_print_spriteline(w,(args->sprites)[i][j], j+startY+1, cols, startX);
 			}
 			wrefresh(w);
 			// Refresh the screen
@@ -376,8 +376,8 @@ void *animate_sprites_thread_at(void *args_ptr) {
  * Takes a WINDOW pointer to print into.
  * Contrary to other of these functions, this one does not touch cursor settings.
  * Uses the passed sprites and displays a range of them in the passed window if it is big enough.
- * Color-character map is define in print_spriteline().
- * @see print_spriteline()
+ * Color-character map is define in s4c_print_spriteline().
+ * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
  * @param repetition The number of times the animation will be cycled through.
@@ -390,7 +390,7 @@ void *animate_sprites_thread_at(void *args_ptr) {
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	//Validate requested range
 	if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
 		return S4C_ERR_RANGE;
@@ -414,7 +414,7 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 		for (int i=fromFrame; i<toFrame+1 ;i++) {
 			for (int j=0; j<rows; j++) {
 				// Print current frame
-				print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
+				s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
 				box(w,0,0);
 				wrefresh(w);
 			}
@@ -432,9 +432,8 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
 /**
  * Takes a WINDOW pointer to print into and an animation array, plus the index of requested frame to print.
  * Contrary to other of these functions, this one does not touch cursor settings.
- * Color-character map is define in print_spriteline().
- * Sets all the frames to the passed array.
- * @see print_spriteline()
+ * Color-character map is define in s4c_print_spriteline().
+ * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param sprite_index The index of requested sprite.
  * @param w The window to print into.
@@ -446,7 +445,7 @@ int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS],
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	//Validate requested range
 	if (sprite_index < 0 || sprite_index > num_frames ) {
 		return S4C_ERR_RANGE;
@@ -463,7 +462,49 @@ int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int spri
 	}
 	for (int j=0; j<rows; j++) {
 		// Print current frame
-		print_spriteline(w,sprites[sprite_index][j], j+startY+1, cols, startX);
+		s4c_print_spriteline(w,sprites[sprite_index][j], j+startY+1, cols, startX);
+	}
+	box(w,0,0);
+	wrefresh(w);
+	return 1;
+}
+
+/**
+ * Takes an S4C_Animation pointer as src and a WINDOW pointer to print into, plus the index of requested frame to print.
+ * Contrary to other of these functions, this one does not touch cursor settings.
+ * Color-character map is define in s4c_print_spriteline().
+ * @see s4c_print_spriteline()
+ * @param src The S4C_Animation pointer used as source.
+ * @param frame_index The index of requested frame.
+ * @param w The window to print into.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
+ * @see S4C_ERR_SMALL_WIN
+ * @return 1 if successful, a negative value for errors.
+ */
+int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+
+	char*** anim = *src;
+	//Validate requested range
+	if (frame_index < 0 || frame_index > num_frames ) {
+		return S4C_ERR_RANGE;
+	}
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(w, win_rows, win_cols);
+	if (win_rows < rows + startY || win_cols < cols + startX) {
+		return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+	}
+	for (int j=0; j<rows; j++) {
+		// Print current frame
+		s4c_print_spriteline(w,anim[frame_index][j], j+startY+1, cols, startX);
 	}
 	box(w,0,0);
 	wrefresh(w);
@@ -479,7 +520,7 @@ int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int spri
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+void s4c_copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
   //Copy all frames
   for (int i = 0 ; i < frames+1; i++ ) {
     //Copy all rows for frame i
@@ -491,4 +532,52 @@ void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAME
      }
     }
   }
+}
+
+/**
+ * Takes a source animation vector matrix and a dinamyc array destination to copy to.
+ * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
+ * Allocates the needed memory for the destination.
+ * @param frames How many frames to copy.
+ * @param rows How many rows to copy.
+ * @param cols How many cols to copy.
+ * @param source The source sprites array.
+ * @param dest The destination sprites array.
+ */
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+    *dest = malloc(frames * sizeof(char**));
+    for (int i = 0; i < frames; i++) {
+        (*dest)[i] = malloc(rows * sizeof(char*));
+        for (int j = 0; j < rows; j++) {
+            (*dest)[i][j] = malloc(cols * sizeof(char));
+            for (int k = 0; k < cols; k++) {
+                (*dest)[i][j][k] = source[i][j][k];
+            }
+        }
+    }
+}
+
+/**
+ * Takes an S4C_Animation pointer and frees it.
+ * Takes ints to indicate how many frames, rows per frame to free.
+ * @param animation The S4C_Animation pointer to free.
+ * @param frames How many frames to free.
+ * @param rows How many rows to free.
+ */
+void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
+    if (animation == NULL || *animation == NULL) {
+        return; // Nothing to free if the pointer or animation is NULL
+    }
+
+    char*** anim = *animation;
+
+    for (int i = 0; i < frames; i++) {
+        for (int j = 0; j < rows; j++) {
+            free(anim[i][j]);
+        }
+        free(anim[i]);
+    }
+
+    free(anim);
+    *animation = NULL; // Set the pointer to NULL after freeing the memory
 }

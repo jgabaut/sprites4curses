@@ -13,10 +13,10 @@
 #include <pthread.h>
 
 
-#define S4C_ANIMATE_VERSION "0.2.14"
+#define S4C_ANIMATE_VERSION "0.3.0"
 #define S4C_ANIMATE_MAJOR_VERSION 0
-#define S4C_ANIMATE_MINOR_VERSION 2
-#define S4C_ANIMATE_PATCH_VERSION 14
+#define S4C_ANIMATE_MINOR_VERSION 3
+#define S4C_ANIMATE_PATCH_VERSION 0
 
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
@@ -27,6 +27,8 @@ void s4c_echoVersionToFile(FILE* f);
 
 #define MAX_COLORS 256
 #define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
+
+typedef char*** S4C_Animation;
 
 /*
  * Defines a color.
@@ -42,23 +44,38 @@ typedef struct S4C_Color {
 void debug_s4c_color_2file(S4C_Color* color, FILE* fp);
 void debug_s4c_color(S4C_Color* color);
 
-// These define constants for the colors prepared by init_s4c_color_pairs().
-#define S4C_BLACK 9
-#define S4C_MIN_COLOR_INDEX S4C_BLACK
-#define S4C_RED 10
-#define S4C_BRIGHT_GREEN 11
-#define S4C_BRIGHT_YELLOW 12
-#define S4C_BLUE 13
-#define S4C_MAGENTA 14
-#define S4C_CYAN 15
-#define S4C_WHITE 16
-#define S4C_ORANGE 17
-#define S4C_LIGHT_BROWN 18
-#define S4C_DARK_BROWN 19
-#define S4C_PURPLE 20
-#define S4C_DARK_GREEN 21
-#define S4C_LIGHT_YELLOW 22
-#define S4C_LIGHT_BLUE 23
+/*
+ * Defines the lowest index that will be used by s4c. A value <=8 is not recommended, as when initialising colorpairs we'd be reloading default ones.
+ * WIP.
+ * @see init_s4c_color_pairs();
+ * @see S4C_Color_Index
+ */
+#define	S4C_BASE_COLOR_INDEX 9
+/*
+ * Defines integer constants to index s4c' color pairs, as expected from the initialised color_pairs.
+ * WIP.
+ * @see init_s4c_color_pairs();
+ */
+typedef enum S4C_Color_Index {
+	S4C_BLACK=S4C_BASE_COLOR_INDEX,
+	S4C_RED,
+	S4C_BRIGHT_GREEN,
+	S4C_BRIGHT_YELLOW,
+	S4C_BLUE,
+	S4C_MAGENTA,
+	S4C_CYAN,
+	S4C_WHITE,
+	S4C_ORANGE,
+	S4C_LIGHT_BROWN,
+	S4C_DARK_BROWN,
+	S4C_PURPLE,
+	S4C_DARK_GREEN,
+	S4C_GREY,
+	S4C_LIGHT_YELLOW,
+	S4C_LIGHT_BLUE
+} S4C_Color_Index;
+
+#define	S4C_MIN_COLOR_INDEX S4C_BLACK
 #define S4C_MAX_COLOR_INDEX S4C_LIGHT_BLUE
 
 #define MAX_LINE_LENGTH 1024
@@ -97,19 +114,22 @@ void init_s4c_color_pair(S4C_Color* color, int color_index);
 
 void test_s4c_color_pairs(WINDOW* win, FILE* palette_file);
 
-void print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
+void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
-int load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
+int s4c_load_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], FILE* file, int rows, int columns);
 
-int animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+int s4c_animate_sprites(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 
-void *animate_sprites_thread_at(void *animate_args);
+void *s4c_animate_sprites_thread_at(void *animate_args);
 
-int animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
-int animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_rangeof_sprites_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
-int display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords(char sprites[MAXFRAMES][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
-void copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
+void s4c_copy_animation(char source[MAXFRAMES][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
+void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
 #endif
