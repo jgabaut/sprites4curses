@@ -128,7 +128,7 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
 
   - To run the C demo program, do:
 
-    *The demo is meant to run with the provided file, since a different-sized animation would require little tweaks to the code.*
+    **The demo is meant to run with the provided file, since a different-sized animation would require little tweaks to the code.**
 
     `autoreconf; automake --add-missing; autoreconf; automake --add-missing`
     `autoreconf; ./configure`
@@ -142,7 +142,7 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
 
   - To run the sprites script and redirect output on "file.txt", give a directory to get the png's from:
 
-    *File names in the directory should follow a imageX.png, imageX+1.png pattern.*
+    **File names in the directory should follow a imageX.png, imageX+1.png pattern.**
 
     `python sprites.py <mode> <directory>   > file.txt`
 
@@ -156,7 +156,7 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
 
   - To run the png resize script, give all required arguments:
 
-    *This overwrites the source pngs, so be careful.*
+    **This overwrites the source pngs, so be careful.**
 
     `python png_resize.py <sprites directory> <sprite width> <sprite height>`
 
