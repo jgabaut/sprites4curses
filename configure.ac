@@ -23,8 +23,8 @@ fi
 if test "$host_os" = "darwin"; then
   echo "Building for macos: [$host_cpu-$host_vendor-$host_os]"
   # macOS specific flags
-  AC_SUBST([S4C_CFLAGS], ["-I/usr/local/opt/ncurses/include"])
-  AC_SUBST([S4C_LDFLAGS], ["-L/usr/local/opt/ncurses/lib -lncurses"])
+  AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/ncurses/include"])
+  AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lncurses"])
   AC_SUBST([OS], ["darwin"])
   AC_SUBST([TARGET], ["demo"])
 fi

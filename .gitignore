@@ -13,6 +13,9 @@ doxygen
 # ignore docs file
 documentation/docs.pdf
 
+# MacOS DS_Store ignoring
+.DS_Store
+
 # ignore generated palette header
 s4c-animate/palette.h
 # ignore generated palette C file
