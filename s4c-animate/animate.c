@@ -140,6 +140,13 @@ void slideshow_s4c_color_pairs(WINDOW* win) {
 		fprintf(stderr,"[%s]:  Passed Window was NULL.",__func__);
 		abort();
 	}
+	int cursorCheck = curs_set(0); // We try making the cursor invisible
+
+	if (cursorCheck == ERR) {
+		//TODO
+		//Log this
+		//fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+	}
 
 	// Get window max size
 	int win_rows, win_cols;
@@ -162,6 +169,7 @@ void slideshow_s4c_color_pairs(WINDOW* win) {
 				}
 			}
 			wattroff(win,COLOR_PAIR(color_index));
+			if (win_cols > 5) mvwprintw(win, 1, 1, "%i", color_index);
 			box(win,0,0);
 			wrefresh(win);
 			refresh();
@@ -187,8 +195,7 @@ void slideshow_s4c_color_pairs(WINDOW* win) {
 			};
 			break;
 			default: {
-				fprintf(stderr,"[%s]:  Unexpected int [%i].\n",__func__,c);
-				abort();
+				//fprintf(stderr,"[%s]:  Unexpected int [%i].\n",__func__,c);
 			}
 			break;
 		}

@@ -154,7 +154,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(stdscr);
 	wrefresh(stdscr);
 	// Then we call the slideshow function with all the needed arguments
+	noecho();
 	slideshow_s4c_color_pairs(stdscr);
+	echo();
 	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
