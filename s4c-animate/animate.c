@@ -72,6 +72,49 @@ void init_s4c_color_pair(S4C_Color* color, int color_index) {
    	init_pair(color_index, color_index, 0);
 }
 
+const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1] = {
+	"S4C_BLACK",
+	"S4C_RED",
+	"S4C_BRIGHT_GREEN",
+	"S4C_BRIGHT_YELLOW",
+	"S4C_BLUE",
+	"S4C_MAGENTA",
+	"S4C_CYAN",
+	"S4C_WHITE",
+	"S4C_ORANGE",
+	"S4C_LIGHT_BROWN",
+	"S4C_DARK_BROWN",
+	"S4C_PURPLE",
+	"S4C_DARK_GREEN",
+	"S4C_GREY",
+	"S4C_LIGHT_YELLOW",
+	"S4C_LIGHT_BLUE",
+	"S4C_DARK_YELLOW",
+	"S4C_DARK_OLIVE",
+	"S4C_LIGHT_OLIVE",
+	"S4C_OLIVE",
+	"S4C_DARK_CHERRY",
+	"S4C_LIGHT_CHERRY",
+	"S4C_CHERRY",
+	"S4C_SALMON",
+	"S4C_DARK_BLUE",
+	"S4C_VIOLET",
+	"S4C_INDIGO",
+	"S4C_LIGHT_ORANGE",
+	"S4C_TEAL",
+	"S4C_DARK_CYAN",
+	"S4C_DARK_PURPLE",
+	"S4C_LIGHT_PURPLE",
+};
+
+const char* s4c_color_name(S4C_Color_Index color_index) {
+	if (color_index < S4C_MIN_COLOR_INDEX || color_index > S4C_MAX_COLOR_INDEX) {
+		fprintf(stderr,"[%s]:  Invalid color index { %i }, { %s -> [%i] }.", __func__, color_index, (color_index < S4C_MIN_COLOR_INDEX ? "Below min valid value " : "Above max valid value"), (color_index < S4C_MIN_COLOR_INDEX ? S4C_MIN_COLOR_INDEX : S4C_MAX_COLOR_INDEX));
+		abort();
+	}
+	return s4c_color_strings[color_index-S4C_MIN_COLOR_INDEX];
+}
+
 /**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
@@ -91,7 +134,7 @@ void init_s4c_color_pairs(FILE* palette) {
 
         // Parse the color values and name
         int r, g, b;
-        char name[MAX_COLOR_NAME_LEN];
+        char name[S4C_PALETTEFILE_MAX_COLOR_NAME_LEN];
         if (sscanf(line, "%d %d %d %[^\n]", &r, &g, &b, name) != 4) {
             fprintf(stderr, "[%s]  Error: could not parse palette line: %s\n", __func__, line);
 	    continue;
@@ -169,7 +212,11 @@ void slideshow_s4c_color_pairs(WINDOW* win) {
 				}
 			}
 			wattroff(win,COLOR_PAIR(color_index));
-			if (win_cols > 5) mvwprintw(win, 1, 1, "%i", color_index);
+			if (win_cols > S4C_MAX_COLOR_NAME_LEN+9) {
+				mvwprintw(win, 2, 1, "[%i] [%s]", color_index, s4c_color_name(color_index));
+			} else if (win_cols > 5) {
+				mvwprintw(win, 1, 1, "[%i]", color_index);
+			}
 			box(win,0,0);
 			wrefresh(win);
 			refresh();

@@ -26,7 +26,7 @@ void s4c_echoVersionToFile(FILE* f);
 
 
 #define MAX_COLORS 256
-#define MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
+#define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
 typedef char*** S4C_Animation;
 
@@ -93,6 +93,14 @@ typedef enum S4C_Color_Index {
 
 #define	S4C_MIN_COLOR_INDEX S4C_BLACK
 #define S4C_MAX_COLOR_INDEX S4C_LIGHT_PURPLE
+#define S4C_MAX_COLOR_NAME_LEN 17
+
+const char* s4c_color_name(S4C_Color_Index color_index);
+
+/**
+ * Holds string names for each S4C_Color_Index value.
+ */
+extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 
 #define MAX_LINE_LENGTH 1024
 
