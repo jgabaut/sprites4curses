@@ -111,12 +111,11 @@ void init_s4c_color_pairs(FILE* palette) {
 }
 
 /**
- * Demoes all colors supported by the passed palette file in the passed WINDOW. Not guaranteed to work.
- * Since it uses indexes defined by default from animate.h, it should work only when your passed palette file has color pairs for the expected index range.
+ * Demoes all colors supported by the palette in the passed WINDOW. Not guaranteed to work.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
  * @param win The window to print the demo to.
- * @param palette_file The palette file used to initialise s4c.
  */
-void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
+void test_s4c_color_pairs(WINDOW* win) {
     for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
         int color_index = i;
         if (color_index >= 0 && color_index < MAX_COLORS) {
@@ -128,6 +127,72 @@ void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
 
     wrefresh(win);
     refresh();
+}
+
+/**
+ * Demoes color pairs defined in s4c to the passed window.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
+ * @param win The Window pointer to print to.
+ * @param colors_per_row How many colors to print in each row.
+ */
+void slideshow_s4c_color_pairs(WINDOW* win) {
+	if (win == NULL) {
+		fprintf(stderr,"[%s]:  Passed Window was NULL.",__func__);
+		abort();
+	}
+
+	// Get window max size
+	int win_rows, win_cols;
+	getmaxyx(win, win_rows, win_cols);
+
+	int picked = 0;
+	int quit = 0;
+	int c = -1;
+	wrefresh(win);
+	refresh();
+
+	int color_index = S4C_MIN_COLOR_INDEX;
+
+	do {
+        	if (color_index >= 0) {
+			wattron(win,COLOR_PAIR(color_index));
+			for (int i=0; i<win_rows; i++) {
+				for (int j=0; j<win_cols; j++) {
+            				mvwaddch(win, i, j, ' ' | A_REVERSE);
+				}
+			}
+			wattroff(win,COLOR_PAIR(color_index));
+			box(win,0,0);
+			wrefresh(win);
+			refresh();
+		}
+		c = wgetch(win);
+		switch(c) {
+			case 'q': { /*Enter*/
+				quit = 1;
+
+			};
+			case 10: { /*Enter*/
+				picked = 1;
+			};
+			break;
+			case KEY_RIGHT: {
+					color_index = (color_index == S4C_MAX_COLOR_INDEX ? color_index : color_index+1);
+
+			};
+			break;
+			case KEY_LEFT: {
+					color_index = (color_index == S4C_MIN_COLOR_INDEX ? color_index : color_index-1);
+
+			};
+			break;
+			default: {
+				fprintf(stderr,"[%s]:  Unexpected int [%i].\n",__func__,c);
+				abort();
+			}
+			break;
+		}
+	} while(!quit && !picked);
 }
 
 /**

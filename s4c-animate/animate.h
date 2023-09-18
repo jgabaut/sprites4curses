@@ -13,7 +13,7 @@
 #include <pthread.h>
 
 
-#define S4C_ANIMATE_VERSION "0.3.1"
+#define S4C_ANIMATE_VERSION "0.3.2"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 3
 #define S4C_ANIMATE_PATCH_VERSION 1
@@ -128,7 +128,9 @@ void init_s4c_color_pairs(FILE* palette_file);
 
 void init_s4c_color_pair(S4C_Color* color, int color_index);
 
-void test_s4c_color_pairs(WINDOW* win, FILE* palette_file);
+void test_s4c_color_pairs(WINDOW* win);
+
+void slideshow_s4c_color_pairs(WINDOW* win);
 
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
