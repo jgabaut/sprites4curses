@@ -93,8 +93,8 @@ void init_s4c_color_pairs(FILE* palette) {
         int r, g, b;
         char name[MAX_COLOR_NAME_LEN];
         if (sscanf(line, "%d %d %d %[^\n]", &r, &g, &b, name) != 4) {
-            fprintf(stderr, "Error: could not parse palette line: %s\n", line);
-            continue;
+            fprintf(stderr, "[%s]  Error: could not parse palette line: %s\n", __func__, line);
+	    continue;
         }
 
 	int proportional_r = (((float)r + 1.0) / 256)*1000;
@@ -340,14 +340,14 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
 	int win_rows, win_cols;
 	getmaxyx(w, win_rows, win_cols);
 	if (win_rows < rows + startY || win_cols < cols + startX) {
-		fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+		fprintf(stderr, "[%s]  animate => Window is too small to display the sprite.\n",__func__);
 		pthread_exit(NULL);
 	}
 	// Open the palette file and read the color values and names
 	FILE* palette_file;
 	palette_file = fopen("palette.gpl", "r");
 	if (palette_file == NULL) {
-	    fprintf(stderr, "Error: could not open palette file.\n");
+	    fprintf(stderr, "[%s]  Error: could not open palette file.\n",__func__);
 	    pthread_exit(NULL);
 	}
 
