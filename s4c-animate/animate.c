@@ -293,7 +293,7 @@ int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int 
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.6";
+    char* READER_VERSION = "0.2.0";
     int row = 0, frame = -1;
 
     int check = -1;

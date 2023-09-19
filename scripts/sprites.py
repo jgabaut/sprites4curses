@@ -43,7 +43,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.6"
+FILE_VERSION = "0.2.0"
 
 # Expects the sprite directory name as first argument.
 # File names format inside the directory should be "imageNUM.png".
