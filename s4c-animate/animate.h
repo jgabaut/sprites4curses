@@ -16,7 +16,7 @@
 #define S4C_ANIMATE_VERSION "0.3.2"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 3
-#define S4C_ANIMATE_PATCH_VERSION 1
+#define S4C_ANIMATE_PATCH_VERSION 2
 
 void s4c_printVersionToFile(FILE* f);
 void s4c_echoVersionToFile(FILE* f);
