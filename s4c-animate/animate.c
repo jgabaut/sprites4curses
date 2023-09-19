@@ -259,7 +259,7 @@ void slideshow_s4c_color_pairs(WINDOW* win) {
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
-        int color_index = c - 'a' + 8;
+        int color_index = c - '0' + 8;
         if (color_index >= 0 && color_index < MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
@@ -293,7 +293,7 @@ int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int 
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.5";
+    char* READER_VERSION = "0.1.6";
     int row = 0, frame = -1;
 
     int check = -1;
