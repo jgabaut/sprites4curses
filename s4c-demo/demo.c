@@ -140,8 +140,26 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(stdscr);
 	wrefresh(stdscr);
 	// Then we call the demo function with all the needed arguments
-	test_s4c_color_pairs(stdscr,palette_file);
-	napms(2000);
+	test_s4c_color_pairs(stdscr);
+	drop_res = scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+
+	mvwprintw(stdscr,3,2, "Let's see a slideshow of the colors:");
+	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
+	mvwprintw(stdscr,8,20, "[Press \"<-\"  \"->\" to scroll colors]");
+	mvwprintw(stdscr,9,20, "[Press Enter or q to end the slideshow]");
+	wrefresh(stdscr);
+	drop_res = scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
+	// Then we call the slideshow function with all the needed arguments
+	noecho();
+	slideshow_s4c_color_pairs(stdscr);
+	echo();
+	drop_res = scanf("%*c");
+	wclear(stdscr);
+	wrefresh(stdscr);
 
 	S4C_Animation* animation = malloc(sizeof(S4C_Animation));
 

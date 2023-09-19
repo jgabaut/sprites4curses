@@ -72,6 +72,49 @@ void init_s4c_color_pair(S4C_Color* color, int color_index) {
    	init_pair(color_index, color_index, 0);
 }
 
+const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1] = {
+	"S4C_BLACK",
+	"S4C_RED",
+	"S4C_BRIGHT_GREEN",
+	"S4C_BRIGHT_YELLOW",
+	"S4C_BLUE",
+	"S4C_MAGENTA",
+	"S4C_CYAN",
+	"S4C_WHITE",
+	"S4C_ORANGE",
+	"S4C_LIGHT_BROWN",
+	"S4C_DARK_BROWN",
+	"S4C_PURPLE",
+	"S4C_DARK_GREEN",
+	"S4C_GREY",
+	"S4C_LIGHT_YELLOW",
+	"S4C_LIGHT_BLUE",
+	"S4C_DARK_YELLOW",
+	"S4C_DARK_OLIVE",
+	"S4C_LIGHT_OLIVE",
+	"S4C_OLIVE",
+	"S4C_DARK_CHERRY",
+	"S4C_LIGHT_CHERRY",
+	"S4C_CHERRY",
+	"S4C_SALMON",
+	"S4C_DARK_BLUE",
+	"S4C_VIOLET",
+	"S4C_INDIGO",
+	"S4C_LIGHT_ORANGE",
+	"S4C_TEAL",
+	"S4C_DARK_CYAN",
+	"S4C_DARK_PURPLE",
+	"S4C_LIGHT_PURPLE",
+};
+
+const char* s4c_color_name(S4C_Color_Index color_index) {
+	if (color_index < S4C_MIN_COLOR_INDEX || color_index > S4C_MAX_COLOR_INDEX) {
+		fprintf(stderr,"[%s]:  Invalid color index { %i }, { %s -> [%i] }.", __func__, color_index, (color_index < S4C_MIN_COLOR_INDEX ? "Below min valid value " : "Above max valid value"), (color_index < S4C_MIN_COLOR_INDEX ? S4C_MIN_COLOR_INDEX : S4C_MAX_COLOR_INDEX));
+		abort();
+	}
+	return s4c_color_strings[color_index-S4C_MIN_COLOR_INDEX];
+}
+
 /**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
@@ -91,7 +134,7 @@ void init_s4c_color_pairs(FILE* palette) {
 
         // Parse the color values and name
         int r, g, b;
-        char name[MAX_COLOR_NAME_LEN];
+        char name[S4C_PALETTEFILE_MAX_COLOR_NAME_LEN];
         if (sscanf(line, "%d %d %d %[^\n]", &r, &g, &b, name) != 4) {
             fprintf(stderr, "[%s]  Error: could not parse palette line: %s\n", __func__, line);
 	    continue;
@@ -111,12 +154,11 @@ void init_s4c_color_pairs(FILE* palette) {
 }
 
 /**
- * Demoes all colors supported by the passed palette file in the passed WINDOW. Not guaranteed to work.
- * Since it uses indexes defined by default from animate.h, it should work only when your passed palette file has color pairs for the expected index range.
+ * Demoes all colors supported by the palette in the passed WINDOW. Not guaranteed to work.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
  * @param win The window to print the demo to.
- * @param palette_file The palette file used to initialise s4c.
  */
-void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
+void test_s4c_color_pairs(WINDOW* win) {
     for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
         int color_index = i;
         if (color_index >= 0 && color_index < MAX_COLORS) {
@@ -131,6 +173,83 @@ void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
 }
 
 /**
+ * Demoes color pairs defined in s4c to the passed window.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
+ * @param win The Window pointer to print to.
+ * @param colors_per_row How many colors to print in each row.
+ */
+void slideshow_s4c_color_pairs(WINDOW* win) {
+	if (win == NULL) {
+		fprintf(stderr,"[%s]:  Passed Window was NULL.",__func__);
+		abort();
+	}
+	int cursorCheck = curs_set(0); // We try making the cursor invisible
+
+	if (cursorCheck == ERR) {
+		//TODO
+		//Log this
+		//fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+	}
+
+	// Get window max size
+	int win_rows, win_cols;
+	getmaxyx(win, win_rows, win_cols);
+
+	int picked = 0;
+	int quit = 0;
+	int c = -1;
+	wrefresh(win);
+	refresh();
+
+	int color_index = S4C_MIN_COLOR_INDEX;
+
+	do {
+        	if (color_index >= 0) {
+			wattron(win,COLOR_PAIR(color_index));
+			for (int i=0; i<win_rows; i++) {
+				for (int j=0; j<win_cols; j++) {
+            				mvwaddch(win, i, j, ' ' | A_REVERSE);
+				}
+			}
+			wattroff(win,COLOR_PAIR(color_index));
+			if (win_cols > S4C_MAX_COLOR_NAME_LEN+9) {
+				mvwprintw(win, 2, 1, "[%i] [%s]", color_index, s4c_color_name(color_index));
+			} else if (win_cols > 5) {
+				mvwprintw(win, 1, 1, "[%i]", color_index);
+			}
+			box(win,0,0);
+			wrefresh(win);
+			refresh();
+		}
+		c = wgetch(win);
+		switch(c) {
+			case 'q': { /*Enter*/
+				quit = 1;
+
+			};
+			case 10: { /*Enter*/
+				picked = 1;
+			};
+			break;
+			case KEY_RIGHT: {
+					color_index = (color_index == S4C_MAX_COLOR_INDEX ? color_index : color_index+1);
+
+			};
+			break;
+			case KEY_LEFT: {
+					color_index = (color_index == S4C_MIN_COLOR_INDEX ? color_index : color_index-1);
+
+			};
+			break;
+			default: {
+				//fprintf(stderr,"[%s]:  Unexpected int [%i].\n",__func__,c);
+			}
+			break;
+		}
+	} while(!quit && !picked);
+}
+
+/**
  * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
  * @param line The string to print
  * @param line_num The y value to print at in win
@@ -140,7 +259,7 @@ void test_s4c_color_pairs(WINDOW* win, FILE* palette_file) {
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX) {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
-        int color_index = c - 'a' + 8;
+        int color_index = c - '0' + 8;
         if (color_index >= 0 && color_index < MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
@@ -174,7 +293,7 @@ int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int 
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.1.5";
+    char* READER_VERSION = "0.2.0";
     int row = 0, frame = -1;
 
     int check = -1;
