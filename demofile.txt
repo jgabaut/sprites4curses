@@ -1,4 +1,4 @@
-0.2.0
+0.2.1
 char chest_animation[31][18][18] = {
 
 	//Frame 1
