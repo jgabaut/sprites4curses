@@ -35,7 +35,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 19/09/2023.
+# - Modified by jgabaut on 20/09/2023.
 
 # Imports
 from PIL import Image
@@ -97,7 +97,7 @@ def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize,
     rgb_palette = [(palette[n], palette[n+1], palette[n+2]) for n in range(0, len(palette), 3)]
     # Create the CHAR_MAP dictionary based on the color values
     CHAR_MAP = {}
-    char_index = 1
+    char_index = 0
     for color in rgb_palette:
         if color not in CHAR_MAP:
             CHAR_MAP[color] = chr(

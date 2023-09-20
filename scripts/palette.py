@@ -28,7 +28,7 @@
 #
 # @section author_palette Author(s)
 # - Created by jgabaut on 01/09/2023.
-# - Modified by jgabaut on 01/09/2023.
+# - Modified by jgabaut on 20/09/2023.
 
 # Imports
 import sys
@@ -38,7 +38,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.1.5"
+FILE_VERSION = "0.2.1"
 
 # Expects the palette name as first argument, output directory as second argument.
 
