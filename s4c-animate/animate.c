@@ -1,3 +1,21 @@
+// jgabaut @ github.com/jgabaut
+// SPDX-License-Identifier: GPL-3.0-only
+/*
+    Copyright (C) 2023  jgabaut
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 3 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "animate.h"
 
 /**
@@ -53,7 +71,7 @@ void debug_s4c_color(S4C_Color* color) {
 void init_s4c_color_pair(S4C_Color* color, int color_index) {
 
 	if (color == NULL) {
-		fprintf(stderr,"Error: invalid S4C_Color at in init_s4c_color_pair().");
+		fprintf(stderr,"Error: invalid S4C_Color at %s().",__func__);
 		exit(EXIT_FAILURE);
 	}
 
@@ -282,6 +300,7 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
  * @param columns The number of columns in each sprite.
  * @see S4C_ERR_FILEVERSION
  * @see S4C_ERR_LOADSPRITES
+ * @see S4C_FILEFORMAT_VERSION
  * @return A negative error value if loading fails or the number of sprites read.
  */
 int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
@@ -293,7 +312,7 @@ int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int 
     char line[1024];
     char* file_version;
     char* token;
-    char* READER_VERSION = "0.2.1";
+    const char* READER_VERSION = S4C_FILEFORMAT_VERSION;
     int row = 0, frame = -1;
 
     int check = -1;
