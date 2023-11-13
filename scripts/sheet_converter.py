@@ -35,7 +35,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 20/09/2023.
+# - Modified by jgabaut on 13/11/2023.
 
 # Imports
 from PIL import Image
@@ -44,7 +44,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.2.0"
+FILE_VERSION = "0.2.2"
 
 # Functions
 def usage():
@@ -100,10 +100,10 @@ def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize,
     char_index = 0
     for color in rgb_palette:
         if color not in CHAR_MAP:
-            CHAR_MAP[color] = chr(
-                    ord('1')
-                    + char_index
-                    )
+            if chr(ord('1') + char_index) == '?':
+                CHAR_MAP[color] = '\\?'
+            else:
+                CHAR_MAP[color] = chr(ord('1') + char_index)
             char_index += 1
 
     #for i in range(height // (sprite_size[1] + separator_size * (sprites_per_column - 1))):
