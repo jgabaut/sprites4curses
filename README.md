@@ -168,4 +168,4 @@ This is a GIMP palette file.
 It's used by the library to initialise the color pairs for curses to display the sprites.
 It's also useful in the first place for exporting PNG with the correct color alignment.
 You can also use it to generate a C implementation file for you color palette.
-Info on how to use it are in the palette-README.md file.
+Info on how to use it are in the [palette-README.md](./palette-README.md) file.
