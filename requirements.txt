@@ -10,7 +10,7 @@ charset-normalizer==3.0.1
     # via requests
 idna==3.4
     # via requests
-pillow==10.0.1
+pillow==10.1.0
     # via -r requirements.in
 requests==2.31.0
     # via -r requirements.in
