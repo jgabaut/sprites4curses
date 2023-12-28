@@ -23,7 +23,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#ifndef MINGW32_BUILD
+#ifndef _WIN32
 #include <ncurses.h>
 #else
 #include <ncursesw/ncurses.h>
@@ -31,10 +31,10 @@
 #include <pthread.h>
 
 
-#define S4C_ANIMATE_VERSION "0.3.5"
+#define S4C_ANIMATE_VERSION "0.3.6"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 3
-#define S4C_ANIMATE_PATCH_VERSION 5
+#define S4C_ANIMATE_PATCH_VERSION 6
 
 /**
  * Defines current version for s4c files.
