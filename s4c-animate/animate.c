@@ -515,7 +515,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
     pthread_exit(NULL);
     //FIXME
     //Is this a bug? Do we have to return NULL here?
-    #ifdef MINGW32_BUILD
+    #ifdef _WIN32
     return NULL;
     #endif
 }
