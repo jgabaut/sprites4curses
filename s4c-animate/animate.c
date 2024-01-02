@@ -744,11 +744,28 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
 }
 
 #ifdef S4RAYLIB_BUILD
+/**
+ * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
+ * @param c The S4C_Color to convert.
+ * @return The converted Color.
+ */
 Color color_from_s4c_color(S4C_Color c) {
     return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
 }
 
-void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size) {
+/**
+ * Takes a string, the Y coordinate to draw at, the lenght of the line, the starting X position, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls DrawRectangle() passing the converted color, by calling color_from_s4c_color().
+ * @param line The string to draw.
+ * @param coordY The Y coordinate to draw at.
+ * @param line_length The length of the string to draw.
+ * @param startX The starting X position to draw at.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @see color_from_s4c_color()
+ */
+void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size) {
     for (int i = 0; i < line_length; i++) {
         const char c = line[i];
         int color_index = c - '1';
@@ -762,6 +779,19 @@ void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, 
     }
 }
 
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the X and Y coordinates to draw at, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls s4rl_draw_spriteline on each line of the passed frame.
+ * @param sprite The char matrix to draw.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param startX The X coordinate of upper-left corner of animation rectangle.
+ * @param startY The Y coordinate of upper-left corner of animation rectangle.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @see s4rl_draw_spriteline()
+ */
 void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size) {
 
 	int rows = frameheight;
@@ -776,9 +806,22 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
 
     for (int j=0; j<rows; j++) {
         // Print current frame line
-		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
+		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
 	}
 }
+
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the Rectangle to print into, the height of each frame, the width of each frame, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls s4rl_draw_sprite_at_coords() and checks if the wanted Rectangle is big enough for the wanted animation.
+ * @param sprite The char matrix to draw.
+ * @param rect The Rectangle to print into.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @see s4rl_draw_sprite_at_coords()
+ */
 void s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size) {
     float r_x = rect.x;
     float r_y = rect.y;
