@@ -36,6 +36,8 @@ void usage(char* progname) {
     exit(EXIT_FAILURE);
 }
 
+typedef enum Screen { LOGO = 0, TITLE, GAMEPLAY, ENDING } Screen;
+
 /*
  * Demo function showing how to call s4c-animate functions correctly.
  * It initialises a window pointer and all needed curses settings, before calling the animation functions.
@@ -68,6 +70,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	drop_res = scanf("%*c");
 	drop_res = system("clear");
 
+#endif
+
 	// Open the palette file to read the color values and name
 	// Keep in mind that the file pointer will be closed by init_s4c_color_pairs(palette_file);
 	//
@@ -80,6 +84,12 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
         	fprintf(stderr, "Error: could not open palette file.\n");
        		return -1;
     	}
+	int frametime = DEMOFRAMETIME;
+	int num_frames = DEMOFRAMES;
+	int frame_height = DEMOROWS;
+	int frame_width = DEMOCOLS;
+
+#ifndef S4RAYLIB_BUILD
 
 	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
@@ -116,14 +126,12 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	}
 
 	int reps = 1;
-	int frametime = DEMOFRAMETIME;
-	int num_frames = DEMOFRAMES;
-	int frame_height = DEMOROWS;
-	int frame_width = DEMOCOLS;
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	// The boxing done by animate is 1 pixel thick. In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
 	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 0, 20);
+
+#endif
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
@@ -131,7 +139,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
+#ifndef S4RAYLIB_BUILD
 		endwin();
+#endif
 		switch (loadCheck) {
 			case S4C_ERR_FILEVERSION: {
         			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");
@@ -144,6 +154,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 		}
 		return loadCheck;
 	}
+
+#ifndef S4RAYLIB_BUILD
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
 	wclear(w);
@@ -419,6 +431,132 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	clear();
 	refresh();
 	endwin();
+#else
+    int screenWidth = 800;
+    int screenHeight = 450;
+    int logo_sleep = 120;
+
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
+    InitWindow(screenWidth, screenHeight, "KLS test");
+
+    Screen currentScreen = LOGO;
+
+    // TODO: Initialize all required variables and load all required data here!
+
+    int framesCounter = 0;          // Useful to count frames
+
+    SetTargetFPS(60);               // Set desired framerate (frames-per-second)
+                                    //
+    int current_anim_frame = 0;
+
+    while (!WindowShouldClose()) {
+        // Update
+        //----------------------------------------------------------------------------------
+
+        screenWidth = GetScreenWidth();
+        screenHeight = GetScreenHeight();
+
+        switch(currentScreen)
+        {
+            case LOGO:
+            {
+                // TODO: Update LOGO screen variables here!
+
+                framesCounter++;    // Count frames
+
+                // Wait for 2 seconds (120 frames) before jumping to TITLE screen
+                if (framesCounter > logo_sleep)
+                {
+                    currentScreen = TITLE;
+                }
+            } break;
+            case TITLE:
+            {
+                // TODO: Update TITLE screen variables here!
+
+                // Press enter to change to GAMEPLAY screen
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+                {
+                    currentScreen = GAMEPLAY;
+                }
+            } break;
+            case GAMEPLAY:
+            {
+                // TODO: Update GAMEPLAY screen variables here!
+                framesCounter++;    // Count frames
+                if (framesCounter % 2 == 0)
+                {
+                    current_anim_frame = ( current_anim_frame < 60 ? current_anim_frame +1 : 0);
+                }
+
+                // Press enter to change to ENDING screen
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+                {
+                    currentScreen = ENDING;
+                }
+            } break;
+            case ENDING:
+            {
+                // TODO: Update ENDING screen variables here!
+
+                // Press enter to return to TITLE screen
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+                {
+                    currentScreen = TITLE;
+                }
+            } break;
+            default: break;
+        }
+        //----------------------------------------------------------------------------------
+
+        // Draw
+        //----------------------------------------------------------------------------------
+        BeginDrawing();
+
+            ClearBackground(RAYWHITE);
+
+            switch(currentScreen)
+            {
+                case LOGO:
+                {
+                    // TODO: Draw LOGO screen here!
+                    //DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
+                    //DrawText("WAIT for 2 SECONDS...", 290, 220, 20, GRAY);
+                } break;
+                case TITLE:
+                {
+                    // TODO: Draw TITLE screen here!
+                    DrawRectangle(0, 0, screenWidth, screenHeight, GREEN);
+                    DrawText("TITLE SCREEN", 20, 20, 40, DARKGREEN);
+                    DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
+                } break;
+                case GAMEPLAY:
+                {
+                    // TODO: Draw GAMEPLAY screen here!
+                    DrawRectangle(0, 0, screenWidth, screenHeight, RAYWHITE);
+                    DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
+                    DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
+                    int anim_res = s4rl_draw_sprite_at_coords(sprites[current_anim_frame], 17, 17, 0, 0, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+
+                } break;
+                case ENDING:
+                {
+                    // TODO: Draw ENDING screen here!
+                    DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
+                    DrawText("ENDING SCREEN", 20, 20, 40, DARKBLUE);
+                    DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", 120, 220, 20, DARKBLUE);
+
+                } break;
+                default: break;
+            }
+
+        EndDrawing();
+        //----------------------------------------------------------------------------------
+    }
+
+    CloseWindow();
+    return 0;
 #endif
 	printf("\n\n\t\tEnd of demo.");
 	printf("\n\t\t[Press Enter to end the demo]\n");

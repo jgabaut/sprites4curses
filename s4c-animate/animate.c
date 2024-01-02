@@ -292,96 +292,6 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
 }
 
 /**
- * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
- * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
- * Closes file pointer before returning.
- * File format should have a sprite line on each line.
- * Sets all the frames to the passed array.
- * @param sprites The char array to fill with all the frames.
- * @param f The file to read the sprites from.
- * @param frames The number of frames to load.
- * @param rows The number of rows in each sprite.
- * @param columns The number of columns in each sprite.
- * @see S4C_ERR_FILEVERSION
- * @see S4C_ERR_LOADSPRITES
- * @see S4C_FILEFORMAT_VERSION
- * @return A negative error value if loading fails or the number of sprites read.
- */
-int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
-
-    if (frames == 0) {
-	return 0;
-    }
-
-    char line[1024];
-    char* file_version;
-    char* token;
-    const char* READER_VERSION = S4C_FILEFORMAT_VERSION;
-    int row = 0, frame = -1;
-
-    int check = -1;
-
-    // Read the first line of the file to get the version number
-    if (fgets(line, sizeof(line), f)) {
-        // Parse the version number
-        file_version = strtok(line, " \t\r\n");
-
-	// Check if the file format has changed, abort and return the error
-        if ((file_version == NULL) || ( (check = strcmp(file_version,READER_VERSION)) != 0) ) {
-	    return S4C_ERR_FILEVERSION;
-	};
-    }
-
-
-    while (fgets(line, sizeof(line), f)) {
-
-	if (frame == frames) {
-		break;
-	}
-
-        // Skip empty lines
-        if (line[strspn(line, " \t\r\n")] == '\0') {
-            continue;
-        }
-
-        // Skip comment lines
-        if (line[strspn(line, " \t\r\n")] == '/') {
-            continue;
-        }
-
-	// Skip heading line with the declaration
-	if (frame == -1 && row == 0) {
-		frame++;
-		continue;
-        }
-
-        // Parse the line
-        token = strtok(line, "\"");
-        while (token != NULL) {
-            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
-		strncpy(sprites[frame][row], token, columns);
-		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
-                row++;
-                if (row == rows) {
-                    frame++;
-                    row = 0;
-                }
-            }
-            token = strtok(NULL, "\"");
-        }
-    }
-
-    //We close the file ourselves
-    fclose(f);
-
-    //Check if we have a strictly positive frame number or return the error
-    if (!(frame > 0)) {
-	return S4C_ERR_LOADSPRITES;
-    }
-    return frame;
-}
-
-/**
  * Calls s4c_animate_sprites_at_coords() with 0,0 as starting coordinates.
  * @see s4c_animate_sprites_at_coords()
  * @param sprites The sprites array.
@@ -663,6 +573,96 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
 	return 1;
 }
 #endif
+
+/**
+ * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
+ * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
+ * Closes file pointer before returning.
+ * File format should have a sprite line on each line.
+ * Sets all the frames to the passed array.
+ * @param sprites The char array to fill with all the frames.
+ * @param f The file to read the sprites from.
+ * @param frames The number of frames to load.
+ * @param rows The number of rows in each sprite.
+ * @param columns The number of columns in each sprite.
+ * @see S4C_ERR_FILEVERSION
+ * @see S4C_ERR_LOADSPRITES
+ * @see S4C_FILEFORMAT_VERSION
+ * @return A negative error value if loading fails or the number of sprites read.
+ */
+int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
+
+    if (frames == 0) {
+	return 0;
+    }
+
+    char line[1024];
+    char* file_version;
+    char* token;
+    const char* READER_VERSION = S4C_FILEFORMAT_VERSION;
+    int row = 0, frame = -1;
+
+    int check = -1;
+
+    // Read the first line of the file to get the version number
+    if (fgets(line, sizeof(line), f)) {
+        // Parse the version number
+        file_version = strtok(line, " \t\r\n");
+
+	// Check if the file format has changed, abort and return the error
+        if ((file_version == NULL) || ( (check = strcmp(file_version,READER_VERSION)) != 0) ) {
+	    return S4C_ERR_FILEVERSION;
+	};
+    }
+
+
+    while (fgets(line, sizeof(line), f)) {
+
+	if (frame == frames) {
+		break;
+	}
+
+        // Skip empty lines
+        if (line[strspn(line, " \t\r\n")] == '\0') {
+            continue;
+        }
+
+        // Skip comment lines
+        if (line[strspn(line, " \t\r\n")] == '/') {
+            continue;
+        }
+
+	// Skip heading line with the declaration
+	if (frame == -1 && row == 0) {
+		frame++;
+		continue;
+        }
+
+        // Parse the line
+        token = strtok(line, "\"");
+        while (token != NULL) {
+            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
+		strncpy(sprites[frame][row], token, columns);
+		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
+                row++;
+                if (row == rows) {
+                    frame++;
+                    row = 0;
+                }
+            }
+            token = strtok(NULL, "\"");
+        }
+    }
+
+    //We close the file ourselves
+    fclose(f);
+
+    //Check if we have a strictly positive frame number or return the error
+    if (!(frame > 0)) {
+	return S4C_ERR_LOADSPRITES;
+    }
+    return frame;
+}
 
 /**
  * Takes a source animation vector matrix and a destination to copy to.

@@ -168,8 +168,6 @@ void slideshow_s4c_color_pairs(WINDOW* win);
 
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
-int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* file, int frames, int rows, int columns);
-
 int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 
 void *s4c_animate_sprites_thread_at(void *animate_args);
@@ -182,6 +180,7 @@ int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_in
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 #endif
 
+int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* file, int frames, int rows, int columns);
 void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
