@@ -762,7 +762,7 @@ void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, 
     }
 }
 
-int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size) {
+void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size) {
 
 	int rows = frameheight;
 	int cols = framewidth;
@@ -778,6 +778,5 @@ int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fram
         // Print current frame line
 		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
 	}
-	return 1;
 }
 #endif

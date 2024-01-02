@@ -529,8 +529,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     DrawRectangle(0, 0, screenWidth, screenHeight, RAYWHITE);
                     DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
                     DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
-                    int anim_res = s4rl_draw_sprite_at_coords(sprites[current_anim_frame], 17, 17, 0, 0, 24, palette, PALETTE_S4C_H_TOTCOLORS);
-
+                    s4rl_draw_sprite_at_coords(sprites[current_anim_frame], 17, 17, 0, 0, 24, palette, PALETTE_S4C_H_TOTCOLORS);
                 } break;
                 case ENDING:
                 {
