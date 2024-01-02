@@ -192,8 +192,8 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
 #endif
 
 Color color_from_s4c_color(S4C_Color c);
-void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, Color color);
-int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, Color color);
+void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);
+int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
 #endif // S4RAYLIB_BUILD
 
 #endif

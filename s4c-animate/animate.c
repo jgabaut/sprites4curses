@@ -748,16 +748,21 @@ Color color_from_s4c_color(S4C_Color c) {
     return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
 }
 
-void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, Color color) {
+void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size) {
     for (int i = 0; i < line_length; i++) {
         const char c = line[i];
         int color_index = c - '1';
-        //Color converted = color_from_s4c_color(palette[color_index]);
+        Color color;
+        if (color_index < 0 || color_index > palette_size) {
+            color = BLACK;
+        } else {
+            color = color_from_s4c_color(palette[color_index]);
+        }
         DrawRectangle(startX + (i * (pixelSize)), coordY, pixelSize, pixelSize, color);
     }
 }
 
-int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, Color color) {
+int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size) {
 
 	int rows = frameheight;
 	int cols = framewidth;
@@ -771,7 +776,7 @@ int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fram
 
     for (int j=0; j<rows; j++) {
         // Print current frame line
-		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, color);
+		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
 	}
 	return 1;
 }
