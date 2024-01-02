@@ -779,4 +779,16 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
 		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
 	}
 }
+void s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size) {
+    float r_x = rect.x;
+    float r_y = rect.y;
+    float r_w = rect.width;
+    float r_h = rect.height;
+    if (frameheight * pixelSize > r_h) {
+        fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle height, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, frameheight, r_h);
+    } else if (framewidth * pixelSize > r_w) {
+        fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle width, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, framewidth, r_w);
+    }
+    return s4rl_draw_sprite_at_coords(sprite, frameheight, framewidth, r_x, r_y, pixelSize, palette, palette_size);
+}
 #endif
