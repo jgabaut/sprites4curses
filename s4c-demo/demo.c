@@ -482,7 +482,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                 framesCounter++;    // Count frames
                 if (framesCounter % 2 == 0)
                 {
-                    current_anim_frame = ( current_anim_frame < 60 ? current_anim_frame +1 : 0);
+                    current_anim_frame = ( current_anim_frame < num_frames-1 ? current_anim_frame +1 : 0);
                     curr_sprite = s4c_new_sprite(sprites[current_anim_frame], 17, 17, palette, PALETTE_S4C_H_TOTCOLORS);
                 }
                 // Press enter to change to ENDING screen
@@ -530,8 +530,6 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     // TODO: Draw GAMEPLAY screen here!
                     Rectangle r = CLITERAL(Rectangle){0, 0, screenWidth, screenHeight};
                     DrawRectangleRec(r, RAYWHITE);
-                    DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
-                    DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
                     //int res = s4rl_draw_sprite_at_rect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
                     int res = s4rl_draw_s4c_sprite_at_rect(curr_sprite, r, 24);
                     if (res != 0) {
