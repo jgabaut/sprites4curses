@@ -820,18 +820,27 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
  * @param pixelSize The size for each pixel's square.
  * @param palette The pointer to s4c color palette/array.
  * @param palette_size The size of s4c color palette/array.
+ * @return 0 if successful, negative values otherwise.
  * @see s4rl_draw_sprite_at_coords()
  */
-void s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size) {
+int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size) {
     float r_x = rect.x;
     float r_y = rect.y;
     float r_w = rect.width;
     float r_h = rect.height;
+    int sanity = 0;
     if (frameheight * pixelSize > r_h) {
         fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle height, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, frameheight, r_h);
+        sanity = S4C_ERR_SMALL_WIN;
     } else if (framewidth * pixelSize > r_w) {
         fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle width, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, framewidth, r_w);
+        sanity = S4C_ERR_SMALL_WIN;
     }
-    return s4rl_draw_sprite_at_coords(sprite, frameheight, framewidth, r_x, r_y, pixelSize, palette, palette_size);
+    if (sanity != 0) {
+        return sanity;
+    } else {
+        s4rl_draw_sprite_at_coords(sprite, frameheight, framewidth, r_x, r_y, pixelSize, palette, palette_size);
+        return 0;
+    }
 }
 #endif

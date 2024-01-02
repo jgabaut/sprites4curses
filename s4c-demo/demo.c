@@ -530,7 +530,10 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     DrawRectangleRec(r, RAYWHITE);
                     DrawText("GAMEPLAY SCREEN", 20, 20, 40, MAROON);
                     DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
-                    s4rl_draw_sprite_at_rect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+                    int res = s4rl_draw_sprite_at_rect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+                    if (res != 0) {
+                        fprintf(stderr,"%s():    Failed s4rl_draw_sprite_at_rect()", __func__);
+                    }
                 } break;
                 case ENDING:
                 {
