@@ -794,6 +794,7 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
         int color_index = c - '1';
         Color color;
         if (color_index < 0 || color_index > palette_size) {
+            fprintf(stderr,"%s():    Invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, color_index, palette_size);
             color = BLACK;
         } else {
             color = color_from_s4c_color(palette[color_index]);
