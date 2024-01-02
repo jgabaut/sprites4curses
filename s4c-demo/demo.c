@@ -434,29 +434,24 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #else
     int screenWidth = 800;
     int screenHeight = 450;
-    int logo_sleep = 120;
+    int logo_sleep = 60;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
-    InitWindow(screenWidth, screenHeight, "KLS test");
+    InitWindow(screenWidth, screenHeight, "S4Raylib test");
 
     Screen currentScreen = LOGO;
 
     // TODO: Initialize all required variables and load all required data here!
-
     int framesCounter = 0;          // Useful to count frames
-
     SetTargetFPS(60);               // Set desired framerate (frames-per-second)
-                                    //
     int current_anim_frame = 0;
 
     while (!WindowShouldClose()) {
         // Update
         //----------------------------------------------------------------------------------
-
         screenWidth = GetScreenWidth();
         screenHeight = GetScreenHeight();
-
         switch(currentScreen)
         {
             case LOGO:
@@ -464,8 +459,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                 // TODO: Update LOGO screen variables here!
 
                 framesCounter++;    // Count frames
-
-                // Wait for 2 seconds (120 frames) before jumping to TITLE screen
+                // Wait for logo_sleep frames before jumping to TITLE screen
                 if (framesCounter > logo_sleep)
                 {
                     currentScreen = TITLE;
@@ -489,7 +483,6 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                 {
                     current_anim_frame = ( current_anim_frame < 60 ? current_anim_frame +1 : 0);
                 }
-
                 // Press enter to change to ENDING screen
                 if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
                 {
@@ -499,7 +492,6 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
             case ENDING:
             {
                 // TODO: Update ENDING screen variables here!
-
                 // Press enter to return to TITLE screen
                 if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
                 {
@@ -521,8 +513,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                 case LOGO:
                 {
                     // TODO: Draw LOGO screen here!
-                    //DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
-                    //DrawText("WAIT for 2 SECONDS...", 290, 220, 20, GRAY);
+                    DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
+                    DrawText("WAIT for 1 SECOND...", 290, 220, 20, GRAY);
                 } break;
                 case TITLE:
                 {
