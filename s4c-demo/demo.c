@@ -48,9 +48,14 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	printf("\n\n\t\tDEMO for ");
 	S4C_PRINTVERSION();
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
+#ifdef S4RAYLIB_BUILD
+    printf("\n\n\t\tRaylib extension enabled\n");
+#endif
 	printf("\n\t\t[Press Enter to start the demo]\n");
 	int drop_res = scanf("%*c");
 	drop_res = system("clear");
+
+#ifndef S4RAYLIB_BUILD
 
 	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
 	printf("\n\t\t[Press Enter to continue]\n");
@@ -414,6 +419,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	clear();
 	refresh();
 	endwin();
+#endif
 	printf("\n\n\t\tEnd of demo.");
 	printf("\n\t\t[Press Enter to end the demo]\n");
 	drop_res = scanf("%*c");

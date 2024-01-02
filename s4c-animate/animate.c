@@ -63,6 +63,8 @@ void debug_s4c_color(S4C_Color* color) {
 	debug_s4c_color_2file(color,stdout);
 }
 
+#ifndef S4RAYLIB_BUILD
+
 /**
  * Initialises a color pair from a passed S4C_Color pointer.
  * @param palette The S4C_Color pointer array at hand.
@@ -89,6 +91,7 @@ void init_s4c_color_pair(S4C_Color* color, int color_index) {
 	init_color(color_index, proportional_r, proportional_g, proportional_b);
    	init_pair(color_index, color_index, 0);
 }
+#endif
 
 const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1] = {
 	"S4C_BLACK",
@@ -133,6 +136,7 @@ const char* s4c_color_name(S4C_Color_Index color_index) {
 	return s4c_color_strings[color_index-S4C_MIN_COLOR_INDEX];
 }
 
+#ifndef S4RAYLIB_BUILD
 /**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
@@ -658,6 +662,7 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
 	wrefresh(w);
 	return 1;
 }
+#endif
 
 /**
  * Takes a source animation vector matrix and a destination to copy to.
@@ -737,3 +742,37 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
     free(anim);
     *animation = NULL; // Set the pointer to NULL after freeing the memory
 }
+
+#ifdef S4RAYLIB_BUILD
+Color color_from_s4c_color(S4C_Color c) {
+    return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
+}
+
+void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, Color color) {
+    for (int i = 0; i < line_length; i++) {
+        const char c = line[i];
+        int color_index = c - '1';
+        //Color converted = color_from_s4c_color(palette[color_index]);
+        DrawRectangle(startX + (i * (pixelSize)), coordY, pixelSize, pixelSize, color);
+    }
+}
+
+int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, Color color) {
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// TODO: Check if window is big enough
+	//int win_rows, win_cols;
+	//getmaxyx(w, win_rows, win_cols);
+	//if (win_rows < rows + startY || win_cols < cols + startX) {
+	//	return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+	//}
+
+    for (int j=0; j<rows; j++) {
+        // Print current frame line
+		s4rl_print_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, color);
+	}
+	return 1;
+}
+#endif

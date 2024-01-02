@@ -23,18 +23,20 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#ifndef S4RAYLIB_BUILD
 #ifndef _WIN32
 #include <ncurses.h>
 #else
 #include <ncursesw/ncurses.h>
 #endif
 #include <pthread.h>
+#endif
 
 
-#define S4C_ANIMATE_VERSION "0.3.6"
+#define S4C_ANIMATE_VERSION "0.4.0"
 #define S4C_ANIMATE_MAJOR_VERSION 0
-#define S4C_ANIMATE_MINOR_VERSION 3
-#define S4C_ANIMATE_PATCH_VERSION 6
+#define S4C_ANIMATE_MINOR_VERSION 4
+#define S4C_ANIMATE_PATCH_VERSION 0
 
 /**
  * Defines current version for s4c files.
@@ -139,6 +141,7 @@ extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 #define	S4C_ERR_RANGE -7 /**< Defines the error value for invalid range requests for animate_rangeof_sprites_at_coords().*/
 
+#ifndef S4RAYLIB_BUILD
 /*
  * Holds arguments for a call to animate_sprites_thread_at().
  * WIP.
@@ -177,8 +180,20 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
 
 int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+#endif
 
 void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
+
+#ifdef S4RAYLIB_BUILD
+#ifndef RAYLIB_H
+#include <raylib.h>
+#endif
+
+Color color_from_s4c_color(S4C_Color c);
+void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, Color color);
+int s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, Color color);
+#endif // S4RAYLIB_BUILD
+
 #endif

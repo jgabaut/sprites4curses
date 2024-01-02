@@ -23,9 +23,13 @@ LDADD = $(S4C_LDFLAGS)
 # Linker flag to strip symbols
 AM_LDFLAGS = -s
 
-# Compiler flags
-AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
 
+# Compiler flags
+if S4RAYLIB_BUILD
+AM_CFLAGS = $(S4C_CFLAGS) -O2 -DS4RAYLIB_BUILD
+else
+AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
+endif
 
 # Build rule for object files
 %.o: %.c
