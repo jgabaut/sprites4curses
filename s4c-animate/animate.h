@@ -141,6 +141,16 @@ extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 #define	S4C_ERR_RANGE -7 /**< Defines the error value for invalid range requests for animate_rangeof_sprites_at_coords().*/
 
+typedef struct S4C_Sprite {
+    char data[MAXROWS][MAXCOLS];
+    int frame_height;
+    int frame_width;
+    S4C_Color* palette;
+    int palette_size;
+} S4C_Sprite;
+
+S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size);
+
 #ifndef S4RAYLIB_BUILD
 /*
  * Holds arguments for a call to animate_sprites_thread_at().
@@ -194,6 +204,7 @@ Color color_from_s4c_color(S4C_Color c);
 //void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);
 void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size);
+int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize);
 #endif // S4RAYLIB_BUILD
 
 #endif

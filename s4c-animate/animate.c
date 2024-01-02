@@ -63,6 +63,29 @@ void debug_s4c_color(S4C_Color* color) {
 	debug_s4c_color_2file(color,stdout);
 }
 
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the S4C_Color palette pointer and the palette size.
+ * Contructs and returns an S4C_Sprite with its fields using the passed arguments.
+ * @param data The char matrix to wrap.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ */
+S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size) {
+    S4C_Sprite res = {0};
+    res.frame_height = frameheight;
+    res.frame_width = framewidth;
+    res.palette = palette;
+    res.palette_size = palette_size;
+    for (int i = 0; i < frameheight; i++) {
+        for (int j = 0; j < framewidth; j++) {
+            res.data[i][j] = data[i][j];
+        }
+    }
+    return res;
+}
+
 #ifndef S4RAYLIB_BUILD
 
 /**
@@ -842,5 +865,18 @@ int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int framehe
         s4rl_draw_sprite_at_coords(sprite, frameheight, framewidth, r_x, r_y, pixelSize, palette, palette_size);
         return 0;
     }
+}
+
+/**
+ * Takes a S4C_Sprite, the Rectangle to print into, and the pixel size (square side).
+ * Calls s4rl_draw_sprite_at_rect().
+ * @param sprite The S4C_Sprite to draw.
+ * @param rect The Rectangle to print into.
+ * @param pixelSize The size for each pixel's square.
+ * @return 0 if successful, negative values otherwise.
+ * @see s4rl_draw_sprite_at_rect()
+ */
+int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize) {
+    return s4rl_draw_sprite_at_rect(sprite.data, rect, sprite.frame_height, sprite.frame_width, pixelSize, sprite.palette, sprite.palette_size);
 }
 #endif
