@@ -38,6 +38,17 @@
 #define S4C_ANIMATE_MINOR_VERSION 4
 #define S4C_ANIMATE_PATCH_VERSION 0
 
+#define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
+#define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
+#define S4C_PATCH S4C_ANIMATE_PATCH_VERSION
+
+/**
+ * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
+ */
+static const int S4C_ANIMATE_API_VERSION_INT =
+    (S4C_MAJOR * 1000000 + S4C_MINOR * 10000 + S4C_PATCH * 100);
+/**< Represents current version with numeric format.*/
+
 /**
  * Defines current version for s4c files.
  */
@@ -49,6 +60,10 @@ void s4c_echoVersionToFile(FILE* f);
 #define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
 #define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
 
+/**
+ * Returns current s4c version as an integer.
+ */
+const int int_s4c_version(void);
 
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/

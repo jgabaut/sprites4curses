@@ -41,6 +41,14 @@ void s4c_echoVersionToFile(FILE* f) {
 }
 
 /**
+ * Returns the constant int representing current version for s4c.
+ * @return A constant int in numeric format for current s4c version.
+ */
+const int int_s4c_version(void) {
+    return S4C_ANIMATE_API_VERSION_INT;
+}
+
+/**
  * Takes a S4C_Color pointer and a FILE pointer to print to.
  *
  * @param color The color to debug.
