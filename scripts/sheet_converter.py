@@ -164,9 +164,9 @@ def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize,
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 8:
-        print("Wrong number of arguments. Expected 8, got {}.".format(len(argv)))
-        print("--> {}\n".format(argv))
+    if (len(argv) -1) != 7:
+        print("Wrong number of arguments. Expected 7, got {}.".format(len(argv)-1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         mode = argv[1]
@@ -178,6 +178,8 @@ def main(argv):
             mode = "cfile"
         else :
             print("Error: wrong mode request")
+            print("--> Found: {}".format(mode))
+            print("--> Expected: \'C-impl\' | \'C-header\' | \'s4c-file\'\n")
             usage()
 
         filename = argv[2]

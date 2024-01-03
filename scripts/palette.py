@@ -136,9 +136,9 @@ def convert_palette(mode, palette_path, s4c_path):
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 4:
-        print("Wrong number of arguments. Expected 4, got {}.".format(len(argv)))
-        print("--> {}\n".format(argv))
+    if (len(argv)-1) != 3:
+        print("Wrong number of arguments. Expected 3, got {}.".format(len(argv)-1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         mode = argv[1]
@@ -148,6 +148,8 @@ def main(argv):
             mode = "cfile"
         else :
             print("Error: wrong mode request")
+            print("--> Found: {}".format(mode))
+            print("--> Expected: \'C-impl\' | \'C-header\'\n")
             usage()
         palette_path = argv[2]
         s4c_path = argv[3]

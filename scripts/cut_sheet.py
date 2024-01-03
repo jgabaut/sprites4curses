@@ -97,9 +97,9 @@ def cut_spritesheet(filename, output_directory, spriteSizeX, spriteSizeY, separa
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 8:
-        print("Wrong number of arguments. Expected 8, got {}.".format(len(argv)))
-        print("--> {}\n".format(argv))
+    if (len(argv)-1) != 7:
+        print("Wrong number of arguments. Expected 7, got {}.".format(len(argv) -1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         filename = argv[1]

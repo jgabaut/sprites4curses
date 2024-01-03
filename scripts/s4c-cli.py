@@ -1,4 +1,39 @@
 #!/usr/bin/python3
+"""! @brief Program that handle s4c scripts as subcommands. WIP."""
+
+##
+# @file s4c-cli.py
+#
+# @brief Program that handle s4c scripts as subcommands. WIP.
+#
+# @section description_s4c_cli Description
+# The png parsing scripts use Pillow, and the mapping is done against a preset color list.
+# The list is described in palette.gpl to aid in exporting images with the correct color indexing.
+#
+# @section libraries_main Libraries/Modules
+# - Pillow (https://pillow.readthedocs.io/en/stable/)
+#   - Access to image manipulation functions.
+# - sys standard library (https://docs.python.org/3/library/sys.html)
+#   - Access to command line arguments.
+# - glob standard library (https://docs.python.org/3/library/glob.html)
+#   - Access to pattern expansion.
+# - re standard library (https://docs.python.org/3/library/re.html)
+#   - Access to regular expressions.
+# - os standard library (https://docs.python.org/3/library/os.html)
+#   - Access to program name.
+# - math standard library (https://docs.python.org/3/library/math.html)
+#   - Access to sqrt.
+#
+# @section notes_s4c_cli Notes
+# - Color map should have the same order as the palette used to index the sprites.
+#
+# @section todo_s4c_cli TODO
+# - Check if the encoded value is exceeding latin literals.
+#
+# @section author_s4c_cli Author(s)
+# - Created by jgabaut on 02/01/2024.
+# - Modified by jgabaut on 03/01/2024.
+
 import sys
 import os
 from cut_sheet import main as cut_sheet_main
@@ -37,7 +72,8 @@ def main(argv):
         elif subcommand.lower() == "cut_sheet" or subcommand.lower() == "palette" or subcommand.lower() == "sprites" or subcommand.lower() == "sheet_converter" or subcommand.lower() == "png_resize":
             print("Running subcommand: \"{}\"".format(subcommand))
             sub_args.append(subcommand)
-            sub_args.append(argv[2:])
+            for arg in argv[2:]:
+                sub_args.append(arg)
             query = subcommand.lower()
             if query == "cut_sheet":
                 cut_sheet_main(sub_args)
