@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install XCursor dev
+      run: sudo apt install libxcursor-dev
     - name: Check out raylib
       uses: actions/checkout@master
       with:
