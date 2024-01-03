@@ -519,6 +519,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     // TODO: Draw LOGO screen here!
                     DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
                     DrawText("Using s4c-animate v" S4C_ANIMATE_VERSION, 250, 250, 20, BLACK);
+                    DrawText("Using raylib v" RAYLIB_VERSION, 250, 280, 20, BLACK);
                     DrawText("WAIT for 2 SECONDs...", 290, 220, 20, GRAY);
                 } break;
                 case GAMEPLAY:
