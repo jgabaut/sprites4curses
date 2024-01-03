@@ -529,7 +529,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     Rectangle r = CLITERAL(Rectangle){0, 0, screenWidth, screenHeight};
                     DrawRectangleRec(r, RAYWHITE);
                     //int res = s4rl_draw_sprite_at_rect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
-                    int res = s4rl_draw_s4c_sprite_at_rect(curr_sprite, r, 24);
+                    //int res = DrawSpriteRect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+                    //int res = s4rl_draw_s4c_sprite_at_rect(curr_sprite, r, 24);
+                    int res = DrawS4CSpriteRect(curr_sprite, r, 24);
                     if (res != 0) {
                         fprintf(stderr,"%s():    Failed s4rl_draw_s4c_sprite_at_rect().\n", __func__);
                     }

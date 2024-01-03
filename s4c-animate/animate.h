@@ -207,8 +207,11 @@ Color color_from_s4c_color(S4C_Color c);
 //void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);
 void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size);
+#define DrawSprite(sprite, height, width, pixelsize, palette, palette_size) s4rl_draw_sprite_at_coords((sprite),(height),(width),0,0,(pixelsize),(palette),(palette_size))
+#define DrawSpriteRect(sprite, rect, height, width, pixelsize, palette, palette_size) s4rl_draw_sprite_at_rect((sprite),(rect),(height),(width),(pixelsize),(palette),(palette_size))
 int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 framesize, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize);
+#define DrawS4CSpriteRect(sprite, rect, pixelsize) s4rl_draw_s4c_sprite_at_rect((sprite),(rect),(pixelsize))
 #endif // S4C_RAYLIB_EXTENSION
 
 #endif
