@@ -872,19 +872,6 @@ int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int framehe
 }
 
 /**
- * Takes a S4C_Sprite, the Rectangle to print into, and the pixel size (square side).
- * Calls s4rl_draw_sprite_at_rect().
- * @param sprite The S4C_Sprite to draw.
- * @param rect The Rectangle to print into.
- * @param pixelSize The size for each pixel's square.
- * @return 0 if successful, negative values otherwise.
- * @see s4rl_draw_sprite_at_rect()
- */
-int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize) {
-    return s4rl_draw_sprite_at_rect(sprite.data, rect, sprite.frame_height, sprite.frame_width, pixelSize, sprite.palette, sprite.palette_size);
-}
-
-/**
  * Takes a char matrix, the Rectangle to print into, a Vector for frame dimensions, the pixel size (square side), the S4C_Color palette pointer and the palette size.
  * Calls s4rl_draw_sprite_at_rect().
  * @param sprite The S4C_Sprite to draw.
@@ -900,4 +887,16 @@ int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 f
     return s4rl_draw_sprite_at_rect(sprite, rect, framesize.y, framesize.x, pixelSize, palette, palette_size);
 }
 
+/**
+ * Takes a S4C_Sprite, the Rectangle to print into, and the pixel size (square side).
+ * Calls s4rl_draw_sprite_at_rect().
+ * @param sprite The S4C_Sprite to draw.
+ * @param rect The Rectangle to print into.
+ * @param pixelSize The size for each pixel's square.
+ * @return 0 if successful, negative values otherwise.
+ * @see s4rl_draw_sprite_at_rect()
+ */
+int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize) {
+    return s4rl_draw_sprite_at_rect(sprite.data, rect, sprite.frame_height, sprite.frame_width, pixelSize, sprite.palette, sprite.palette_size);
+}
 #endif
