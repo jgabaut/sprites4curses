@@ -2,6 +2,8 @@
 
   A library of scripts and C functions to deal with sprites in ncurses.
 
+  It also offers a seamless transition into raylib API, by providing wrapper functions to reuse assets on both graphic modes. Link to raylib repo: [link](https://github.com/raysan5/raylib)
+
 ## Table of Contents
 
 + [Scripts](#scripts)
@@ -13,6 +15,7 @@
   + [palette.py](#palette_py)
 + [animate.h](#animate)
   + [Prerequisites](#prerequisites_animate)
+  + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
   + [demo.c](#demo_c)
 + [Scripts usage](#scripts_usage)
@@ -98,10 +101,10 @@
   -------------------------------------------------------------------------------
   Language                     files          blank        comment           code
   -------------------------------------------------------------------------------
-  C                                2             69            211            341
-  C/C++ Header                     2             30             22             96
+  C                                2             95            304            523
+  C/C++ Header                     2             41             43            142
   -------------------------------------------------------------------------------
-  SUM:                             4             99            233            437
+  SUM:                             4            136            347            665
   -------------------------------------------------------------------------------
   ```
 
@@ -113,6 +116,18 @@
 The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
 
 ### Prerequisites <a name = "prerequisites_animate"></a>
+
+  To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
+
+### Raylib extension <a name = "raylib_ext"></a>
+
+  To produce the Raylib `./demo`, run:
+
+  - `./configure --enable-raylib=yes && make rebuild`
+
+  In case you want to include `animate.h` as Raylib extension in a C file, you should define this macro to make sure the included declarations work as expected:
+
+  - `S4C_RAYLIB_EXTENSION`
 
 ### Terminal capabilities <a name = "terminal_capabilities"></a>
 
