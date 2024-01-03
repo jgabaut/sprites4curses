@@ -18,7 +18,7 @@ jobs:
         repository: raysan5/raylib
     - name: Prep raylib
       run: |
-        cd raylib/src && make PLATFORM=PLATFORM_DESKTOP && sudo make install
+        cd src && make PLATFORM=PLATFORM_DESKTOP && sudo make install
     - uses: actions/checkout@v3
     - name: Run aclocal
       run: aclocal
