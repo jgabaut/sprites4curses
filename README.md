@@ -36,6 +36,9 @@
   - `make`
   - `python`, to generate `./s4c-animate/palette.h` and `./s4c-animate/palette.c` from `./palette.gpl`
 
+  To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
+  - More info at [this section](#raylib_ext).
+
 ### sprites.py <a name = "sprites_py"></a>
 
   This is a python script that converts PNG's to a char representation.
@@ -116,8 +119,6 @@
 The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
 
 ### Prerequisites <a name = "prerequisites_animate"></a>
-
-  To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
 
 ### Raylib extension <a name = "raylib_ext"></a>
 
