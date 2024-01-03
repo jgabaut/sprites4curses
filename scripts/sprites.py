@@ -32,7 +32,7 @@
 #
 # @section author_sprites Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 13/11/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 from PIL import Image
@@ -178,6 +178,8 @@ def print_converted_sprites(mode, direc):
 def main(argv):
     """! Main program entry."""
     if len(argv) != 3:
+        print("Wrong number of arguments. Expected 3, got {}.".format(len(argv)))
+        print("--> {}\n".format(argv))
         usage()
     else:
         mode = argv[1]

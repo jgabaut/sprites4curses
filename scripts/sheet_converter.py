@@ -35,7 +35,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 13/11/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 from PIL import Image
@@ -165,6 +165,8 @@ def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize,
 def main(argv):
     """! Main program entry."""
     if len(argv) != 8:
+        print("Wrong number of arguments. Expected 8, got {}.".format(len(argv)))
+        print("--> {}\n".format(argv))
         usage()
     else:
         mode = argv[1]
