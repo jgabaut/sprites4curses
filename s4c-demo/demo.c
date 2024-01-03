@@ -60,7 +60,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
     int drop_res = -1;
 #ifndef S4C_RAYLIB_EXTENSION
 	printf("\n\t\t[Press Enter to start the demo]\n");
-	int drop_res = scanf("%*c");
+	drop_res = scanf("%*c");
 #ifndef _WIN32
 	drop_res = system("clear");
 #else
@@ -91,8 +91,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
         	fprintf(stderr, "Error: could not open palette file.\n");
        		return -1;
     	}
-#endif
 	int frametime = DEMOFRAMETIME;
+#endif
+
 	int num_frames = DEMOFRAMES;
 	int frame_height = DEMOROWS;
 	int frame_width = DEMOCOLS;

@@ -23,12 +23,12 @@ LDADD = $(S4C_LDFLAGS)
 # Linker flag to strip symbols
 AM_LDFLAGS = -s
 
-
 # Compiler flags
-if S4C_RAYLIB_BUILD
-AM_CFLAGS = $(S4C_CFLAGS) -O2 -DS4C_RAYLIB_EXTENSION
-else
 AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
+
+if S4C_RAYLIB_BUILD
+AM_CFLAGS += -DS4C_RAYLIB_EXTENSION
+else
 endif
 
 if S4C_EXPERIMENTAL_BUILD
