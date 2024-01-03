@@ -2,7 +2,7 @@
 """! @brief Program that handle s4c scripts as subcommands. WIP."""
 
 ##
-# @file s4c-cli.py
+# @file s4c_cli.py
 #
 # @brief Program that handle s4c scripts as subcommands. WIP.
 #
