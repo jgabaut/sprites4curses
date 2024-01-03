@@ -51,13 +51,13 @@ def print_subcommands():
     print("\t{}".format('\n\t'.join(subcommands)))
 
 def usage():
-    """! Run s4c scripts as subcommands."""
+    """! Prints correct invocation."""
     print("Wrong arguments.");
     print("\nUsage:\tpython {} <subcommand>".format(os.path.basename(__file__)))
     print_subcommands()
 
 def main(argv):
-    """! Main program entry."""
+    """! Main program entry. Run s4c scripts as subcommands."""
     if len(argv) < 2:
         usage()
     else:
