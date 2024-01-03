@@ -2,10 +2,13 @@
 
   A library of scripts and C functions to deal with sprites in ncurses.
 
+  It also offers a seamless transition into raylib API, by providing wrapper functions to reuse assets on both graphic modes. Link to raylib repo: [link](https://github.com/raysan5/raylib)
+
 ## Table of Contents
 
 + [Scripts](#scripts)
   + [Prerequisites](#prerequisites_scripts)
+  + [s4c-cli.py](#s4c_cli_py)
   + [sprites.py](#sprites_py)
   + [sheet_converter.py](#sheet_converter_py)
   + [cut_sheet_.py](#cut_sheet_py)
@@ -13,6 +16,7 @@
   + [palette.py](#palette_py)
 + [animate.h](#animate)
   + [Prerequisites](#prerequisites_animate)
+  + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
   + [demo.c](#demo_c)
 + [Scripts usage](#scripts_usage)
@@ -32,6 +36,17 @@
   - `autoconf`
   - `make`
   - `python`, to generate `./s4c-animate/palette.h` and `./s4c-animate/palette.c` from `./palette.gpl`
+
+  To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
+  - More info at [this section](#raylib_ext).
+
+### s4c-cli.py <a name = "s4c_cli_py"></a>
+
+  This is a wrapper script that imports the local scripts and enables calling their main as a subcommand.
+
+  To ensure it works as a general program, you should try to install Pillow as a system library. Running:
+    `pip install Pillow`
+  may give you hints about following recommended platform instructions for installation.
 
 ### sprites.py <a name = "sprites_py"></a>
 
@@ -98,10 +113,10 @@
   -------------------------------------------------------------------------------
   Language                     files          blank        comment           code
   -------------------------------------------------------------------------------
-  C                                2             69            211            341
-  C/C++ Header                     2             30             22             96
+  C                                2             95            304            523
+  C/C++ Header                     2             41             43            142
   -------------------------------------------------------------------------------
-  SUM:                             4             99            233            437
+  SUM:                             4            136            347            665
   -------------------------------------------------------------------------------
   ```
 
@@ -113,6 +128,16 @@
 The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
 
 ### Prerequisites <a name = "prerequisites_animate"></a>
+
+### Raylib extension <a name = "raylib_ext"></a>
+
+  To produce the Raylib `./demo`, run:
+
+  - `./configure --enable-raylib=yes && make rebuild`
+
+  In case you want to include `animate.h` as Raylib extension in a C file, you should define this macro to make sure the included declarations work as expected:
+
+  - `S4C_RAYLIB_EXTENSION`
 
 ### Terminal capabilities <a name = "terminal_capabilities"></a>
 
@@ -136,9 +161,16 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
 
   - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
-    `make; ./demo <( python sprites.py <directory> )`
+    `make; ./demo <( python sprites.py <directory> )
 
 # Scripts usage <a name = "scripts_usage"></a>
+
+  To run the cli wrapper:
+
+  - `python s4c-cli.py <subcommand> <subcommand_args>`
+
+  - Some commands may be more useful when their output is redirected:
+    `python s4c-cli.py <subcommand> <subcommand_args> > file.txt`
 
   - To run the sprites script and redirect output on "file.txt", give a directory to get the png's from:
 

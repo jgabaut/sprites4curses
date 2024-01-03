@@ -28,7 +28,7 @@
 #
 # @section author_palette Author(s)
 # - Created by jgabaut on 01/09/2023.
-# - Modified by jgabaut on 20/09/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 import sys
@@ -38,7 +38,7 @@ import os
 import math
 
 ## The file format version.
-FILE_VERSION = "0.2.1"
+FILE_VERSION = "0.2.2"
 
 # Expects the palette name as first argument, output directory as second argument.
 
@@ -136,7 +136,9 @@ def convert_palette(mode, palette_path, s4c_path):
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 4:
+    if (len(argv)-1) != 3:
+        print("Wrong number of arguments. Expected 3, got {}.".format(len(argv)-1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         mode = argv[1]
@@ -146,6 +148,8 @@ def main(argv):
             mode = "cfile"
         else :
             print("Error: wrong mode request")
+            print("--> Found: {}".format(mode))
+            print("--> Expected: \'C-impl\' | \'C-header\'\n")
             usage()
         palette_path = argv[2]
         s4c_path = argv[3]

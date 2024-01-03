@@ -26,6 +26,14 @@ AM_LDFLAGS = -s
 # Compiler flags
 AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
 
+if S4C_RAYLIB_BUILD
+AM_CFLAGS += -DS4C_RAYLIB_EXTENSION
+else
+endif
+
+if S4C_EXPERIMENTAL_BUILD
+AM_CFLAGS += -DS4C_EXPERIMENTAL
+endif
 
 # Build rule for object files
 %.o: %.c

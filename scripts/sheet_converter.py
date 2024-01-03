@@ -35,7 +35,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 13/11/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 from PIL import Image
@@ -164,7 +164,9 @@ def convert_spritesheet(mode, filename, spriteSizeX, spriteSizeY, separatorSize,
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 8:
+    if (len(argv) -1) != 7:
+        print("Wrong number of arguments. Expected 7, got {}.".format(len(argv)-1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         mode = argv[1]
@@ -176,6 +178,8 @@ def main(argv):
             mode = "cfile"
         else :
             print("Error: wrong mode request")
+            print("--> Found: {}".format(mode))
+            print("--> Expected: \'C-impl\' | \'C-header\' | \'s4c-file\'\n")
             usage()
 
         filename = argv[2]

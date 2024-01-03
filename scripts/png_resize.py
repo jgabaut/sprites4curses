@@ -29,7 +29,7 @@
 #
 # @section author_spritesheet Author(s)
 # - Created by jgabaut on 24/02/2023.
-# - Modified by jgabaut on 04/03/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 from PIL import Image
@@ -69,7 +69,9 @@ def resize_sprites(directory, targetSizeX, targetSizeY):
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 4:
+    if (len(argv)-1) != 3:
+        print("Wrong number of arguments. Expected 3, got {}.".format(len(argv)-1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         direc = argv[1]

@@ -36,6 +36,8 @@ void usage(char* progname) {
     exit(EXIT_FAILURE);
 }
 
+typedef enum Screen { LOGO = 0, GAMEPLAY, ENDING } Screen;
+
 /*
  * Demo function showing how to call s4c-animate functions correctly.
  * It initialises a window pointer and all needed curses settings, before calling the animation functions.
@@ -47,10 +49,24 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	printf("\n\n\t\tDEMO for ");
 	S4C_PRINTVERSION();
+    printf("\n\n\t\tAPI version: {%i}\n", int_s4c_version());
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
+#ifdef S4C_RAYLIB_EXTENSION
+    printf("\n\n\t\tRaylib extension enabled\n");
+#endif
+#ifdef S4C_EXPERIMENTAL
+    printf("\n\n\t\tExperimental extension enabled\n");
+#endif
+
+    int drop_res = -1;
+#ifndef S4C_RAYLIB_EXTENSION
 	printf("\n\t\t[Press Enter to start the demo]\n");
-	int drop_res = scanf("%*c");
+	drop_res = scanf("%*c");
+#ifndef _WIN32
 	drop_res = system("clear");
+#else
+	drop_res = system("cls");
+#endif
 
 	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
 	printf("\n\t\t[Press Enter to continue]\n");
@@ -62,6 +78,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	printf("\n\t\t[Press Enter to continue]\n");
 	drop_res = scanf("%*c");
 	drop_res = system("clear");
+
 
 	// Open the palette file to read the color values and name
 	// Keep in mind that the file pointer will be closed by init_s4c_color_pairs(palette_file);
@@ -75,6 +92,14 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
         	fprintf(stderr, "Error: could not open palette file.\n");
        		return -1;
     	}
+	int frametime = DEMOFRAMETIME;
+#endif
+
+	int num_frames = DEMOFRAMES;
+	int frame_height = DEMOROWS;
+	int frame_width = DEMOCOLS;
+
+#ifndef S4C_RAYLIB_EXTENSION
 
 	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
@@ -111,14 +136,12 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	}
 
 	int reps = 1;
-	int frametime = DEMOFRAMETIME;
-	int num_frames = DEMOFRAMES;
-	int frame_height = DEMOROWS;
-	int frame_width = DEMOCOLS;
 
 	// Window must be big enough to fit the animation AND the boxing of the window.
 	// The boxing done by animate is 1 pixel thick. In this demo, we also add extra space to show that you can print at any coords with the at_coords function.
 	w = newwin(frame_height + 1 +2, frame_width + 1 +3, 0, 20);
+
+#endif
 
 	// Prepare the frames
 	char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
@@ -126,7 +149,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
+#ifndef S4C_RAYLIB_EXTENSION
 		endwin();
+#endif
 		switch (loadCheck) {
 			case S4C_ERR_FILEVERSION: {
         			fprintf(stderr,"S4C_ERR_FILEVERSION : Failed file version check.\n");
@@ -139,6 +164,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 		}
 		return loadCheck;
 	}
+
+#ifndef S4C_RAYLIB_EXTENSION
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
 	wclear(w);
@@ -178,7 +205,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
+    int result = -1;
 
+#ifdef S4C_EXPERIMENTAL
 	S4C_Animation* animation = malloc(sizeof(S4C_Animation));
 
 	s4c_copy_animation_alloc(animation,sprites,DEMOFRAMES,DEMOROWS,DEMOCOLS);
@@ -198,7 +227,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(w);
 	// Then we call the animation function with all the needed arguments
 
-	int result = s4c_display_frame(animation, 3, w, DEMOFRAMES, DEMOROWS, DEMOCOLS, test_x, test_y);
+	result = s4c_display_frame(animation, 3, w, DEMOFRAMES, DEMOROWS, DEMOCOLS, test_x, test_y);
 
 	mvwprintw(stdscr,6,20, "[Press Enter to continue] (And free the allocated animation.)");
 	wrefresh(stdscr);
@@ -238,6 +267,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	wclear(stdscr);
 	wrefresh(stdscr);
+#endif
+
 	mvwprintw(stdscr,3,2, "Let's see animate_sprites:");
 	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (0,0).");
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");
@@ -414,6 +445,116 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	clear();
 	refresh();
 	endwin();
+#else
+    int screenWidth = 800;
+    int screenHeight = 450;
+    int logo_sleep = 120;
+
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
+    InitWindow(screenWidth, screenHeight, "S4C Raylib test");
+
+    Screen currentScreen = LOGO;
+
+    // TODO: Initialize all required variables and load all required data here!
+    int framesCounter = 0;          // Useful to count frames
+    SetTargetFPS(60);               // Set desired framerate (frames-per-second)
+    int current_anim_frame = 0;
+    S4C_Sprite curr_sprite = s4c_new_sprite(sprites[current_anim_frame], 17, 17, palette, PALETTE_S4C_H_TOTCOLORS);
+
+    while (!WindowShouldClose()) {
+        // Update
+        //----------------------------------------------------------------------------------
+        screenWidth = GetScreenWidth();
+        screenHeight = GetScreenHeight();
+        switch(currentScreen)
+        {
+            case LOGO:
+            {
+                // TODO: Update LOGO screen variables here!
+
+                framesCounter++;    // Count frames
+                // Wait for logo_sleep frames before jumping to GAMEPLAY screen
+                if (framesCounter % logo_sleep == 0)
+                {
+                    currentScreen = GAMEPLAY;
+                }
+            } break;
+            case GAMEPLAY:
+            {
+                // TODO: Update GAMEPLAY screen variables here!
+                framesCounter++;    // Count frames
+                if (framesCounter % 2 == 0)
+                {
+                    current_anim_frame = ( current_anim_frame < num_frames-1 ? current_anim_frame +1 : 0);
+                    curr_sprite = s4c_new_sprite(sprites[current_anim_frame], 17, 17, palette, PALETTE_S4C_H_TOTCOLORS);
+                }
+                // Press enter to change to ENDING screen
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+                {
+                    currentScreen = ENDING;
+                }
+            } break;
+            case ENDING:
+            {
+                // TODO: Update ENDING screen variables here!
+                // Press enter to return to LOGO screen
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+                {
+                    currentScreen = LOGO;
+                }
+            } break;
+            default: break;
+        }
+        //----------------------------------------------------------------------------------
+
+        // Draw
+        //----------------------------------------------------------------------------------
+        BeginDrawing();
+
+            ClearBackground(RAYWHITE);
+
+            switch(currentScreen)
+            {
+                case LOGO:
+                {
+                    // TODO: Draw LOGO screen here!
+                    DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
+                    DrawText("Using s4c-animate v" S4C_ANIMATE_VERSION, 250, 250, 20, BLACK);
+                    DrawText("Using raylib v" RAYLIB_VERSION, 250, 280, 20, BLACK);
+                    DrawText("WAIT for 2 SECONDs...", 290, 220, 20, GRAY);
+                } break;
+                case GAMEPLAY:
+                {
+                    // TODO: Draw GAMEPLAY screen here!
+                    Rectangle r = CLITERAL(Rectangle){0, 0, screenWidth, screenHeight};
+                    DrawRectangleRec(r, RAYWHITE);
+                    //int res = s4rl_draw_sprite_at_rect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+                    //int res = DrawSpriteRect(sprites[current_anim_frame], r, 17, 17, 24, palette, PALETTE_S4C_H_TOTCOLORS);
+                    //int res = s4rl_draw_s4c_sprite_at_rect(curr_sprite, r, 24);
+                    int res = DrawS4CSpriteRect(curr_sprite, r, 24);
+                    if (res != 0) {
+                        fprintf(stderr,"%s():    Failed s4rl_draw_s4c_sprite_at_rect().\n", __func__);
+                    }
+                } break;
+                case ENDING:
+                {
+                    // TODO: Draw ENDING screen here!
+                    DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
+                    DrawText("ENDING SCREEN", 20, 20, 40, DARKBLUE);
+                    DrawText("End of demo for s4c-animate v" S4C_ANIMATE_VERSION ", raylib extension", 20, 120, 28, BLACK);
+                    DrawText("PRESS ENTER or TAP to RETURN to LOGO SCREEN", 120, 220, 20, DARKBLUE);
+                } break;
+                default: break;
+            }
+
+        EndDrawing();
+        //----------------------------------------------------------------------------------
+    }
+
+    CloseWindow();
+    return 0;
+#endif
 	printf("\n\n\t\tEnd of demo.");
 	printf("\n\t\t[Press Enter to end the demo]\n");
 	drop_res = scanf("%*c");

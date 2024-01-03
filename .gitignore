@@ -35,3 +35,6 @@ aclocal.m4
 configure~
 Makefile
 Makefile.in
+
+# ignore __pycache__
+__pycache__

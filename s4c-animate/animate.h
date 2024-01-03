@@ -23,18 +23,31 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
 #include <ncurses.h>
 #else
 #include <ncursesw/ncurses.h>
 #endif
 #include <pthread.h>
+#endif
 
 
-#define S4C_ANIMATE_VERSION "0.3.6"
+#define S4C_ANIMATE_VERSION "0.4.0"
 #define S4C_ANIMATE_MAJOR_VERSION 0
-#define S4C_ANIMATE_MINOR_VERSION 3
-#define S4C_ANIMATE_PATCH_VERSION 6
+#define S4C_ANIMATE_MINOR_VERSION 4
+#define S4C_ANIMATE_PATCH_VERSION 0
+
+#define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
+#define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
+#define S4C_PATCH S4C_ANIMATE_PATCH_VERSION
+
+/**
+ * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
+ */
+static const int S4C_ANIMATE_API_VERSION_INT =
+    (S4C_MAJOR * 1000000 + S4C_MINOR * 10000 + S4C_PATCH * 100);
+/**< Represents current version with numeric format.*/
 
 /**
  * Defines current version for s4c files.
@@ -47,11 +60,17 @@ void s4c_echoVersionToFile(FILE* f);
 #define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
 #define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
 
+/**
+ * Returns current s4c version as an integer.
+ */
+const int int_s4c_version(void);
 
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
+#ifdef S4C_EXPERIMENTAL
 typedef char*** S4C_Animation;
+#endif
 
 /*
  * Defines a color.
@@ -139,6 +158,17 @@ extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 #define	S4C_ERR_CURSOR -6 /**< Defines the error value for when the terminal doesn't support changing cursor visibility.*/
 #define	S4C_ERR_RANGE -7 /**< Defines the error value for invalid range requests for animate_rangeof_sprites_at_coords().*/
 
+typedef struct S4C_Sprite {
+    char data[MAXROWS][MAXCOLS];
+    int frame_height;
+    int frame_width;
+    S4C_Color* palette;
+    int palette_size;
+} S4C_Sprite;
+
+S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size);
+
+#ifndef S4C_RAYLIB_EXTENSION
 /*
  * Holds arguments for a call to animate_sprites_thread_at().
  * WIP.
@@ -165,8 +195,6 @@ void slideshow_s4c_color_pairs(WINDOW* win);
 
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
-int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* file, int frames, int rows, int columns);
-
 int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
 
 void *s4c_animate_sprites_thread_at(void *animate_args);
@@ -176,9 +204,29 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
 int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+#ifdef S4C_EXPERIMENTAL
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
-
-void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
+#endif
+#endif
+
+int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* file, int frames, int rows, int columns);
+void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
+#ifdef S4C_RAYLIB_EXTENSION
+#ifndef RAYLIB_H
+#include <raylib.h>
+#endif
+
+Color color_from_s4c_color(S4C_Color c);
+//void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);
+void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
+int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size);
+#define DrawSprite(sprite, height, width, pixelsize, palette, palette_size) s4rl_draw_sprite_at_coords((sprite),(height),(width),0,0,(pixelsize),(palette),(palette_size))
+#define DrawSpriteRect(sprite, rect, height, width, pixelsize, palette, palette_size) s4rl_draw_sprite_at_rect((sprite),(rect),(height),(width),(pixelsize),(palette),(palette_size))
+int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 framesize, int pixelSize, S4C_Color* palette, int palette_size);
+int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize);
+#define DrawS4CSpriteRect(sprite, rect, pixelsize) s4rl_draw_s4c_sprite_at_rect((sprite),(rect),(pixelsize))
+#endif // S4C_RAYLIB_EXTENSION
+
 #endif

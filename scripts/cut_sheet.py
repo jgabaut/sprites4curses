@@ -36,7 +36,7 @@
 #
 # @section author_cut_spritesheet Author(s)
 # - Created by jgabaut on 04/03/2023.
-# - Modified by jgabaut on 09/03/2023.
+# - Modified by jgabaut on 03/01/2024.
 
 # Imports
 # Imports
@@ -97,7 +97,9 @@ def cut_spritesheet(filename, output_directory, spriteSizeX, spriteSizeY, separa
 
 def main(argv):
     """! Main program entry."""
-    if len(argv) != 8:
+    if (len(argv)-1) != 7:
+        print("Wrong number of arguments. Expected 7, got {}.".format(len(argv) -1))
+        print("--> {}\n".format(argv[1:]))
         usage()
     else:
         filename = argv[1]

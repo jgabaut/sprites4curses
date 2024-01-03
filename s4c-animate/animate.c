@@ -41,6 +41,14 @@ void s4c_echoVersionToFile(FILE* f) {
 }
 
 /**
+ * Returns the constant int representing current version for s4c.
+ * @return A constant int in numeric format for current s4c version.
+ */
+const int int_s4c_version(void) {
+    return S4C_ANIMATE_API_VERSION_INT;
+}
+
+/**
  * Takes a S4C_Color pointer and a FILE pointer to print to.
  *
  * @param color The color to debug.
@@ -62,6 +70,31 @@ void debug_s4c_color_2file(S4C_Color* color, FILE* fp) {
 void debug_s4c_color(S4C_Color* color) {
 	debug_s4c_color_2file(color,stdout);
 }
+
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the S4C_Color palette pointer and the palette size.
+ * Contructs and returns an S4C_Sprite with its fields using the passed arguments.
+ * @param data The char matrix to wrap.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ */
+S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size) {
+    S4C_Sprite res = {0};
+    res.frame_height = frameheight;
+    res.frame_width = framewidth;
+    res.palette = palette;
+    res.palette_size = palette_size;
+    for (int i = 0; i < frameheight; i++) {
+        for (int j = 0; j < framewidth; j++) {
+            res.data[i][j] = data[i][j];
+        }
+    }
+    return res;
+}
+
+#ifndef S4C_RAYLIB_EXTENSION
 
 /**
  * Initialises a color pair from a passed S4C_Color pointer.
@@ -89,6 +122,7 @@ void init_s4c_color_pair(S4C_Color* color, int color_index) {
 	init_color(color_index, proportional_r, proportional_g, proportional_b);
    	init_pair(color_index, color_index, 0);
 }
+#endif
 
 const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1] = {
 	"S4C_BLACK",
@@ -133,6 +167,7 @@ const char* s4c_color_name(S4C_Color_Index color_index) {
 	return s4c_color_strings[color_index-S4C_MIN_COLOR_INDEX];
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 /**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
@@ -285,96 +320,6 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
         }
 
     }
-}
-
-/**
- * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
- * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
- * Closes file pointer before returning.
- * File format should have a sprite line on each line.
- * Sets all the frames to the passed array.
- * @param sprites The char array to fill with all the frames.
- * @param f The file to read the sprites from.
- * @param frames The number of frames to load.
- * @param rows The number of rows in each sprite.
- * @param columns The number of columns in each sprite.
- * @see S4C_ERR_FILEVERSION
- * @see S4C_ERR_LOADSPRITES
- * @see S4C_FILEFORMAT_VERSION
- * @return A negative error value if loading fails or the number of sprites read.
- */
-int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
-
-    if (frames == 0) {
-	return 0;
-    }
-
-    char line[1024];
-    char* file_version;
-    char* token;
-    const char* READER_VERSION = S4C_FILEFORMAT_VERSION;
-    int row = 0, frame = -1;
-
-    int check = -1;
-
-    // Read the first line of the file to get the version number
-    if (fgets(line, sizeof(line), f)) {
-        // Parse the version number
-        file_version = strtok(line, " \t\r\n");
-
-	// Check if the file format has changed, abort and return the error
-        if ((file_version == NULL) || ( (check = strcmp(file_version,READER_VERSION)) != 0) ) {
-	    return S4C_ERR_FILEVERSION;
-	};
-    }
-
-
-    while (fgets(line, sizeof(line), f)) {
-
-	if (frame == frames) {
-		break;
-	}
-
-        // Skip empty lines
-        if (line[strspn(line, " \t\r\n")] == '\0') {
-            continue;
-        }
-
-        // Skip comment lines
-        if (line[strspn(line, " \t\r\n")] == '/') {
-            continue;
-        }
-
-	// Skip heading line with the declaration
-	if (frame == -1 && row == 0) {
-		frame++;
-		continue;
-        }
-
-        // Parse the line
-        token = strtok(line, "\"");
-        while (token != NULL) {
-            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
-		strncpy(sprites[frame][row], token, columns);
-		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
-                row++;
-                if (row == rows) {
-                    frame++;
-                    row = 0;
-                }
-            }
-            token = strtok(NULL, "\"");
-        }
-    }
-
-    //We close the file ourselves
-    fclose(f);
-
-    //Check if we have a strictly positive frame number or return the error
-    if (!(frame > 0)) {
-	return S4C_ERR_LOADSPRITES;
-    }
-    return frame;
 }
 
 /**
@@ -617,6 +562,7 @@ int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_in
 	return 1;
 }
 
+#ifdef S4C_EXPERIMENTAL
 /**
  * Takes an S4C_Animation pointer as src and a WINDOW pointer to print into, plus the index of requested frame to print.
  * Contrary to other of these functions, this one does not touch cursor settings.
@@ -657,29 +603,6 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
 	box(w,0,0);
 	wrefresh(w);
 	return 1;
-}
-
-/**
- * Takes a source animation vector matrix and a destination to copy to.
- * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
- * @param frames How many frames to copy.
- * @param rows How many rows to copy.
- * @param cols How many cols to copy.
- * @param source The source sprites array.
- * @param dest The destination sprites array.
- */
-void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
-  //Copy all frames
-  for (int i = 0 ; i < frames+1; i++ ) {
-    //Copy all rows for frame i
-    for (int j = 0 ; j < rows+1; j++) {
-      //Copy all columns for row j
-     for (int k = 0 ; k < cols; k++) {
-       //Assign current pixel, frame i row j col k
-       dest[i][j][k] = source[i][j][k];
-     }
-    }
-  }
 }
 
 /**
@@ -737,3 +660,251 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
     free(anim);
     *animation = NULL; // Set the pointer to NULL after freeing the memory
 }
+
+#endif //S4C_EXPERIMENTAL
+#endif
+
+/**
+ * Takes an empty 3D char array (frame, height, width) and a file to read the sprites from.
+ * Checks if the file version is compatible with the current reader version, otherwise returns a negative error value.
+ * Closes file pointer before returning.
+ * File format should have a sprite line on each line.
+ * Sets all the frames to the passed array.
+ * @param sprites The char array to fill with all the frames.
+ * @param f The file to read the sprites from.
+ * @param frames The number of frames to load.
+ * @param rows The number of rows in each sprite.
+ * @param columns The number of columns in each sprite.
+ * @see S4C_ERR_FILEVERSION
+ * @see S4C_ERR_LOADSPRITES
+ * @see S4C_FILEFORMAT_VERSION
+ * @return A negative error value if loading fails or the number of sprites read.
+ */
+int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns) {
+
+    if (frames == 0) {
+	return 0;
+    }
+
+    char line[1024];
+    char* file_version;
+    char* token;
+    const char* READER_VERSION = S4C_FILEFORMAT_VERSION;
+    int row = 0, frame = -1;
+
+    int check = -1;
+
+    // Read the first line of the file to get the version number
+    if (fgets(line, sizeof(line), f)) {
+        // Parse the version number
+        file_version = strtok(line, " \t\r\n");
+
+	// Check if the file format has changed, abort and return the error
+        if ((file_version == NULL) || ( (check = strcmp(file_version,READER_VERSION)) != 0) ) {
+	    return S4C_ERR_FILEVERSION;
+	};
+    }
+
+
+    while (fgets(line, sizeof(line), f)) {
+
+	if (frame == frames) {
+		break;
+	}
+
+        // Skip empty lines
+        if (line[strspn(line, " \t\r\n")] == '\0') {
+            continue;
+        }
+
+        // Skip comment lines
+        if (line[strspn(line, " \t\r\n")] == '/') {
+            continue;
+        }
+
+	// Skip heading line with the declaration
+	if (frame == -1 && row == 0) {
+		frame++;
+		continue;
+        }
+
+        // Parse the line
+        token = strtok(line, "\"");
+        while (token != NULL) {
+            if (token[0] != ',' && token[0] != '{' && token[0] != '}' && token[0] != '\t' && token[0] != '\n' && token[0] != '\"' && (token[0] != '}' && token[1] != ',' )) {
+		strncpy(sprites[frame][row], token, columns);
+		sprites[frame][row][columns] = '\0'; // add null-terminator to end of string
+                row++;
+                if (row == rows) {
+                    frame++;
+                    row = 0;
+                }
+            }
+            token = strtok(NULL, "\"");
+        }
+    }
+
+    //We close the file ourselves
+    fclose(f);
+
+    //Check if we have a strictly positive frame number or return the error
+    if (!(frame > 0)) {
+	return S4C_ERR_LOADSPRITES;
+    }
+    return frame;
+}
+
+/**
+ * Takes a source animation vector matrix and a destination to copy to.
+ * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
+ * @param frames How many frames to copy.
+ * @param rows How many rows to copy.
+ * @param cols How many cols to copy.
+ * @param source The source sprites array.
+ * @param dest The destination sprites array.
+ */
+void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+  //Copy all frames
+  for (int i = 0 ; i < frames+1; i++ ) {
+    //Copy all rows for frame i
+    for (int j = 0 ; j < rows+1; j++) {
+      //Copy all columns for row j
+     for (int k = 0 ; k < cols; k++) {
+       //Assign current pixel, frame i row j col k
+       dest[i][j][k] = source[i][j][k];
+     }
+    }
+  }
+}
+
+#ifdef S4C_RAYLIB_EXTENSION
+/**
+ * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
+ * @param c The S4C_Color to convert.
+ * @return The converted Color.
+ */
+Color color_from_s4c_color(S4C_Color c) {
+    return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
+}
+
+/**
+ * Takes a string, the Y coordinate to draw at, the lenght of the line, the starting X position, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls DrawRectangle() passing the converted color, by calling color_from_s4c_color().
+ * @param line The string to draw.
+ * @param coordY The Y coordinate to draw at.
+ * @param line_length The length of the string to draw.
+ * @param startX The starting X position to draw at.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @see color_from_s4c_color()
+ */
+void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size) {
+    for (int i = 0; i < line_length; i++) {
+        const char c = line[i];
+        int color_index = c - '1';
+        Color color;
+        if (color_index < 0 || color_index > palette_size) {
+            fprintf(stderr,"%s():    Can't print at Y coord [%i], invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, coordY, color_index, palette_size);
+            color = BLACK;
+        } else {
+            color = color_from_s4c_color(palette[color_index]);
+        }
+        DrawRectangle(startX + (i * (pixelSize)), coordY, pixelSize, pixelSize, color);
+    }
+}
+
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the X and Y coordinates to draw at, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls s4rl_draw_spriteline on each line of the passed frame.
+ * @param sprite The char matrix to draw.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param startX The X coordinate of upper-left corner of animation rectangle.
+ * @param startY The Y coordinate of upper-left corner of animation rectangle.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @see s4rl_draw_spriteline()
+ */
+void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size) {
+
+	int rows = frameheight;
+	int cols = framewidth;
+
+	// TODO: Check if window is big enough
+	//int win_rows, win_cols;
+	//getmaxyx(w, win_rows, win_cols);
+	//if (win_rows < rows + startY || win_cols < cols + startX) {
+	//	return S4C_ERR_SMALL_WIN; //fprintf(stderr, "animate => Window is too small to display the sprite.\n");
+	//}
+
+    for (int j=0; j<rows; j++) {
+        // Print current frame line
+		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
+	}
+}
+
+/**
+ * Takes a char matrix (maximum line size is MAXCOLS), the Rectangle to print into, the height of each frame, the width of each frame, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls s4rl_draw_sprite_at_coords() and checks if the wanted Rectangle is big enough for the wanted animation.
+ * @param sprite The char matrix to draw.
+ * @param rect The Rectangle to print into.
+ * @param frameheight The height of each frame.
+ * @param framewidth The width of each frame.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @return 0 if successful, negative values otherwise.
+ * @see s4rl_draw_sprite_at_coords()
+ */
+int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size) {
+    float r_x = rect.x;
+    float r_y = rect.y;
+    float r_w = rect.width;
+    float r_h = rect.height;
+    int sanity = 0;
+    if (frameheight * pixelSize > r_h) {
+        fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle height, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, frameheight, r_h);
+        sanity = S4C_ERR_SMALL_WIN;
+    } else if (framewidth * pixelSize > r_w) {
+        fprintf(stderr,"%s():    Requested animation doesn't fit target Rectangle width, for given pixelsize {%i}. {%i > %f}\n", __func__, pixelSize, framewidth, r_w);
+        sanity = S4C_ERR_SMALL_WIN;
+    }
+    if (sanity != 0) {
+        return sanity;
+    } else {
+        s4rl_draw_sprite_at_coords(sprite, frameheight, framewidth, r_x, r_y, pixelSize, palette, palette_size);
+        return 0;
+    }
+}
+
+/**
+ * Takes a char matrix, the Rectangle to print into, a Vector for frame dimensions, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Calls s4rl_draw_sprite_at_rect().
+ * @param sprite The S4C_Sprite to draw.
+ * @param rect The Rectangle to print into.
+ * @param framesize The Vector2 for frame dimensions.
+ * @param pixelSize The size for each pixel's square.
+ * @param palette The pointer to s4c color palette/array.
+ * @param palette_size The size of s4c color palette/array.
+ * @return 0 if successful, negative values otherwise.
+ * @see s4rl_draw_sprite_at_rect()
+ */
+int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 framesize, int pixelSize, S4C_Color* palette, int palette_size) {
+    return s4rl_draw_sprite_at_rect(sprite, rect, framesize.y, framesize.x, pixelSize, palette, palette_size);
+}
+
+/**
+ * Takes a S4C_Sprite, the Rectangle to print into, and the pixel size (square side).
+ * Calls s4rl_draw_sprite_at_rect().
+ * @param sprite The S4C_Sprite to draw.
+ * @param rect The Rectangle to print into.
+ * @param pixelSize The size for each pixel's square.
+ * @return 0 if successful, negative values otherwise.
+ * @see s4rl_draw_sprite_at_rect()
+ */
+int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize) {
+    return s4rl_draw_sprite_at_rect(sprite.data, rect, sprite.frame_height, sprite.frame_width, pixelSize, sprite.palette, sprite.palette_size);
+}
+#endif

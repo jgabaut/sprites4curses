@@ -1,0 +1,34 @@
+name: Build CI for raylib extension
+
+on:
+  push:
+    branches: [ "master" , "devel" ]
+  pull_request:
+    branches: [ "master" , "devel" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install raylib dev dependencies
+      run: sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+    - name: Check out raylib
+      uses: actions/checkout@master
+      with:
+        repository: raysan5/raylib
+    - name: Prep raylib
+      run: |
+        cd src && make PLATFORM=PLATFORM_DESKTOP && sudo make install
+    - uses: actions/checkout@v3
+    - name: Run aclocal
+      run: aclocal
+    - name: Run autoconf
+      run: autoconf
+    - name: Run automake --add-missing
+      run: automake --add-missing
+    - name: Run ./configure --enable-raylib=yes
+      run: ./configure --enable-raylib=yes
+    - name: Run make
+      run: make
