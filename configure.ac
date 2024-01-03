@@ -15,7 +15,7 @@ AC_ARG_ENABLE([raylib],
   [AS_HELP_STRING([--enable-raylib], [Enable s4raylib extension header])],
   [enable_raylib=$enableval],
   [enable_raylib=no])
-AM_CONDITIONAL([S4RAYLIB_BUILD], [test "$enable_raylib" = "yes"])
+AM_CONDITIONAL([S4C_RAYLIB_BUILD], [test "$enable_raylib" = "yes"])
 
 # Define the include and library paths based on the host system
 case "${host_os}" in

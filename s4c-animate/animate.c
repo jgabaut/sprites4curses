@@ -86,7 +86,7 @@ S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth,
     return res;
 }
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 
 /**
  * Initialises a color pair from a passed S4C_Color pointer.
@@ -159,7 +159,7 @@ const char* s4c_color_name(S4C_Color_Index color_index) {
 	return s4c_color_strings[color_index-S4C_MIN_COLOR_INDEX];
 }
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 /**
  * Initialises all the needed color pairs for animate, from the palette file.
  * @param palette The palette file to read the colors from.
@@ -766,7 +766,7 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
     *animation = NULL; // Set the pointer to NULL after freeing the memory
 }
 
-#ifdef S4RAYLIB_BUILD
+#ifdef S4C_RAYLIB_EXTENSION
 /**
  * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
  * @param c The S4C_Color to convert.

@@ -50,14 +50,14 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	printf("\n\n\t\tDEMO for ");
 	S4C_PRINTVERSION();
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
-#ifdef S4RAYLIB_BUILD
+#ifdef S4C_RAYLIB_EXTENSION
     printf("\n\n\t\tRaylib extension enabled\n");
 #endif
 	printf("\n\t\t[Press Enter to start the demo]\n");
 	int drop_res = scanf("%*c");
 	drop_res = system("clear");
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 
 	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
 	printf("\n\t\t[Press Enter to continue]\n");
@@ -89,7 +89,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	int frame_height = DEMOROWS;
 	int frame_width = DEMOCOLS;
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 
 	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
@@ -139,7 +139,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Check for possible loadCheck() errors and in this case we return early if we couldn't load
 	if (loadCheck < 0) {
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 		endwin();
 #endif
 		switch (loadCheck) {
@@ -155,7 +155,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 		return loadCheck;
 	}
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
 	wclear(w);
@@ -438,7 +438,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
-    InitWindow(screenWidth, screenHeight, "S4Raylib test");
+    InitWindow(screenWidth, screenHeight, "S4C Raylib test");
 
     Screen currentScreen = LOGO;
 

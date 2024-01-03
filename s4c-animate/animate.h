@@ -23,7 +23,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
 #include <ncurses.h>
 #else
@@ -151,7 +151,7 @@ typedef struct S4C_Sprite {
 
 S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size);
 
-#ifndef S4RAYLIB_BUILD
+#ifndef S4C_RAYLIB_EXTENSION
 /*
  * Holds arguments for a call to animate_sprites_thread_at().
  * WIP.
@@ -195,7 +195,7 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
 void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
 
-#ifdef S4RAYLIB_BUILD
+#ifdef S4C_RAYLIB_EXTENSION
 #ifndef RAYLIB_H
 #include <raylib.h>
 #endif
@@ -205,6 +205,6 @@ Color color_from_s4c_color(S4C_Color c);
 void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize);
-#endif // S4RAYLIB_BUILD
+#endif // S4C_RAYLIB_EXTENSION
 
 #endif
