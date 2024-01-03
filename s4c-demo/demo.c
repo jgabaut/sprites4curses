@@ -56,6 +56,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #ifdef S4C_EXPERIMENTAL
     printf("\n\n\t\tExperimental extension enabled\n");
 #endif
+
+    int drop_res = -1;
+#ifndef S4C_RAYLIB_EXTENSION
 	printf("\n\t\t[Press Enter to start the demo]\n");
 	int drop_res = scanf("%*c");
 #ifndef _WIN32
@@ -63,8 +66,6 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #else
 	drop_res = system("cls");
 #endif
-
-#ifndef S4C_RAYLIB_EXTENSION
 
 	printf("\n\n\t\tShows debug output for the provided S4C_Color array, defined in the generated \"palette.c\" file.\n");
 	printf("\n\t\t[Press Enter to continue]\n");
@@ -445,7 +446,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #else
     int screenWidth = 800;
     int screenHeight = 450;
-    int logo_sleep = 60;
+    int logo_sleep = 120;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
@@ -517,7 +518,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                 {
                     // TODO: Draw LOGO screen here!
                     DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
-                    DrawText("WAIT for 1 SECOND...", 290, 220, 20, GRAY);
+                    DrawText("Using s4c-animate v" S4C_ANIMATE_VERSION, 250, 250, 20, BLACK);
+                    DrawText("WAIT for 2 SECONDs...", 290, 220, 20, GRAY);
                 } break;
                 case GAMEPLAY:
                 {
@@ -535,6 +537,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
                     // TODO: Draw ENDING screen here!
                     DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
                     DrawText("ENDING SCREEN", 20, 20, 40, DARKBLUE);
+                    DrawText("End of demo for s4c-animate v" S4C_ANIMATE_VERSION ", raylib extension", 20, 120, 28, BLACK);
                     DrawText("PRESS ENTER or TAP to RETURN to LOGO SCREEN", 120, 220, 20, DARKBLUE);
                 } break;
                 default: break;
