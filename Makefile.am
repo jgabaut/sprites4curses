@@ -31,6 +31,10 @@ else
 AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
 endif
 
+if S4C_EXPERIMENTAL_BUILD
+AM_CFLAGS += -DS4C_EXPERIMENTAL
+endif
+
 # Build rule for object files
 %.o: %.c
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) $< -o $@

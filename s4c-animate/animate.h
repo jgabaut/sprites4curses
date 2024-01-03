@@ -53,7 +53,9 @@ void s4c_echoVersionToFile(FILE* f);
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
+#ifdef S4C_EXPERIMENTAL
 typedef char*** S4C_Animation;
+#endif
 
 /*
  * Defines a color.
@@ -187,14 +189,15 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
 int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+#ifdef S4C_EXPERIMENTAL
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
+void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
+#endif
 #endif
 
 int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* file, int frames, int rows, int columns);
 void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols);
-void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
-void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
-
 #ifdef S4C_RAYLIB_EXTENSION
 #ifndef RAYLIB_H
 #include <raylib.h>

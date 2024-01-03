@@ -195,7 +195,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	drop_res = scanf("%*c");
 	wclear(stdscr);
 	wrefresh(stdscr);
+    int result = -1;
 
+#ifdef S4C_EXPERIMENTAL
 	S4C_Animation* animation = malloc(sizeof(S4C_Animation));
 
 	s4c_copy_animation_alloc(animation,sprites,DEMOFRAMES,DEMOROWS,DEMOCOLS);
@@ -215,7 +217,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	wclear(w);
 	// Then we call the animation function with all the needed arguments
 
-	int result = s4c_display_frame(animation, 3, w, DEMOFRAMES, DEMOROWS, DEMOCOLS, test_x, test_y);
+	result = s4c_display_frame(animation, 3, w, DEMOFRAMES, DEMOROWS, DEMOCOLS, test_x, test_y);
 
 	mvwprintw(stdscr,6,20, "[Press Enter to continue] (And free the allocated animation.)");
 	wrefresh(stdscr);
@@ -255,6 +257,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	wclear(stdscr);
 	wrefresh(stdscr);
+#endif
+
 	mvwprintw(stdscr,3,2, "Let's see animate_sprites:");
 	mvwprintw(stdscr,4,2, "This function puts the Upper Left animation corner at (0,0).");
 	mvwprintw(stdscr,6,20, "[Press Enter to continue]");

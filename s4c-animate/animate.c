@@ -554,6 +554,7 @@ int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_in
 	return 1;
 }
 
+#ifdef S4C_EXPERIMENTAL
 /**
  * Takes an S4C_Animation pointer as src and a WINDOW pointer to print into, plus the index of requested frame to print.
  * Contrary to other of these functions, this one does not touch cursor settings.
@@ -595,6 +596,64 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
 	wrefresh(w);
 	return 1;
 }
+
+/**
+ * Takes a source animation vector matrix and a dinamyc array destination to copy to.
+ * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
+ * Allocates the needed memory for the destination.
+ * @param frames How many frames to copy.
+ * @param rows How many rows to copy.
+ * @param cols How many cols to copy.
+ * @param source The source sprites array.
+ * @param dest The destination sprites array.
+ */
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
+    if (rows > MAXROWS) {
+	fprintf(stderr,"{s4c} Error at [%s]: rows number was bigger than MAXROWS: [%i > %i]\n",__func__,rows,MAXROWS);
+	exit(EXIT_FAILURE);
+    }
+    if (cols > MAXCOLS) {
+	fprintf(stderr,"{s4c} Error at [%s]: cols number was bigger than MAXCOLS: [%i > %i]\n",__func__,cols,MAXCOLS);
+	exit(EXIT_FAILURE);
+    }
+    *dest = malloc(frames * sizeof(char**));
+    for (int i = 0; i < frames; i++) {
+        (*dest)[i] = malloc(rows * sizeof(char*));
+        for (int j = 0; j < rows; j++) {
+            (*dest)[i][j] = malloc(cols * sizeof(char));
+            for (int k = 0; k < cols; k++) {
+                (*dest)[i][j][k] = source[i][j][k];
+            }
+        }
+    }
+}
+
+/**
+ * Takes an S4C_Animation pointer and frees it.
+ * Takes ints to indicate how many frames, rows per frame to free.
+ * @param animation The S4C_Animation pointer to free.
+ * @param frames How many frames to free.
+ * @param rows How many rows to free.
+ */
+void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
+    if (animation == NULL || *animation == NULL) {
+        return; // Nothing to free if the pointer or animation is NULL
+    }
+
+    char*** anim = *animation;
+
+    for (int i = 0; i < frames; i++) {
+        for (int j = 0; j < rows; j++) {
+            free(anim[i][j]);
+        }
+        free(anim[i]);
+    }
+
+    free(anim);
+    *animation = NULL; // Set the pointer to NULL after freeing the memory
+}
+
+#endif //S4C_EXPERIMENTAL
 #endif
 
 /**
@@ -708,62 +767,6 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
      }
     }
   }
-}
-
-/**
- * Takes a source animation vector matrix and a dinamyc array destination to copy to.
- * Takes ints to indicate how many frames, rows per frame and cols per row to copy.
- * Allocates the needed memory for the destination.
- * @param frames How many frames to copy.
- * @param rows How many rows to copy.
- * @param cols How many cols to copy.
- * @param source The source sprites array.
- * @param dest The destination sprites array.
- */
-void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols) {
-    if (rows > MAXROWS) {
-	fprintf(stderr,"{s4c} Error at [%s]: rows number was bigger than MAXROWS: [%i > %i]\n",__func__,rows,MAXROWS);
-	exit(EXIT_FAILURE);
-    }
-    if (cols > MAXCOLS) {
-	fprintf(stderr,"{s4c} Error at [%s]: cols number was bigger than MAXCOLS: [%i > %i]\n",__func__,cols,MAXCOLS);
-	exit(EXIT_FAILURE);
-    }
-    *dest = malloc(frames * sizeof(char**));
-    for (int i = 0; i < frames; i++) {
-        (*dest)[i] = malloc(rows * sizeof(char*));
-        for (int j = 0; j < rows; j++) {
-            (*dest)[i][j] = malloc(cols * sizeof(char));
-            for (int k = 0; k < cols; k++) {
-                (*dest)[i][j][k] = source[i][j][k];
-            }
-        }
-    }
-}
-
-/**
- * Takes an S4C_Animation pointer and frees it.
- * Takes ints to indicate how many frames, rows per frame to free.
- * @param animation The S4C_Animation pointer to free.
- * @param frames How many frames to free.
- * @param rows How many rows to free.
- */
-void s4c_free_animation(S4C_Animation* animation, int frames, int rows) {
-    if (animation == NULL || *animation == NULL) {
-        return; // Nothing to free if the pointer or animation is NULL
-    }
-
-    char*** anim = *animation;
-
-    for (int i = 0; i < frames; i++) {
-        for (int j = 0; j < rows; j++) {
-            free(anim[i][j]);
-        }
-        free(anim[i]);
-    }
-
-    free(anim);
-    *animation = NULL; // Set the pointer to NULL after freeing the memory
 }
 
 #ifdef S4C_RAYLIB_EXTENSION
