@@ -55,7 +55,11 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #endif
 	printf("\n\t\t[Press Enter to start the demo]\n");
 	int drop_res = scanf("%*c");
+#ifndef _WIN32
 	drop_res = system("clear");
+#else
+	drop_res = system("cls");
+#endif
 
 #ifndef S4C_RAYLIB_EXTENSION
 
@@ -70,7 +74,6 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	drop_res = scanf("%*c");
 	drop_res = system("clear");
 
-#endif
 
 	// Open the palette file to read the color values and name
 	// Keep in mind that the file pointer will be closed by init_s4c_color_pairs(palette_file);
@@ -84,6 +87,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
         	fprintf(stderr, "Error: could not open palette file.\n");
        		return -1;
     	}
+#endif
 	int frametime = DEMOFRAMETIME;
 	int num_frames = DEMOFRAMES;
 	int frame_height = DEMOROWS;
