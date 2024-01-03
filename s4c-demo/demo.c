@@ -53,6 +53,9 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 #ifdef S4C_RAYLIB_EXTENSION
     printf("\n\n\t\tRaylib extension enabled\n");
 #endif
+#ifdef S4C_EXPERIMENTAL
+    printf("\n\n\t\tExperimental extension enabled\n");
+#endif
 	printf("\n\t\t[Press Enter to start the demo]\n");
 	int drop_res = scanf("%*c");
 #ifndef _WIN32
