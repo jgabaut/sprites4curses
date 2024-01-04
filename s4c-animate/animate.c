@@ -782,6 +782,8 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
  * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
  * @param c The S4C_Color to convert.
  * @return The converted Color.
+ * @see ColorFromPaletteIdx()
+ * @see S4C_Color
  */
 Color color_from_s4c_color(S4C_Color c) {
     return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
