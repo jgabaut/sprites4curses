@@ -33,10 +33,10 @@
 #endif
 
 
-#define S4C_ANIMATE_VERSION "0.4.0"
+#define S4C_ANIMATE_VERSION "0.4.1"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 0
+#define S4C_ANIMATE_PATCH_VERSION 1
 
 #define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
 #define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
@@ -219,6 +219,7 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 #endif
 
 Color color_from_s4c_color(S4C_Color c);
+#define ColorFromS4CPalette(palette, idx) color_from_s4c_color((palette)[(idx) - S4C_BASE_COLOR_INDEX]) /**< Macro to retrieve a Color from S4C_Color palette by index.*/
 //void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);
 void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size);
 int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size);

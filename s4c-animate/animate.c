@@ -782,6 +782,8 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
  * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
  * @param c The S4C_Color to convert.
  * @return The converted Color.
+ * @see ColorFromPaletteIdx()
+ * @see S4C_Color
  */
 Color color_from_s4c_color(S4C_Color c) {
     return CLITERAL(Color){ c.red, c.green, c.blue, 255 };
@@ -841,7 +843,7 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
 
     for (int j=0; j<rows; j++) {
         // Print current frame line
-		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
+		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY), cols, startX, pixelSize, palette, palette_size);
 	}
 }
 
