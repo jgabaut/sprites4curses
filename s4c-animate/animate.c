@@ -841,7 +841,7 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
 
     for (int j=0; j<rows; j++) {
         // Print current frame line
-		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY * pixelSize), cols, startX, pixelSize, palette, palette_size);
+		s4rl_draw_spriteline(sprite[j], (j*(pixelSize)) + (startY), cols, startX, pixelSize, palette, palette_size);
 	}
 }
 
