@@ -36,7 +36,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-L/usr/x86_64-w64-mingw32/lib -lraylib -lm -lgdi32 -lwinmm"])
         else
             AC_SUBST([S4C_CFLAGS], ["-I/usr/x86_64-w64-mingw32/include -static -fstack-protector -DNCURSES_STATIC"])
-            AC_SUBST([S4C_LDFLAGS], ["-L/usr/x86_64-w64-mingw32/lib -lncursesw"])
+            AC_SUBST([S4C_LDFLAGS], ["-L/usr/x86_64-w64-mingw32/lib -lncursesw -lm"])
         fi
         AC_SUBST([OS], ["w64-mingw32"])
         AC_SUBST([TARGET], ["demo.exe"])
@@ -51,7 +51,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/raylib/lib -lraylib -lm"])
         else
             AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/ncurses/include"])
-            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lncurses"])
+            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lncurses -lm"])
         fi
         AC_SUBST([OS], ["darwin"])
         AC_SUBST([TARGET], ["demo"])
@@ -66,7 +66,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-lraylib -lm"])
         else
             AC_SUBST([S4C_CFLAGS], [""])
-            AC_SUBST([S4C_LDFLAGS], ["-lncurses"])
+            AC_SUBST([S4C_LDFLAGS], ["-lncurses -lm"])
         fi
         AC_SUBST([OS], ["Linux"])
         AC_SUBST([TARGET], ["demo"])

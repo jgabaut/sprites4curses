@@ -782,7 +782,9 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
     if (!area) return;
     int row = 5;
-    int size = 10;
+    float scale_factor = sqrt(area->width * area->height);
+    float eps_factor = 0.03;
+    float size = eps_factor * scale_factor;
     if (area->width < (5 * size)) {
         fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, S4C_MAX_COLOR_INDEX);
         return;

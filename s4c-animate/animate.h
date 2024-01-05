@@ -22,6 +22,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <math.h>
 
 #ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
