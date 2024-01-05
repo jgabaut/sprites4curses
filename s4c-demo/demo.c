@@ -51,12 +51,8 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	S4C_PRINTVERSION();
     printf("\n\n\t\tAPI version: {%i}\n", int_s4c_version());
 	printf("\n\n\t\tShows how to correctly call animate functions.h\n");
-#ifdef S4C_RAYLIB_EXTENSION
-    printf("\n\n\t\tRaylib extension enabled\n");
-#endif
-#ifdef S4C_EXPERIMENTAL
-    printf("\n\n\t\tExperimental extension enabled\n");
-#endif
+
+    s4c_dbg_features();
 
     int drop_res = -1;
 #ifndef S4C_RAYLIB_EXTENSION

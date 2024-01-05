@@ -22,6 +22,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <math.h>
 
 #ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
@@ -33,10 +34,10 @@
 #endif
 
 
-#define S4C_ANIMATE_VERSION "0.4.1"
+#define S4C_ANIMATE_VERSION "0.4.2"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 1
+#define S4C_ANIMATE_PATCH_VERSION 2
 
 #define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
 #define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
@@ -64,6 +65,8 @@ void s4c_echoVersionToFile(FILE* f);
  * Returns current s4c version as an integer.
  */
 const int int_s4c_version(void);
+
+void s4c_dbg_features(void);
 
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
@@ -218,6 +221,7 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 #include <raylib.h>
 #endif
 
+bool test_s4c_color_pairs(Rectangle* area, S4C_Color* palette);
 Color color_from_s4c_color(S4C_Color c);
 #define ColorFromS4CPalette(palette, idx) color_from_s4c_color((palette)[(idx) - S4C_BASE_COLOR_INDEX]) /**< Macro to retrieve a Color from S4C_Color palette by index.*/
 //void s4rl_print_spriteline(char* line, int coordY, int line_length, int startX, int pixelSize, S4C_Color* palette, int palette_size);

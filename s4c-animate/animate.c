@@ -49,6 +49,23 @@ const int int_s4c_version(void) {
 }
 
 /**
+ * Prints enabled s4c features to stderr.
+ */
+void s4c_dbg_features(void)
+{
+#ifdef S4C_RAYLIB_EXTENSION
+    fprintf(stderr, "[S4C] raylib.h integration is enabled\n");
+#else
+    fprintf(stderr, "[S4C] ncurses.h integration is enabled\n");
+#endif
+#ifdef S4C_EXPERIMENTAL
+    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is enabled\n");
+#else
+    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is not enabled\n");
+#endif
+}
+
+/**
  * Takes a S4C_Color pointer and a FILE pointer to print to.
  *
  * @param color The color to debug.
@@ -778,6 +795,51 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 }
 
 #ifdef S4C_RAYLIB_EXTENSION
+
+/**
+ * Demoes all colors supported by the palette in the passed area.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
+ * @param area The area to draw the demo to.
+ * @param palette The s4c color array palette.
+ * @return true on success, false on errors
+ */
+bool test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
+    if (!area) {
+        fprintf(stderr,"%s():    Area is NULL.\n", __func__);
+        return false;
+    }
+    int row = 5;
+    float scale_factor = sqrt(area->width * area->height);
+    float eps_factor = 0.03;
+    float size_factor = eps_factor * scale_factor;
+    int size = 1.5 * size_factor;
+    if (area->width < (5 * size)) {
+        fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, 5*size);
+        return false;
+    }
+    float min_h = (((S4C_MAX_COLOR_INDEX/row)+2) * size);
+    if (area->height < min_h) {
+        fprintf(stderr,"%s():    Area is too small for height. --> {%f < %f}\n", __func__, area->height, min_h);
+        return false;
+    }
+    BeginDrawing();
+    ClearBackground(ColorFromS4CPalette(palette,S4C_BLACK));
+    int line = 0;
+    for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
+        int color_index = i;
+        if ( i % row == 0 ) {
+            line++;
+        }
+        if (color_index >= 0 && color_index < MAX_COLORS) {
+            DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + (line) * size, size, size, ColorFromS4CPalette(palette, color_index));
+        }
+    }
+    int fontSize = 20;
+    DrawText("[ Press ENTER or TAP to quit ]", 14, (line+2) * size, fontSize, ColorFromS4CPalette(palette,S4C_RED));
+    EndDrawing();
+    return true;
+}
+
 /**
  * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
  * @param c The S4C_Color to convert.
