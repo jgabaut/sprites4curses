@@ -794,10 +794,14 @@ void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
     }
     BeginDrawing();
     ClearBackground(ColorFromS4CPalette(palette,S4C_BLACK));
+    int line = 0;
     for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
         int color_index = i;
+        if ( i % row == 0 ) {
+            line++;
+        }
         if (color_index >= 0 && color_index < MAX_COLORS) {
-            DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + ((i-S4C_MIN_COLOR_INDEX)%row) * size, size, size, ColorFromS4CPalette(palette, color_index));
+            DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + (line) * size, size, size, ColorFromS4CPalette(palette, color_index));
         }
     }
     EndDrawing();
