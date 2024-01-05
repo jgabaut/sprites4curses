@@ -779,8 +779,11 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 
 #ifdef S4C_RAYLIB_EXTENSION
 
-void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
-    if (!area) return;
+bool test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
+    if (!area) {
+        fprintf(stderr,"%s():    Area is NULL.\n", __func__);
+        return false;
+    }
     int row = 5;
     float scale_factor = sqrt(area->width * area->height);
     float eps_factor = 0.03;
@@ -788,12 +791,12 @@ void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
     int size = 1.5 * size_factor;
     if (area->width < (5 * size)) {
         fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, 5*size);
-        return;
+        return false;
     }
-    float min_h = ((S4C_MAX_COLOR_INDEX/row) * size);
+    float min_h = (((S4C_MAX_COLOR_INDEX/row)+2) * size);
     if (area->height < min_h) {
         fprintf(stderr,"%s():    Area is too small for height. --> {%f < %f}\n", __func__, area->height, min_h);
-        return;
+        return false;
     }
     BeginDrawing();
     ClearBackground(ColorFromS4CPalette(palette,S4C_BLACK));
@@ -808,8 +811,9 @@ void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
         }
     }
     int fontSize = 20;
-    DrawText("[ Press ENTER or TAP to quit ]", 14, line * size + fontSize, fontSize, ColorFromS4CPalette(palette,S4C_RED));
+    DrawText("[ Press ENTER or TAP to quit ]", 14, (line+2) * size, fontSize, ColorFromS4CPalette(palette,S4C_RED));
     EndDrawing();
+    return true;
 }
 
 /**
