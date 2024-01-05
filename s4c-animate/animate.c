@@ -779,6 +779,13 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 
 #ifdef S4C_RAYLIB_EXTENSION
 
+/**
+ * Demoes all colors supported by the palette in the passed area.
+ * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
+ * @param area The area to draw the demo to.
+ * @param palette The s4c color array palette.
+ * @return true on success, false on errors
+ */
 bool test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
     if (!area) {
         fprintf(stderr,"%s():    Area is NULL.\n", __func__);
