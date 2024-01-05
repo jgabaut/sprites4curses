@@ -785,9 +785,9 @@ void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
     float scale_factor = sqrt(area->width * area->height);
     float eps_factor = 0.03;
     float size_factor = eps_factor * scale_factor;
-    int size = 10 * size_factor;
+    int size = 1.5 * size_factor;
     if (area->width < (5 * size)) {
-        fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, S4C_MAX_COLOR_INDEX);
+        fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, 5*size);
         return;
     }
     float min_h = ((S4C_MAX_COLOR_INDEX/row) * size);
