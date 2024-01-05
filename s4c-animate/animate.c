@@ -49,6 +49,23 @@ const int int_s4c_version(void) {
 }
 
 /**
+ * Prints enabled s4c features to stderr.
+ */
+void s4c_dbg_features(void)
+{
+#ifdef S4C_RAYLIB_EXTENSION
+    fprintf(stderr, "[S4C] raylib.h integration is enabled\n");
+#else
+    fprintf(stderr, "[S4C] ncurses.h integration is enabled\n");
+#endif
+#ifdef S4C_EXPERIMENTAL
+    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is enabled\n");
+#else
+    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is not enabled\n");
+#endif
+}
+
+/**
  * Takes a S4C_Color pointer and a FILE pointer to print to.
  *
  * @param color The color to debug.

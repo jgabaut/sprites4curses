@@ -66,6 +66,8 @@ void s4c_echoVersionToFile(FILE* f);
  */
 const int int_s4c_version(void);
 
+void s4c_dbg_features(void);
+
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
 
