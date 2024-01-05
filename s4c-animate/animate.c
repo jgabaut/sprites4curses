@@ -807,6 +807,8 @@ void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
             DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + (line) * size, size, size, ColorFromS4CPalette(palette, color_index));
         }
     }
+    int fontSize = 20;
+    DrawText("[ Press ENTER or TAP to quit ]", 14, line * size + fontSize, fontSize, ColorFromS4CPalette(palette,S4C_RED));
     EndDrawing();
 }
 
