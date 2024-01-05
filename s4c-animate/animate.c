@@ -778,6 +778,31 @@ void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MA
 }
 
 #ifdef S4C_RAYLIB_EXTENSION
+
+void test_s4c_color_pairs(Rectangle* area, S4C_Color* palette) {
+    if (!area) return;
+    int row = 5;
+    int size = 10;
+    if (area->width < (5 * size)) {
+        fprintf(stderr,"%s():    Area is too small for width. --> {%f < %i}\n", __func__, area->width, S4C_MAX_COLOR_INDEX);
+        return;
+    }
+    float min_h = ((S4C_MAX_COLOR_INDEX/row) * size);
+    if (area->height < min_h) {
+        fprintf(stderr,"%s():    Area is too small for height. --> {%f < %f}\n", __func__, area->height, min_h);
+        return;
+    }
+    BeginDrawing();
+    ClearBackground(ColorFromS4CPalette(palette,S4C_BLACK));
+    for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
+        int color_index = i;
+        if (color_index >= 0 && color_index < MAX_COLORS) {
+            DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + ((i-S4C_MIN_COLOR_INDEX)%row) * size, size, size, ColorFromS4CPalette(palette, color_index));
+        }
+    }
+    EndDrawing();
+}
+
 /**
  * Takes an S4C_Color and returns the equivalent Color with 255 alpha.
  * @param c The S4C_Color to convert.
