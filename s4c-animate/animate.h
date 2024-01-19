@@ -194,6 +194,9 @@ void init_s4c_color_pair(S4C_Color* color, int color_index);
 
 void test_s4c_color_pairs(WINDOW* win);
 
+int s4c_check_term(void);
+int s4c_check_win(WINDOW* win, int rows, int cols, int startX, int startY);
+
 void slideshow_s4c_color_pairs(WINDOW* win);
 
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);

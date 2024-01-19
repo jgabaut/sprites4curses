@@ -104,19 +104,28 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	clear();
 	refresh();
 	start_color();
-	int colorCheck = has_colors();
+	int colorCheck = s4c_check_term();
 
-	if (colorCheck == FALSE	) {
-		fprintf(stderr,"Terminal can't use colors, abort.\n");
-		return S4C_ERR_TERMCOLOR;
+	if (colorCheck != 0 ) {
+        switch (colorCheck) {
+            case S4C_ERR_TERMCOLOR: {
+		        fprintf(stderr,"Terminal can't use colors, abort.\n");
+		        return S4C_ERR_TERMCOLOR;
+            }
+            break;
+            case S4C_ERR_TERMCHANGECOLOR: {
+		        fprintf(stderr,"Terminal can't change colors, abort.\n");
+		        return S4C_ERR_TERMCHANGECOLOR;
+            }
+            break;
+            default: {
+		        fprintf(stderr,"Unexpected error from s4c_check_term() --> {%i}.\n", colorCheck);
+		        return colorCheck;
+            }
+            break;
+        }
 	}
 
-	colorCheck = can_change_color();
-
-	if (colorCheck == FALSE	) {
-		fprintf(stderr,"Terminal can't change colors, abort.\n");
-		return S4C_ERR_TERMCHANGECOLOR;
-	}
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
@@ -162,6 +171,14 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 	}
 
 #ifndef S4C_RAYLIB_EXTENSION
+
+    while (s4c_check_win(stdscr, frame_height, frame_width, 1, 1) != 0){
+        mvwprintw(stdscr, 3, 2, "Window too small, please resize your terminal.\n");
+        mvwprintw(stdscr, 4, 2, "[ Press Enter to continue.\n");
+	    wrefresh(stdscr);
+    }
+
+    drop_res = scanf("%*c");
 
 	// We make sure we have the background correcly set up and expect animate_sprites to refresh it
 	wclear(w);
