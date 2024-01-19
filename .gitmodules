@@ -1,0 +1,3 @@
+[submodule "s4c-scripts"]
+	path = s4c-scripts
+	url = git@github.com:jgabaut/s4c-scripts

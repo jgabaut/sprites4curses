@@ -34,10 +34,10 @@
 #endif
 
 
-#define S4C_ANIMATE_VERSION "0.4.2"
+#define S4C_ANIMATE_VERSION "0.4.3"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 2
+#define S4C_ANIMATE_PATCH_VERSION 3
 
 #define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
 #define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
@@ -193,6 +193,9 @@ void init_s4c_color_pairs(FILE* palette_file);
 void init_s4c_color_pair(S4C_Color* color, int color_index);
 
 void test_s4c_color_pairs(WINDOW* win);
+
+int s4c_check_term(void);
+int s4c_check_win(WINDOW* win, int rows, int cols, int startX, int startY);
 
 void slideshow_s4c_color_pairs(WINDOW* win);
 

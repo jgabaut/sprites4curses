@@ -126,8 +126,13 @@ pack: rebuild
 	@echo -e "\033[1;32m[ZIP] Done.\e[0m"
 	@echo -e "\033[1;33mDone.\e[0m"
 
+init:
+	@echo -e "\033[1;35m[Makefile] Initialising submodules.\e[0m"
+	git submodule update --init
+	@echo -e "\033[1;33mDone.\e[0m"
+
 # Default target (builds everything)
-all: $(TARGET)
+all: init $(TARGET)
 
 # Target to clean and rebuild
 rebuild: clean all

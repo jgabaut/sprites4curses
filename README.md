@@ -7,24 +7,45 @@
 ## Table of Contents
 
 + [Scripts](#scripts)
-  + [Prerequisites](#prerequisites_scripts)
-  + [s4c-cli.py](#s4c_cli_py)
-  + [sprites.py](#sprites_py)
-  + [sheet_converter.py](#sheet_converter_py)
-  + [cut_sheet_.py](#cut_sheet_py)
-  + [png_resize.py](#png_resize_py)
-  + [palette.py](#palette_py)
 + [animate.h](#animate)
   + [Prerequisites](#prerequisites_animate)
   + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
   + [demo.c](#demo_c)
-+ [Scripts usage](#scripts_usage)
 + [palette.gpl](#palette_gpl)
 
 # Scripts <a name = "scripts"></a>
 
-## Prerequisites <a name = "prerequisites_scripts"></a>
+  From version 0.5, all python scripts have been moved to a separate repo ([s4c-scripts](https://github.com/jgabaut/s4c-scripts)), included as a submodule.
+
+  To maintain backwards compatibility:
+  - New stub scripts have been put at the old path in the repo.
+  - An `init` target was added to the `Makefile.am`, so that you remember to initialise the submodule before trying to run any script.
+  This will be removed in an upcoming minor version, so you should update your scripts to use the new path.
+
+## animate.c and animate.h <a name = "animate"></a>
+
+  This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
+
+  ```
+  -------------------------------------------------------------------------------
+  Language                     files          blank        comment           code
+  -------------------------------------------------------------------------------
+  C                                2            107            348            606
+  C/C++ Header                     2             45             50            158
+  -------------------------------------------------------------------------------
+  SUM:                             4            152            398            764
+  -------------------------------------------------------------------------------
+  ```
+
+  `s4c_animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
+
+  `s4c_animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
+
+  You can look at the `demo.c` program to see how you can request the animation after setup.
+The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
+
+### Prerequisites <a name = "prerequisites_animate"></a>
 
   To use the python scripts you need to install Pillow, using `pip`:
 
@@ -39,95 +60,6 @@
 
   To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
   - More info at [this section](#raylib_ext).
-
-### s4c-cli.py <a name = "s4c_cli_py"></a>
-
-  This is a wrapper script that imports the local scripts and enables calling their main as a subcommand.
-
-  To ensure it works as a general program, you should try to install Pillow as a system library. Running:
-    `pip install Pillow`
-  may give you hints about following recommended platform instructions for installation.
-
-### sprites.py <a name = "sprites_py"></a>
-
-  This is a python script that converts PNG's to a char representation.
-  The output text should be a valid C declaration for a 3D char array.
-
-  It expects as arguments:
-
-  - A mode of operation: `s4c-file`, `C-impl` , `C-header`.
-  - A directory with the images to convert.
-
-### sheet_converter.py <a name = "sheet_converter_py"></a>
-
-  This is a python script that converts a single PNG spritesheet to a char representation.
-  The output text should be a valid C declaration for a 3D char array.
-
-  It expects as arguments:
-
-  - A mode of operation: `s4c-file`, `C-impl` , `C-header`.
-  - The spritesheet file name
-  - The sprite width
-  - The sprite height
-  - The thickness of the separator between sprites
-  - The start coordinate (aka, the first sprite's left corner).
-
-### cut_sheet.py <a name = "cut_sheet_py"></a>
-
-  This is a python script that cuts a single PNG spritesheet to a number of sprites, and puts them in the passed directory.
-
-  It expects as arguments:
-
-  - The spritesheet file name
-  - The output directory name
-  - The sprite width
-  - The sprite height
-  - The thickness of the separator between sprites
-  - The start coordinate (aka, the first sprite's left corner).
-
-### png_resize.py <a name = "png_resize_py"></a>
-
-  This is a python script that resizess PNG's to a desired size.
-
-  It expects as arguments:
-
-  - A directory with the images to resize
-  - Two ints for width and height of the resulting PNGs.
-
-
-### palette.py <a name = "palette_py"></a>
-
-  This is a python script that generates C files from a `palette.gpl` file.
-
-  It expects as arguments:
-
-  - A mode of operation: `C-impl` , `C-header`.
-  - The palette file
-  - The relative path to the `s4c` directory, so that the generated header can correctly include `animate.h`
-
-## animate.c and animate.h <a name = "animate"></a>
-
-  This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
-
-  ```
-  -------------------------------------------------------------------------------
-  Language                     files          blank        comment           code
-  -------------------------------------------------------------------------------
-  C                                2             95            304            523
-  C/C++ Header                     2             41             43            142
-  -------------------------------------------------------------------------------
-  SUM:                             4            136            347            665
-  -------------------------------------------------------------------------------
-  ```
-
-  `s4c_animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
-
-  `s4c_animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
-
-  You can look at the `demo.c` program to see how you can request the animation after setup.
-The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
-
-### Prerequisites <a name = "prerequisites_animate"></a>
 
 ### Raylib extension <a name = "raylib_ext"></a>
 
@@ -162,37 +94,6 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
   - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
     `make; ./demo <( python sprites.py <directory> )
-
-# Scripts usage <a name = "scripts_usage"></a>
-
-  To run the cli wrapper:
-
-  - `python s4c-cli.py <subcommand> <subcommand_args>`
-
-  - Some commands may be more useful when their output is redirected:
-    `python s4c-cli.py <subcommand> <subcommand_args> > file.txt`
-
-  - To run the sprites script and redirect output on "file.txt", give a directory to get the png's from:
-
-    **File names in the directory should follow a imageX.png, imageX+1.png pattern.**
-
-    `python sprites.py <mode> <directory>   > file.txt`
-
-  - To run the sheet converter script and redirect output on "file.txt", give all required arguments:
-
-    `python sheet_converter.py <mode> <sheet file> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>   > file.txt`
-
-  - To run the sheet cutter script, give the sheet png file and the output directory:
-
-    `python cut_sheet.py <sheet file> <output dir> <sprite width> <sprite height> <separator thickness> <first sprite left corner X> <first sprite LC Y>`
-
-  - To run the png resize script, give all required arguments:
-
-    **This overwrites the source pngs, so be careful.**
-
-    `python png_resize.py <sprites directory> <sprite width> <sprite height>`
-
-  Possible animation glitches if the frame rate is too high, add in-between frames and longer frametime as needed.
 
 ## palette.gpl <a name = "palette_gpl"></a>
 

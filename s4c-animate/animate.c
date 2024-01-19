@@ -242,6 +242,57 @@ void test_s4c_color_pairs(WINDOW* win) {
     refresh();
 }
 
+int s4c_check_has_colors() {
+    if (has_colors() == FALSE) {
+        return  S4C_ERR_TERMCOLOR;
+    }
+    return 0;
+}
+
+int s4c_check_can_change_color() {
+    if (can_change_color() == FALSE) {
+        return S4C_ERR_TERMCHANGECOLOR;
+    }
+    return 0;
+}
+
+/**
+ * Checks terminal color capabilities.
+ * @return 0 if successful, a negative value otherwise.
+ */
+int s4c_check_term(void) {
+    // Only works after calling init_scr().
+    // TODO: check if init_scr() was called already?
+
+    int checks[2] = {0};
+
+    checks[0] = s4c_check_has_colors();
+    checks[1] = s4c_check_can_change_color();
+    if (checks[0] != 0) return checks[0];
+    if (checks[1] != 0) return checks[1];
+    return 0;
+}
+
+/**
+ * Checks window size using s4c_animate() logic check.
+ * @param win The window to check.
+ * @param rows Height of animation.
+ * @param cols Width of animation.
+ * @param startX The X coord we want to draw at.
+ * @param startY The Y coord we want to draw at.
+ * @return 0 if successful, a negative value otherwise.
+ */
+int s4c_check_win(WINDOW* win, int rows, int cols, int startX, int startY) {
+	// Check if window is big enough
+	int win_rows, win_cols;
+	getmaxyx(win, win_rows, win_cols);
+
+	if (win_rows < rows + startY || win_cols < cols + startX) {
+		return S4C_ERR_SMALL_WIN;
+	}
+    return 0;
+}
+
 /**
  * Demoes color pairs defined in s4c to the passed window.
  * Since it uses indexes defined by default from animate.h, it should work only when your currently initialised palette has color pairs for the expected index range.
