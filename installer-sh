@@ -123,7 +123,7 @@ installdoc() {
     fi
 
     install $SOURCE_INSTALL_DIR/README.md "$TARGET_DOC_DIR/sprites4curses"
-    install $SOURCE_INSTALL_DIR/docs/docs.pdf "$TARGET_DOC_DIR/sprites4curses"
+    install $SOURCE_INSTALL_DIR/documentation/docs.pdf "$TARGET_DOC_DIR/sprites4curses"
     log_msg "\n  Installed docs to [$TARGET_DOC_DIR]."
 }
 
