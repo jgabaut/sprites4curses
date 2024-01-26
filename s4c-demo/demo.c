@@ -99,7 +99,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file) {
 
 	// Initialisation: we need a large enough window and all the curses settings needed to be applied before calling animate_sprites().
 	WINDOW* w;
-	setlocale(LC_CTYPE, "it_IT.UTF-8");
+    setlocale(LC_ALL, "");
 	initscr();
 	clear();
 	refresh();

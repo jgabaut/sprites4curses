@@ -261,15 +261,36 @@ int s4c_check_can_change_color(void) {
  * @return 0 if successful, a negative value otherwise.
  */
 int s4c_check_term(void) {
-    // Only works after calling init_scr().
-    // TODO: check if init_scr() was called already?
+
+    bool curses_was_ready = (stdscr != NULL) ? true : false;
+
+    if (!curses_was_ready) { //We temporarily try to start curses ourselves.
+        setlocale(LC_ALL, "");
+	    initscr();
+	    clear();
+	    refresh();
+	    start_color();
+    }
 
     int checks[2] = {0};
 
     checks[0] = s4c_check_has_colors();
     checks[1] = s4c_check_can_change_color();
-    if (checks[0] != 0) return checks[0];
-    if (checks[1] != 0) return checks[1];
+    if (checks[0] != 0) {
+        if (!curses_was_ready) {
+            endwin();
+        }
+        return checks[0];
+    }
+    if (checks[1] != 0) {
+        if (!curses_was_ready) {
+            endwin();
+        }
+        return checks[1];
+    }
+    if (!curses_was_ready) {
+        endwin();
+    }
     return 0;
 }
 

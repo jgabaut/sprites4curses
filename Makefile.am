@@ -50,7 +50,7 @@ $(SHARED_LIB): libs4c.o
 	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
 	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
 	@echo -e "    \033[1;35mCFLAGS\e[0m: [ \"\033[1;34m$(CFLAGS)\e[0m\" ]"
-	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) -shared $< -o $@
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) -shared $< -o $@ $(LDADD)
 	@echo -e "\033[1;33mDone.\e[0m"
 
 libs4c.a: libs4c.o
@@ -108,6 +108,9 @@ clean:
 	-rm s4c-animate/palette.c
 	-rm s4c-demo/*.o
 	-rm ./*.o
+	-rm ./*.so
+	-rm ./*.a
+	-rm ./*.dll
 	@echo -e "\033[1;33mDone.\e[0m"
 
 cleanob:

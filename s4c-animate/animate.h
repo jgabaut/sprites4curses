@@ -23,15 +23,16 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
+#include <locale.h>
 
 #ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
 #include <ncurses.h>
 #else
 #include <ncursesw/ncurses.h>
-#endif
+#endif // _WIN32
 #include <pthread.h>
-#endif
+#endif // S4C_RAYLIB_EXTENSION
 
 
 #define S4C_ANIMATE_VERSION "0.4.4"
