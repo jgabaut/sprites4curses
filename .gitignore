@@ -2,6 +2,12 @@
 .venv
 # ignore object files
 *.o
+# ignore shared object files
+*.so
+# ignore .a files
+*.a
+# ignore .dll files
+*.dll
 # ignore executable
 demo
 # ignore win executable
@@ -38,3 +44,6 @@ Makefile.in
 
 # ignore __pycache__
 __pycache__
+
+# ignore installer log
+installer.log

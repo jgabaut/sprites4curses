@@ -242,14 +242,14 @@ void test_s4c_color_pairs(WINDOW* win) {
     refresh();
 }
 
-int s4c_check_has_colors() {
+int s4c_check_has_colors(void) {
     if (has_colors() == FALSE) {
         return  S4C_ERR_TERMCOLOR;
     }
     return 0;
 }
 
-int s4c_check_can_change_color() {
+int s4c_check_can_change_color(void) {
     if (can_change_color() == FALSE) {
         return S4C_ERR_TERMCHANGECOLOR;
     }

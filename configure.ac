@@ -1,5 +1,5 @@
 # Define the package name and version
-AC_INIT([sprites4curses], [0.4.3], [jgabaut@github.com])
+AC_INIT([sprites4curses], [0.4.4], [jgabaut@github.com])
 
 # Verify automake version and enable foreign option
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -40,6 +40,7 @@ case "${host_os}" in
         fi
         AC_SUBST([OS], ["w64-mingw32"])
         AC_SUBST([TARGET], ["demo.exe"])
+        AC_SUBST([SHARED_LIB], ["libs4c.dll"])
     ;;
     darwin*)
         echo "Building for macos: [$host_cpu-$host_vendor-$host_os]"
@@ -55,6 +56,7 @@ case "${host_os}" in
         fi
         AC_SUBST([OS], ["darwin"])
         AC_SUBST([TARGET], ["demo"])
+        AC_SUBST([SHARED_LIB], ["libs4c.so"])
     ;;
     linux*)
         echo "Building for Linux: [$host_cpu-$host_vendor-$host_os]"
@@ -70,6 +72,7 @@ case "${host_os}" in
         fi
         AC_SUBST([OS], ["Linux"])
         AC_SUBST([TARGET], ["demo"])
+        AC_SUBST([SHARED_LIB], ["libs4c.so"])
     ;;
 esac
 
@@ -80,7 +83,7 @@ AM_CONDITIONAL([LINUX_BUILD], [test "$build_linux" = "yes"])
 # Set a default version number if not specified externally
 AC_ARG_VAR([VERSION], [Version number])
 if test -z "$VERSION"; then
-  VERSION="0.4.3"
+  VERSION="0.4.4"
 fi
 
 # Output variables to the config.h header
