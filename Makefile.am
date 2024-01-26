@@ -12,10 +12,16 @@ SHELL := /bin/bash
 .ONESHELL:
 # Check system info
 MACHINE := $$(uname -m)
+TARGET_INSTALL_DIR = /usr
+SOURCE_INSTALL_DIR = "."
+INSTALLER_LOG_FILE = "./installer.log"
 PACK_NAME = $(TARGET)-$(VERSION)-$(OS)-$(MACHINE)
 
 # Source files
-s4c_SOURCES = s4c-animate/animate.c s4c-animate/palette.c s4c-demo/demo.c
+demo_SOURCES = s4c-animate/animate.c s4c-animate/palette.c s4c-demo/demo.c
+
+# Lib source files
+lib_SOURCES = s4c-animate/animate.c
 
 # Linking rule
 LDADD = $(S4C_LDFLAGS)
@@ -35,15 +41,32 @@ if S4C_EXPERIMENTAL_BUILD
 AM_CFLAGS += -DS4C_EXPERIMENTAL
 endif
 
+libs4c.o: $(lib_SOURCES)
+	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
+	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) -fPIC $< -o $@
+	@echo -e "\033[1;33mDone.\e[0m"
+
+$(SHARED_LIB): libs4c.o
+	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
+	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
+	@echo -e "    \033[1;35mCFLAGS\e[0m: [ \"\033[1;34m$(CFLAGS)\e[0m\" ]"
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) -shared $< -o $@ $(LDADD)
+	@echo -e "\033[1;33mDone.\e[0m"
+
+libs4c.a: libs4c.o
+	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
+	ar rcs $@ $<
+	@echo -e "\033[1;33mDone.\e[0m"
+
 # Build rule for object files
 %.o: %.c
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) $< -o $@
 
 # Build rule for the final binary
-$(TARGET): $(s4c_SOURCES:.c=.o)
+$(TARGET): $(demo_SOURCES:.c=.o)
 	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
 	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
-	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(s4c_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
 
 s4c-animate/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "
@@ -85,6 +108,9 @@ clean:
 	-rm s4c-animate/palette.c
 	-rm s4c-demo/*.o
 	-rm ./*.o
+	-rm ./*.so
+	-rm ./*.a
+	-rm ./*.dll
 	@echo -e "\033[1;33mDone.\e[0m"
 
 cleanob:
@@ -131,8 +157,14 @@ init:
 	git submodule update --init
 	@echo -e "\033[1;33mDone.\e[0m"
 
+install: $(SHARED_LIB) doc
+	@echo -en "Installing s4c lib $(VERSION):  "
+	./installer-sh "-i" $(VERSION) $(TARGET_INSTALL_DIR) $(SOURCE_INSTALL_DIR) $(INSTALLER_LOG_FILE)
+	ldconfig
+	@echo -e "\n\033[1;33mDone.\e[0m"
+
 # Default target (builds everything)
-all: init $(TARGET)
+all: init $(TARGET) $(SHARED_LIB) libs4c.a
 
 # Target to clean and rebuild
 rebuild: clean all

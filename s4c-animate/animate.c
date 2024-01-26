@@ -242,14 +242,14 @@ void test_s4c_color_pairs(WINDOW* win) {
     refresh();
 }
 
-int s4c_check_has_colors() {
+int s4c_check_has_colors(void) {
     if (has_colors() == FALSE) {
         return  S4C_ERR_TERMCOLOR;
     }
     return 0;
 }
 
-int s4c_check_can_change_color() {
+int s4c_check_can_change_color(void) {
     if (can_change_color() == FALSE) {
         return S4C_ERR_TERMCHANGECOLOR;
     }
@@ -261,15 +261,36 @@ int s4c_check_can_change_color() {
  * @return 0 if successful, a negative value otherwise.
  */
 int s4c_check_term(void) {
-    // Only works after calling init_scr().
-    // TODO: check if init_scr() was called already?
+
+    bool curses_was_ready = (stdscr != NULL) ? true : false;
+
+    if (!curses_was_ready) { //We temporarily try to start curses ourselves.
+        setlocale(LC_ALL, "");
+	    initscr();
+	    clear();
+	    refresh();
+	    start_color();
+    }
 
     int checks[2] = {0};
 
     checks[0] = s4c_check_has_colors();
     checks[1] = s4c_check_can_change_color();
-    if (checks[0] != 0) return checks[0];
-    if (checks[1] != 0) return checks[1];
+    if (checks[0] != 0) {
+        if (!curses_was_ready) {
+            endwin();
+        }
+        return checks[0];
+    }
+    if (checks[1] != 0) {
+        if (!curses_was_ready) {
+            endwin();
+        }
+        return checks[1];
+    }
+    if (!curses_was_ready) {
+        endwin();
+    }
     return 0;
 }
 
@@ -593,6 +614,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
 /**
  * Takes a WINDOW pointer to print into and an animation array, plus the index of requested frame to print.
  * Contrary to other of these functions, this one does not touch cursor settings.
+ * It checks if the passed WINDOW is big enough for the requested frame.
  * Color-character map is define in s4c_print_spriteline().
  * @see s4c_print_spriteline()
  * @param sprites The sprites array.
@@ -606,7 +628,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+int s4c_display_sprite_at_coords_checked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
 	//Validate requested range
 	if (sprite_index < 0 || sprite_index > num_frames ) {
 		return S4C_ERR_RANGE;
@@ -624,6 +646,37 @@ int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_in
 	for (int j=0; j<rows; j++) {
 		// Print current frame
 		s4c_print_spriteline(w,sprites[sprite_index][j], j+startY+1, cols, startX);
+	}
+	box(w,0,0);
+	wrefresh(w);
+	return 1;
+}
+
+/**
+ * Takes a WINDOW pointer to print into and an animation array, plus the index of requested frame to print.
+ * Contrary to other of these functions, this one does not touch cursor settings.
+ * It does not check if the passed WINDOW is big enough for the requested frame.
+ * Color-character map is define in s4c_print_spriteline().
+ * @see s4c_print_spriteline()
+ * @param sprites The sprites array.
+ * @param sprite_index The index of requested sprite.
+ * @param w The window to print into.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
+ * @return 1 if successful, a negative value for errors.
+ */
+int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY) {
+	//Validate requested range
+	if (sprite_index < 0 || sprite_index > num_frames ) {
+		return S4C_ERR_RANGE;
+	}
+
+	for (int j=0; j<frameheight; j++) {
+		// Print current frame
+		s4c_print_spriteline(w,sprites[sprite_index][j], j+startY+1, framewidth, startX);
 	}
 	box(w,0,0);
 	wrefresh(w);

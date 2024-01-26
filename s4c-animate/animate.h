@@ -23,21 +23,22 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
+#include <locale.h>
 
 #ifndef S4C_RAYLIB_EXTENSION
 #ifndef _WIN32
 #include <ncurses.h>
 #else
 #include <ncursesw/ncurses.h>
-#endif
+#endif // _WIN32
 #include <pthread.h>
-#endif
+#endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.4.3"
+#define S4C_ANIMATE_VERSION "0.4.4"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 3
+#define S4C_ANIMATE_PATCH_VERSION 4
 
 #define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
 #define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
@@ -209,7 +210,15 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
 
 int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
-int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords_checked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+
+#ifdef S4C_UNCHECKED
+#define s4c_display_sprite_at_coords(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY) s4c_display_sprite_at_coords_unchecked((sprites), (sprite_index), (w), (num_frames), (frameheight), (framewidth), (startX), (startY))
+#else
+#define s4c_display_sprite_at_coords(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY) s4c_display_sprite_at_coords_checked((sprites), (sprite_index), (w), (num_frames), (frameheight), (framewidth), (startX), (startY))
+#endif // S4C_UNCHECKED
+
 #ifdef S4C_EXPERIMENTAL
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols);
