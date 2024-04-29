@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Install raylib dev dependencies
-      run: sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+      run: sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
     - name: Check out raylib
       uses: actions/checkout@master
       with:
