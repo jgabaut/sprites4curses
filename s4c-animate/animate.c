@@ -1,7 +1,7 @@
 // jgabaut @ github.com/jgabaut
 // SPDX-License-Identifier: GPL-3.0-only
 /*
-    Copyright (C) 2023  jgabaut
+    Copyright (C) 2023-2024  jgabaut
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -117,8 +117,9 @@ S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth,
  * Initialises a color pair from a passed S4C_Color pointer.
  * @param palette The S4C_Color pointer array at hand.
  * @param color_index The resulting color index for defined colorpair.
+ * @param bg_color_index The color index for background color of defined colorpair. Typical values are 0 or, only after use_default_colors(), -1.
  */
-void init_s4c_color_pair(S4C_Color* color, int color_index) {
+void init_s4c_color_pair_ex(S4C_Color* color, int color_index, int bg_color_index) {
 
 	if (color == NULL) {
 		fprintf(stderr,"Error: invalid S4C_Color at %s().",__func__);
@@ -137,8 +138,31 @@ void init_s4c_color_pair(S4C_Color* color, int color_index) {
 	int proportional_g = (((float)g + 1.0) / 256)*1000;
 	int proportional_b = (((float)b + 1.0) / 256)*1000;
 	init_color(color_index, proportional_r, proportional_g, proportional_b);
-   	init_pair(color_index, color_index, 0);
+   	init_pair(color_index, color_index, bg_color_index);
 }
+
+/**
+ * Initialises a color pair from a passed S4C_Color pointer.
+ * The background color index for the defined color pair is 0.
+ * @param palette The S4C_Color pointer array at hand.
+ * @param color_index The resulting color index for defined colorpair.
+ */
+void init_s4c_color_pair(S4C_Color* color, int color_index) {
+    init_s4c_color_pair_ex(color, color_index, 0);
+}
+
+/**
+ * Initialises a color pair from a passed S4C_Color pointer.
+ * It sets the background color index for the pair to -1.
+ * This is useless to any curses implementation that does not support use_default_colors().
+ * In that case, plain init_s4c_color_pair() should be used.
+ * @param palette The S4C_Color pointer array at hand.
+ * @param color_index The resulting color index for defined colorpair.
+ */
+void init_s4c_color_pair_default_bg(S4C_Color* color, int color_index) {
+    init_s4c_color_pair_ex(color, color_index, -1);
+}
+
 #endif
 
 const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1] = {
