@@ -1,7 +1,7 @@
 // jgabaut @ github.com/jgabaut
 // SPDX-License-Identifier: GPL-3.0-only
 /*
-    Copyright (C) 2023  jgabaut
+    Copyright (C) 2023-2024  jgabaut
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,10 +35,10 @@
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.4.4"
+#define S4C_ANIMATE_VERSION "0.4.5"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 4
+#define S4C_ANIMATE_PATCH_VERSION 5
 
 #define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
 #define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
@@ -191,7 +191,9 @@ typedef struct animate_args {
 
 void init_s4c_color_pairs(FILE* palette_file);
 
+void init_s4c_color_pair_ex(S4C_Color* color, int color_index, int bg_color_index);
 void init_s4c_color_pair(S4C_Color* color, int color_index);
+void init_s4c_color_pair_default_bg(S4C_Color* color, int color_index);
 
 void test_s4c_color_pairs(WINDOW* win);
 
