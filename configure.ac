@@ -17,6 +17,12 @@ AC_ARG_ENABLE([raylib],
   [enable_raylib=no])
 AM_CONDITIONAL([S4C_RAYLIB_BUILD], [test "$enable_raylib" = "yes"])
 
+AC_ARG_ENABLE([quieter],
+  [AS_HELP_STRING([--enable-quieter], [Enable s4raylib quieter output extension])],
+  [enable_quieter=$enableval],
+  [enable_quieter=no])
+AM_CONDITIONAL([S4C_RL_QUIETER_BUILD], [test "$enable_quieter" = "yes"])
+
 AC_ARG_ENABLE([exp],
   [AS_HELP_STRING([--enable-exp], [Enable experimental extensions])],
   [enable_exp=$enableval],

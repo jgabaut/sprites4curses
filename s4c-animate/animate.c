@@ -58,6 +58,11 @@ void s4c_dbg_features(void)
 #else
     fprintf(stderr, "[S4C] ncurses.h integration is enabled\n");
 #endif
+#ifdef S4C_RL_QUIETER
+    fprintf(stderr, "[S4C] rl extension for quieter color index failures is enabled\n");
+#else
+    fprintf(stderr, "[S4C] rl extension for quieter color index failures is not enabled\n");
+#endif
 #ifdef S4C_EXPERIMENTAL
     fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is enabled\n");
 #else
@@ -997,7 +1002,9 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
         int color_index = c - '1';
         Color color;
         if (color_index < 0 || color_index > palette_size) {
+#ifndef S4C_RL_QUIETER
             fprintf(stderr,"%s():    Can't print at [x: %i, y: %i], invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, (startX + i), coordY, color_index, palette_size);
+#endif // S4C_RL_QUIETER
             color = BLACK;
         } else {
             color = color_from_s4c_color(palette[color_index]);

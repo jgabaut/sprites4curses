@@ -41,6 +41,10 @@ if S4C_EXPERIMENTAL_BUILD
 AM_CFLAGS += -DS4C_EXPERIMENTAL
 endif
 
+if S4C_RL_QUIETER_BUILD
+AM_CFLAGS += -DS4C_RL_QUIETER
+endif
+
 libs4c.o: $(lib_SOURCES)
 	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) -fPIC $< -o $@
