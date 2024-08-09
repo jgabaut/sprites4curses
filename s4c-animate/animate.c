@@ -99,6 +99,7 @@ void s4c_dbg_features(void)
         }
         if (s4c_ncurses_extension) {
             fprintf(stderr, "ncurses%s", (total_enabled > 1 ? "," : ""));
+            total_enabled -= 1;
         }
         if (s4c_raylib_quieter) {
             fprintf(stderr, "quieter%s", (total_enabled > 1 ? "," : ""));
