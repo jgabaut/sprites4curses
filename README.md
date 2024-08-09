@@ -9,6 +9,7 @@
 + [Scripts](#scripts)
 + [animate.h](#animate)
   + [Prerequisites](#prerequisites_animate)
+  + [A note about napms()](#napms_note)
   + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
   + [demo.c](#demo_c)
@@ -31,19 +32,16 @@
   -------------------------------------------------------------------------------
   Language                     files          blank        comment           code
   -------------------------------------------------------------------------------
-  C                                2            114            380            644
+  C                                2            114            385            651
   C/C++ Header                     2             47             50            167
   -------------------------------------------------------------------------------
-  SUM:                             4            161            430            811
+  SUM:                             4            161            435            818
   -------------------------------------------------------------------------------
   ```
 
-  `s4c_animate\_sprites()` is useful in a initialised WINDOW, it boxes the window and displays the animation snugly.
-
-  `s4c_animate\_sprites\_at\_coords()` does the same, but has 2 more parameters to start displaying at any coord in a window big enough to fit the animation.
-
   You can look at the `demo.c` program to see how you can request the animation after setup.
-The file format expected is compatible with `s4c-file` specs, see `sprites.py` or `sheet_converter.py` for info about the basic file format.
+
+  Some APIs which rely on reading a file are compatible with `s4c-file` specs, see `s4c-scripts/s4c/core/sprites.py` or `s4c-scripts/s4c/core/sheet_converter.py` for info about the basic file format.
 
 ### Prerequisites <a name = "prerequisites_animate"></a>
 
@@ -60,6 +58,23 @@ The file format expected is compatible with `s4c-file` specs, see `sprites.py` o
 
   To use the Raylib extension, you need to have installed `raylib`. Refer to lib docs for help: [link](https://github.com/raysan5/raylib#build-and-installation).
   - More info at [this section](#raylib_ext).
+
+### A note about napms() <a name = "napms_note"></a>
+
+  Some of the older APIs for `ncurses` extension come with a caveat: they are not interrupt-handler safe.
+
+  This is due to the usage of `napms()` to wait for the requested frametime.
+
+  If SIGINT is received by your program while waiting on a frame time, a crash will occur.
+
+  A refactor for those APIs to avoid the active sleep could lift this limitation.
+
+  In the meantime, you can use
+
+    ```c
+      s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+    ```
+  (actually a macro, defined depending on the presence of `S4C_UNCHECKED` definition), as an interrupt-safe way of doing animation.
 
 ### Raylib extension <a name = "raylib_ext"></a>
 
