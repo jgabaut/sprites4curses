@@ -74,8 +74,8 @@ $(TARGET): $(demo_SOURCES:.c=.o)
 
 s4c-animate/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "
-	python scripts/palette.py C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
-	python scripts/palette.py C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
+	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
+	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
 	@echo -e "Done."
 
 doc:

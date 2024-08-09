@@ -54,20 +54,49 @@ const int int_s4c_version(void) {
 void s4c_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
-    fprintf(stderr, "[S4C] raylib.h integration is enabled\n");
+    bool s4c_raylib_extension = true;
 #else
-    fprintf(stderr, "[S4C] ncurses.h integration is enabled\n");
+    bool s4c_raylib_extension = false;
 #endif
 #ifdef S4C_RL_QUIETER
-    fprintf(stderr, "[S4C] rl extension for quieter color index failures is enabled\n");
+    bool s4c_raylib_quieter = true;
 #else
-    fprintf(stderr, "[S4C] rl extension for quieter color index failures is not enabled\n");
+    bool s4c_raylib_quieter = false;
 #endif
 #ifdef S4C_EXPERIMENTAL
-    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is enabled\n");
+    bool s4c_experimental = true;
 #else
-    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is not enabled\n");
+    bool s4c_experimental = false;
 #endif
+    bool features[3] = {
+        [0] = s4c_raylib_extension,
+        [1] = s4c_raylib_quieter,
+        [2] = s4c_experimental,
+    };
+    int total_enabled = 0;
+    for (int i=0; i<3; i++) {
+        if (features[i]) {
+            total_enabled += 1;
+        }
+    }
+    fprintf(stderr, "[S4C] Enabled features: {");
+    if (total_enabled == 0) {
+        fprintf(stderr, "ncurses}\n");
+        return;
+    } else {
+        if (s4c_raylib_extension) {
+            fprintf(stderr, "raylib%s", (total_enabled > 1 ? "," : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_raylib_quieter) {
+            fprintf(stderr, "quieter%s", (total_enabled > 1 ? "," : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_experimental) {
+            fprintf(stderr, "exper");
+        }
+        fprintf(stderr, "}\n");
+    }
 }
 
 /**
