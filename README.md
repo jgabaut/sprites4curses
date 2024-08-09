@@ -71,9 +71,9 @@
 
   In the meantime, you can use
 
-    ```c
-      s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
-    ```
+  ```c
+  s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+  ```
   (actually a macro, defined depending on the presence of `S4C_UNCHECKED` definition), as an interrupt-safe way of doing animation.
 
 ### Raylib extension <a name = "raylib_ext"></a>
