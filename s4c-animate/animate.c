@@ -55,8 +55,10 @@ void s4c_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
     bool s4c_raylib_extension = true;
+    bool s4c_ncurses_extension = false;
 #else
     bool s4c_raylib_extension = false;
+    bool s4c_ncurses_extension = true;
 #endif
 #ifdef S4C_RL_QUIETER
     bool s4c_raylib_quieter = true;
@@ -73,26 +75,30 @@ void s4c_dbg_features(void)
 #else
     bool s4c_experimental = false;
 #endif
-    bool features[4] = {
-        [0] = s4c_raylib_extension,
-        [1] = s4c_raylib_quieter,
-        [2] = s4c_ncurses_unchecked,
-        [3] = s4c_experimental,
+    bool features[5] = {
+        [0] = s4c_ncurses_extension,
+        [1] = s4c_ncurses_unchecked,
+        [2] = s4c_raylib_extension,
+        [3] = s4c_raylib_quieter,
+        [4] = s4c_experimental,
     };
     int total_enabled = 0;
-    for (int i=0; i<4; i++) {
+    for (int i=0; i<5; i++) {
         if (features[i]) {
             total_enabled += 1;
         }
     }
     fprintf(stderr, "[S4C] Enabled features: {");
     if (total_enabled == 0) {
-        fprintf(stderr, "ncurses}\n");
+        fprintf(stderr, "none}\n");
         return;
     } else {
         if (s4c_raylib_extension) {
             fprintf(stderr, "raylib%s", (total_enabled > 1 ? "," : ""));
             total_enabled -= 1;
+        }
+        if (s4c_ncurses_extension) {
+            fprintf(stderr, "ncurses%s", (total_enabled > 1 ? "," : ""));
         }
         if (s4c_raylib_quieter) {
             fprintf(stderr, "quieter%s", (total_enabled > 1 ? "," : ""));
