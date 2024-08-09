@@ -63,18 +63,24 @@ void s4c_dbg_features(void)
 #else
     bool s4c_raylib_quieter = false;
 #endif
+#ifdef S4C_UNCHECKED
+    bool s4c_ncurses_unchecked = true;
+#else
+    bool s4c_ncurses_unchecked = false;
+#endif
 #ifdef S4C_EXPERIMENTAL
     bool s4c_experimental = true;
 #else
     bool s4c_experimental = false;
 #endif
-    bool features[3] = {
+    bool features[4] = {
         [0] = s4c_raylib_extension,
         [1] = s4c_raylib_quieter,
-        [2] = s4c_experimental,
+        [2] = s4c_ncurses_unchecked,
+        [3] = s4c_experimental,
     };
     int total_enabled = 0;
-    for (int i=0; i<3; i++) {
+    for (int i=0; i<4; i++) {
         if (features[i]) {
             total_enabled += 1;
         }
@@ -91,6 +97,9 @@ void s4c_dbg_features(void)
         if (s4c_raylib_quieter) {
             fprintf(stderr, "quieter%s", (total_enabled > 1 ? "," : ""));
             total_enabled -= 1;
+        }
+        if (s4c_ncurses_unchecked) {
+            fprintf(stderr, "unchecked%s", (total_enabled > 1 ? "," : ""));
         }
         if (s4c_experimental) {
             fprintf(stderr, "exper");
