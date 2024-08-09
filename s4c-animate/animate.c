@@ -88,7 +88,7 @@ void s4c_dbg_features(void)
             total_enabled += 1;
         }
     }
-    fprintf(stderr, "[S4C] Enabled features: {");
+    fprintf(stderr, "[S4C]    Enabled features: {");
     if (total_enabled == 0) {
         fprintf(stderr, "none}\n");
         return;
