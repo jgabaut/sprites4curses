@@ -1,5 +1,5 @@
 # Define the package name and version
-AC_INIT([sprites4curses], [0.4.6], [jgabaut@github.com])
+AC_INIT([sprites4curses], [0.4.7], [jgabaut@github.com])
 
 # Verify automake version and enable foreign option
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -16,6 +16,12 @@ AC_ARG_ENABLE([raylib],
   [enable_raylib=$enableval],
   [enable_raylib=no])
 AM_CONDITIONAL([S4C_RAYLIB_BUILD], [test "$enable_raylib" = "yes"])
+
+AC_ARG_ENABLE([quieter],
+  [AS_HELP_STRING([--enable-quieter], [Enable s4raylib quieter output extension])],
+  [enable_quieter=$enableval],
+  [enable_quieter=no])
+AM_CONDITIONAL([S4C_RL_QUIETER_BUILD], [test "$enable_quieter" = "yes"])
 
 AC_ARG_ENABLE([exp],
   [AS_HELP_STRING([--enable-exp], [Enable experimental extensions])],
@@ -83,7 +89,7 @@ AM_CONDITIONAL([LINUX_BUILD], [test "$build_linux" = "yes"])
 # Set a default version number if not specified externally
 AC_ARG_VAR([VERSION], [Version number])
 if test -z "$VERSION"; then
-  VERSION="0.4.6"
+  VERSION="0.4.7"
 fi
 
 # Output variables to the config.h header

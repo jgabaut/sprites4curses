@@ -41,6 +41,10 @@ if S4C_EXPERIMENTAL_BUILD
 AM_CFLAGS += -DS4C_EXPERIMENTAL
 endif
 
+if S4C_RL_QUIETER_BUILD
+AM_CFLAGS += -DS4C_RL_QUIETER
+endif
+
 libs4c.o: $(lib_SOURCES)
 	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) -fPIC $< -o $@
@@ -70,8 +74,8 @@ $(TARGET): $(demo_SOURCES:.c=.o)
 
 s4c-animate/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "
-	python scripts/palette.py C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
-	python scripts/palette.py C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
+	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
+	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
 	@echo -e "Done."
 
 doc:

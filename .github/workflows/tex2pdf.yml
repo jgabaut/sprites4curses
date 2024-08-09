@@ -18,7 +18,7 @@ jobs:
 
     name: (doxygen ./documentation/s4c.doxyfile) ->    (cd ./doxygen/latex && make) ->    docs.pdf
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 

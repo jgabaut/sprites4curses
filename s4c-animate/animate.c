@@ -54,15 +54,65 @@ const int int_s4c_version(void) {
 void s4c_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
-    fprintf(stderr, "[S4C] raylib.h integration is enabled\n");
+    bool s4c_raylib_extension = true;
+    bool s4c_ncurses_extension = false;
 #else
-    fprintf(stderr, "[S4C] ncurses.h integration is enabled\n");
+    bool s4c_raylib_extension = false;
+    bool s4c_ncurses_extension = true;
+#endif
+#ifdef S4C_RL_QUIETER
+    bool s4c_raylib_quieter = true;
+#else
+    bool s4c_raylib_quieter = false;
+#endif
+#ifdef S4C_UNCHECKED
+    bool s4c_ncurses_unchecked = true;
+#else
+    bool s4c_ncurses_unchecked = false;
 #endif
 #ifdef S4C_EXPERIMENTAL
-    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is enabled\n");
+    bool s4c_experimental = true;
 #else
-    fprintf(stderr, "[S4C] S4C_EXPERIMENTAL is not enabled\n");
+    bool s4c_experimental = false;
 #endif
+    bool features[5] = {
+        [0] = s4c_ncurses_extension,
+        [1] = s4c_ncurses_unchecked,
+        [2] = s4c_raylib_extension,
+        [3] = s4c_raylib_quieter,
+        [4] = s4c_experimental,
+    };
+    int total_enabled = 0;
+    for (int i=0; i<5; i++) {
+        if (features[i]) {
+            total_enabled += 1;
+        }
+    }
+    fprintf(stderr, "[S4C]    Enabled features: {");
+    if (total_enabled == 0) {
+        fprintf(stderr, "none}\n");
+        return;
+    } else {
+        if (s4c_raylib_extension) {
+            fprintf(stderr, "raylib%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_ncurses_extension) {
+            fprintf(stderr, "ncurses%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_raylib_quieter) {
+            fprintf(stderr, "quieter%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_ncurses_unchecked) {
+            fprintf(stderr, "unchecked%s", (total_enabled > 1 ? ", " : ""));
+        }
+        if (s4c_experimental) {
+            fprintf(stderr, "exper");
+        }
+        fprintf(stderr, "}\n");
+    }
 }
 
 /**
@@ -437,6 +487,7 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
 
 /**
  * Calls s4c_animate_sprites_at_coords() with 0,0 as starting coordinates.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_animate_sprites_at_coords()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -458,6 +509,7 @@ int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetit
  * Takes a pre-initialised array of sprites, valid format output by sprites.py or sheet_converter.py.
  * Color-character map is define in s4c_print_spriteline().
  * Sets all the frames to the passed array.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -516,6 +568,8 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
 
 /**
  * Takes a void pointer, to be cast to animate_args*, containing parameters to animate a sprite in a WINDOW, using a separate thread.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
+ * @param args_ptr Pointer to be cast to animate_args*.
  * @see animate_args
  */
 void *s4c_animate_sprites_thread_at(void *args_ptr) {
@@ -583,6 +637,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
  * Contrary to other of these functions, this one does not touch cursor settings.
  * Uses the passed sprites and displays a range of them in the passed window if it is big enough.
  * Color-character map is define in s4c_print_spriteline().
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -997,7 +1052,9 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
         int color_index = c - '1';
         Color color;
         if (color_index < 0 || color_index > palette_size) {
-            fprintf(stderr,"%s():    Can't print at Y coord [%i], invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, coordY, color_index, palette_size);
+#ifndef S4C_RL_QUIETER
+            fprintf(stderr,"%s():    Can't print at [x: %i, y: %i], invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, (startX + i), coordY, color_index, palette_size);
+#endif // S4C_RL_QUIETER
             color = BLACK;
         } else {
             color = color_from_s4c_color(palette[color_index]);
