@@ -442,6 +442,7 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
 
 /**
  * Calls s4c_animate_sprites_at_coords() with 0,0 as starting coordinates.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_animate_sprites_at_coords()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -463,6 +464,7 @@ int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetit
  * Takes a pre-initialised array of sprites, valid format output by sprites.py or sheet_converter.py.
  * Color-character map is define in s4c_print_spriteline().
  * Sets all the frames to the passed array.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
@@ -521,6 +523,8 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
 
 /**
  * Takes a void pointer, to be cast to animate_args*, containing parameters to animate a sprite in a WINDOW, using a separate thread.
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
+ * @param args_ptr Pointer to be cast to animate_args*.
  * @see animate_args
  */
 void *s4c_animate_sprites_thread_at(void *args_ptr) {
@@ -588,6 +592,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
  * Contrary to other of these functions, this one does not touch cursor settings.
  * Uses the passed sprites and displays a range of them in the passed window if it is big enough.
  * Color-character map is define in s4c_print_spriteline().
+ * Not interrupt-safe. Receiving SIGINT while actively waiting on a frame with napms() will crash the program.
  * @see s4c_print_spriteline()
  * @param sprites The sprites array.
  * @param w The window to print into.
