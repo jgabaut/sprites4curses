@@ -47,6 +47,9 @@ void s4c_echoVersionToFile(FILE* f);
 #define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
 #define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
 
+void s4c_dbg_features(void);
+
+#ifdef S4C_HAS_ANIMATE
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
 #include <stdio.h>
@@ -99,7 +102,7 @@ const int int_s4c_animate_version(void);
  */
 const char *string_s4c_animate_version(void);
 
-void s4c_dbg_features(void);
+void s4c_animate_dbg_features(void);
 
 #define MAX_COLORS 256
 #define S4C_PALETTEFILE_MAX_COLOR_NAME_LEN 256 /**< Defines max size for the name strings in palette.gpl.*/
@@ -281,8 +284,10 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 #endif // S4C_RAYLIB_EXTENSION
 
 #endif // S4C_ANIMATE_H
+#endif // S4C_HAS_ANIMATE
 
 #ifndef S4C_RAYLIB_EXTENSION // At the moment, this conflicts.
+#ifdef S4C_HAS_GUI
 #ifndef S4C_GUI_H_
 #define S4C_GUI_H_
 #include <stdlib.h>
@@ -497,6 +502,7 @@ void free_ToggleMenu(ToggleMenu toggle_menu);
 #endif // TOGGLE_H_
 
 #endif // S4C_GUI_H_
+#endif // S4C_HAS_GUI
 #endif // S4C_RAYLIB_EXTENSION
 
 #endif // S4C_H_

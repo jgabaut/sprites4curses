@@ -6,8 +6,9 @@
 
   All previous APIs will still be available in the new module, but some macros may be renamed to better namespace the new module.
 
-  A list of all updated identifiers follows.
+  Most of the names have been reused in the new module and will have the same use, but be relative to the whole project rather than just the animate module.
 
+  A list of all updated identifiers follows.
 
   ```c
   S4C_MAJOR  // Dropped
@@ -22,4 +23,5 @@
   s4c_echoVersionToFile() // Renamed to s4c_animate_echoVersionToFile()
   S4C_ECHOVERSION() // Renamed to S4C_ANIMATE_ECHOVERSION()
   S4C_PRINTVERSION() // Renamed to S4C_ANIMATE_PRINTVERSION()
+  s4c_dbg_features() // Renamed to s4c_animate_dbg_features()
   ```

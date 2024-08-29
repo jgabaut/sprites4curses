@@ -37,6 +37,8 @@ AM_LDFLAGS = -s
 # Compiler flags
 AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
 
+if S4C_ANIMATE_BUILD
+AM_CFLAGS += -DS4C_HAS_ANIMATE
 if S4C_RAYLIB_BUILD
 AM_CFLAGS += -DS4C_RAYLIB_EXTENSION
 else
@@ -49,6 +51,11 @@ endif
 if S4C_RL_QUIETER_BUILD
 AM_CFLAGS += -DS4C_RL_QUIETER
 endif
+endif # S4C_ANIMATE_BUILD
+
+if S4C_GUI_BUILD
+AM_CFLAGS += -DS4C_HAS_GUI
+endif # S4C_GUI_BUILD
 
 libs4c.o: $(lib_SOURCES)
 	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"

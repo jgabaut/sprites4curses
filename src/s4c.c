@@ -56,6 +56,93 @@ void s4c_echoVersionToFile(FILE* f) {
 	fprintf(f,"%s\n",S4C_VERSION);
 }
 
+/**
+ * Prints enabled s4c features to stderr.
+ */
+void s4c_dbg_features(void)
+{
+#ifdef S4C_HAS_ANIMATE
+    bool s4c_has_animate = true;
+#else
+    bool s4c_has_animate = false;
+#endif
+#ifdef S4C_HAS_GUI
+    bool s4c_has_gui = true;
+#else
+    bool s4c_has_gui = false;
+#endif
+#ifdef S4C_RAYLIB_EXTENSION
+    bool s4c_raylib_extension = true;
+    bool s4c_ncurses_extension = false;
+#else
+    bool s4c_raylib_extension = false;
+    bool s4c_ncurses_extension = true;
+#endif
+#ifdef S4C_RL_QUIETER
+    bool s4c_raylib_quieter = true;
+#else
+    bool s4c_raylib_quieter = false;
+#endif
+#ifdef S4C_UNCHECKED
+    bool s4c_ncurses_unchecked = true;
+#else
+    bool s4c_ncurses_unchecked = false;
+#endif
+#ifdef S4C_EXPERIMENTAL
+    bool s4c_experimental = true;
+#else
+    bool s4c_experimental = false;
+#endif
+    bool features[7] = {
+        [0] = s4c_has_animate,
+        [1] = s4c_has_gui,
+        [2] = s4c_ncurses_extension,
+        [3] = s4c_ncurses_unchecked,
+        [4] = s4c_raylib_extension,
+        [5] = s4c_raylib_quieter,
+        [6] = s4c_experimental,
+    };
+    int total_enabled = 0;
+    for (int i=0; i<7; i++) {
+        if (features[i]) {
+            total_enabled += 1;
+        }
+    }
+    fprintf(stderr, "[S4C]    Enabled features: {");
+    if (total_enabled == 0) {
+        fprintf(stderr, "none}\n");
+        return;
+    } else {
+        if (s4c_has_animate) {
+            fprintf(stderr, "animate%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_has_gui) {
+            fprintf(stderr, "gui%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_raylib_extension) {
+            fprintf(stderr, "animate-raylib%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_ncurses_extension) {
+            fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_raylib_quieter) {
+            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
+            total_enabled -= 1;
+        }
+        if (s4c_ncurses_unchecked) {
+            fprintf(stderr, "animate-unchecked%s", (total_enabled > 1 ? ", " : ""));
+        }
+        if (s4c_experimental) {
+            fprintf(stderr, "animate-exper");
+        }
+        fprintf(stderr, "}\n");
+    }
+}
+
 #ifdef S4C_ANIMATE_H
 /**
  * Prints formatted animate version.
@@ -97,9 +184,9 @@ const char *string_s4c_animate_version(void)
 }
 
 /**
- * Prints enabled s4c features to stderr.
+ * Prints enabled s4c-animate features to stderr.
  */
-void s4c_dbg_features(void)
+void s4c_animate_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
     bool s4c_raylib_extension = true;
@@ -142,22 +229,22 @@ void s4c_dbg_features(void)
         return;
     } else {
         if (s4c_raylib_extension) {
-            fprintf(stderr, "raylib%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-raylib%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_extension) {
-            fprintf(stderr, "ncurses%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_raylib_quieter) {
-            fprintf(stderr, "quieter%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_unchecked) {
-            fprintf(stderr, "unchecked%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-unchecked%s", (total_enabled > 1 ? ", " : ""));
         }
         if (s4c_experimental) {
-            fprintf(stderr, "exper");
+            fprintf(stderr, "animate-exper");
         }
         fprintf(stderr, "}\n");
     }

@@ -49,9 +49,9 @@ const int int_s4c_animate_version(void) {
 }
 
 /**
- * Prints enabled s4c features to stderr.
+ * Prints enabled s4c-animate features to stderr.
  */
-void s4c_dbg_features(void)
+void s4c_animate_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
     bool s4c_raylib_extension = true;
@@ -94,22 +94,22 @@ void s4c_dbg_features(void)
         return;
     } else {
         if (s4c_raylib_extension) {
-            fprintf(stderr, "raylib%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-raylib%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_extension) {
-            fprintf(stderr, "ncurses%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_raylib_quieter) {
-            fprintf(stderr, "quieter%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_unchecked) {
-            fprintf(stderr, "unchecked%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-unchecked%s", (total_enabled > 1 ? ", " : ""));
         }
         if (s4c_experimental) {
-            fprintf(stderr, "exper");
+            fprintf(stderr, "animate-exper");
         }
         fprintf(stderr, "}\n");
     }
