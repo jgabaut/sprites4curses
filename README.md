@@ -124,13 +124,24 @@
 
   This is a C library offering a small collection of curses-based UI elements.
 
-  It's still in an early stage, but it has a minimal workable interface.
+  It's still in an early stage, but it has a minimal workable interface. It's not that big.
+
+  ```
+  -------------------------------------------------------------------------------
+  Language                     files          blank        comment           code
+  -------------------------------------------------------------------------------
+  C                                1             65             57            528
+  C/C++ Header                     1             41             33            157
+  -------------------------------------------------------------------------------
+  SUM:                             2            106             90            685
+  -------------------------------------------------------------------------------
+  ```
 
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
-This is a GIMP palette file.
-It's used by the library to initialise the color pairs for curses to display the sprites.
-It's also useful in the first place for exporting PNG with the correct color alignment.
-You can also use it to generate a C implementation file for you color palette.
-Info on how to use it are in the [palette-README.md](./palette-README.md) file.
+  This is a GIMP palette file.
+  It's used by the library to initialise the color pairs for curses to display the sprites.
+  It's also useful in the first place for exporting PNG with the correct color alignment.
+  You can also use it to generate a C implementation file for you color palette.
+  Info on how to use it are in the [palette-README.md](./palette-README.md) file.
