@@ -8,12 +8,12 @@
 
 + [Scripts](#scripts)
 + [s4c.h](#s4c)
-+ [animate.h](#animate)
++ [s4c-animate](#s4c_animate)
   + [Prerequisites](#prerequisites_animate)
   + [A note about napms()](#napms_note)
   + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
-  + [demo_animate_c](#demo_animate_c)
+  + [demo_animate.c](#demo_animate_c)
 + [s4c-gui](#s4c_gui)
 + [palette.gpl](#palette_gpl)
 
@@ -34,7 +34,7 @@
 
   There's also an early stage module `s4c-gui`, supporting only `ncurses`.
 
-## animate.c and animate.h <a name = "animate"></a>
+## s4c-animate <a name = "s4c_animate"></a>
 
   This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
 
@@ -49,7 +49,7 @@
   -------------------------------------------------------------------------------
   ```
 
-  You can look at the `demo.c` program to see how you can request the animation after setup.
+  You can look at the `demo_animate.c` program to see how you can request the animation after setup.
 
   Some APIs which rely on reading a file are compatible with `s4c-file` specs, see `s4c-scripts/s4c/core/sprites.py` or `s4c-scripts/s4c/core/sheet_converter.py` for info about the basic file format.
 
@@ -59,7 +59,7 @@
 
 #### `pip install Pillow`
 
-  To produce the `Makefile` needed to compile `./demo`, you will need:
+  To produce the `Makefile` needed to compile `./demo_animate`, you will need:
 
   - `automake`
   - `autoconf`
@@ -88,12 +88,13 @@
 
 ### Raylib extension <a name = "raylib_ext"></a>
 
-  To produce the Raylib `./demo`, run:
+  To produce the Raylib `./demo_animate`, run:
 
-  - `./configure --enable-raylib=yes && make rebuild`
+  - `./configure --enable-animate-raylib=yes && make rebuild`
 
-  In case you want to include `animate.h` as Raylib extension in a C file, you should define this macro to make sure the included declarations work as expected:
+  In case you want to include `s4c.h` as Raylib extension in a C file, you should define these macros to make sure the included declarations work as expected:
 
+  - `S4C_HAS_ANIMATE`
   - `S4C_RAYLIB_EXTENSION`
 
 ### Terminal capabilities <a name = "terminal_capabilities"></a>
@@ -114,11 +115,11 @@
 
     `autoreconf; automake --add-missing; autoreconf; automake --add-missing`
     `autoreconf; ./configure`
-    `make; ./demo demofile.txt`
+    `make; ./demo_animate demofile.txt`
 
   - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
-    `make; ./demo <( python sprites.py <directory> )
+    `make; ./demo_animate <( python sprites.py <directory> )
 
 ## s4c-gui <a name = "s4c_gui"></a>
 
@@ -136,7 +137,6 @@
   SUM:                             2            106             90            685
   -------------------------------------------------------------------------------
   ```
-
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
