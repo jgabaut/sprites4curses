@@ -17,6 +17,35 @@
 */
 #ifndef S4C_H_
 #define S4C_H_
+#include <stdio.h>
+
+#define S4C_VERSION "0.4.8-dev"
+#define S4C_MAJOR_VERSION 0
+#define S4C_MINOR_VERSION 4
+#define S4C_PATCH_VERSION 8
+
+/**
+ * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
+ */
+static const int S4C_API_VERSION_INT =
+    (S4C_MAJOR_VERSION * 1000000 + S4C_MINOR_VERSION * 10000 + S4C_PATCH_VERSION * 100);
+/**< Represents current version with numeric format.*/
+
+    /**
+ * Returns current s4c version as an integer.
+ */
+const int int_s4c_version(void);
+
+/**
+ * Returns current s4c version as a string.
+ */
+const char *string_s4c_version(void);
+
+void s4c_printVersionToFile(FILE* f);
+void s4c_echoVersionToFile(FILE* f);
+
+#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
+#define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
 
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
@@ -42,15 +71,11 @@
 #define S4C_ANIMATE_MINOR_VERSION 4
 #define S4C_ANIMATE_PATCH_VERSION 8
 
-#define S4C_MAJOR S4C_ANIMATE_MAJOR_VERSION
-#define S4C_MINOR S4C_ANIMATE_MINOR_VERSION
-#define S4C_PATCH S4C_ANIMATE_PATCH_VERSION
-
 /**
- * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
+ * Defines current API version number from S4C_ANIMATE_{MAJOR,MINOR,PATCH}.
  */
 static const int S4C_ANIMATE_API_VERSION_INT =
-    (S4C_MAJOR * 1000000 + S4C_MINOR * 10000 + S4C_PATCH * 100);
+    (S4C_ANIMATE_MAJOR_VERSION * 1000000 + S4C_ANIMATE_MINOR_VERSION * 10000 + S4C_ANIMATE_PATCH_VERSION * 100);
 /**< Represents current version with numeric format.*/
 
 /**
@@ -58,21 +83,21 @@ static const int S4C_ANIMATE_API_VERSION_INT =
  */
 #define S4C_FILEFORMAT_VERSION "0.2.2"
 
-void s4c_printVersionToFile(FILE* f);
-void s4c_echoVersionToFile(FILE* f);
+void s4c_animate_printVersionToFile(FILE* f);
+void s4c_animate_echoVersionToFile(FILE* f);
 
-#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
-#define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
-
-/**
- * Returns current s4c version as an integer.
- */
-const int int_s4c_version(void);
+#define S4C_ANIMATE_PRINTVERSION() s4c_animate_printVersionToFile(stdout); //Prints formatted version to stdout
+#define S4C_ANIMATE_ECHOVERSION() s4c_animate_echoVersionToFile(stdout); //Prints version to stdout
 
 /**
- * Returns current s4c  version as a string.
+ * Returns current s4c-animate version as an integer.
  */
-const char *string_s4c_version(void);
+const int int_s4c_animate_version(void);
+
+/**
+ * Returns current s4c-animate version as a string.
+ */
+const char *string_s4c_animate_version(void);
 
 void s4c_dbg_features(void);
 

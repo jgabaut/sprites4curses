@@ -17,13 +17,52 @@
 */
 #include "s4c.h"
 
-#ifdef S4C_ANIMATE_H
 /**
- * Prints formatted animate version.
+ * Returns the constant int representing current version for s4c.
+ * @return A constant int in numeric format for current s4c version.
+ */
+const int int_s4c_version(void) {
+    return S4C_API_VERSION_INT;
+}
+
+/**
+ * Returns the constant string representing current version for s4c.
+ * @return A constant char pointer for current s4c version.
+ */
+const char *string_s4c_version(void)
+{
+    return S4C_VERSION;
+}
+
+/**
+ * Prints formatted s4c version.
  */
 void s4c_printVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print formatted s4c version, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(f,"sprites4curses/animate.h v%s\n",S4C_VERSION);
+}
+
+/**
+ * Prints s4c version.
+ */
+void s4c_echoVersionToFile(FILE* f) {
+	if (!f) {
+		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
+		exit(EXIT_FAILURE);
+	}
+	fprintf(f,"%s\n",S4C_VERSION);
+}
+
+#ifdef S4C_ANIMATE_H
+/**
+ * Prints formatted animate version.
+ */
+void s4c_animate_printVersionToFile(FILE* f) {
+	if (!f) {
+		fprintf(stderr,"Error while trying to print formatted s4c-animate version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
 	}
 	fprintf(f,"sprites4curses/animate.h v%s\n",S4C_ANIMATE_VERSION);
@@ -32,27 +71,27 @@ void s4c_printVersionToFile(FILE* f) {
 /**
  * Prints animate version.
  */
-void s4c_echoVersionToFile(FILE* f) {
+void s4c_animate_echoVersionToFile(FILE* f) {
 	if (!f) {
-		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
+		fprintf(stderr,"Error while trying to print s4c-animate version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
 	}
 	fprintf(f,"%s\n",S4C_ANIMATE_VERSION);
 }
 
 /**
- * Returns the constant int representing current version for s4c.
- * @return A constant int in numeric format for current s4c version.
+ * Returns the constant int representing current version for s4c-animate.
+ * @return A constant int in numeric format for current s4c-animate version.
  */
-const int int_s4c_version(void) {
+const int int_s4c_animate_version(void) {
     return S4C_ANIMATE_API_VERSION_INT;
 }
 
 /**
- * Returns the constant string representing current version for s4c.
- * @return A constant char pointer for current s4c version.
+ * Returns the constant string representing current version for s4c-animate.
+ * @return A constant char pointer for current s4c-animate version.
  */
-const char *string_s4c_version(void)
+const char *string_s4c_animate_version(void)
 {
     return S4C_ANIMATE_VERSION;
 }
