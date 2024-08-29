@@ -17,6 +17,7 @@
 */
 #include "../src/s4c.h"
 
+#ifdef S4C_GUI_H_
 int textfield_main(void)
 {
     // Initialize ncurses
@@ -144,3 +145,10 @@ int main(int argc, char** argv)
         return textfield_main();
     }
 }
+#else
+int main(int argc, char** argv)
+{
+    printf("TODO: build this.\n");
+    return 0;
+}
+#endif // S4C_GUI_H_
