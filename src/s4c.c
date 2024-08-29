@@ -1,3 +1,20 @@
+// jgabaut @ github.com/jgabaut
+// SPDX-License-Identifier: GPL-3.0-only
+/*
+    Copyright (C) 2023-2024  jgabaut
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 3 of the License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 #include "s4c.h"
 
 #ifdef S4C_ANIMATE_H
@@ -29,6 +46,15 @@ void s4c_echoVersionToFile(FILE* f) {
  */
 const int int_s4c_version(void) {
     return S4C_ANIMATE_API_VERSION_INT;
+}
+
+/**
+ * Returns the constant string representing current version for s4c.
+ * @return A constant char pointer for current s4c version.
+ */
+const char *string_s4c_version(void)
+{
+    return S4C_ANIMATE_VERSION;
 }
 
 /**

@@ -69,6 +69,11 @@ void s4c_echoVersionToFile(FILE* f);
  */
 const int int_s4c_version(void);
 
+/**
+ * Returns current s4c  version as a string.
+ */
+const char *string_s4c_version(void);
+
 void s4c_dbg_features(void);
 
 #define MAX_COLORS 256
