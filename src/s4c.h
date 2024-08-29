@@ -19,6 +19,7 @@
 #define S4C_H_
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define S4C_VERSION "0.4.8-dev"
 #define S4C_MAJOR_VERSION 0
