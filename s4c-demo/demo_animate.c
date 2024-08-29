@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include "../src/s4c.h"
-#include "../s4c-animate/palette.h"
+#include "../src/palette.h"
 
 #define DEMOFRAMES 30 /**< Defines the number of sprites in the demo.*/
 #define DEMOROWS 18 /**< Defines the maximum number of rows per sprite.*/

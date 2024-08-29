@@ -56,16 +56,16 @@ static const int S4C_ANIMATE_API_VERSION_INT =
  */
 #define S4C_FILEFORMAT_VERSION "0.2.2"
 
-void s4c_printVersionToFile(FILE* f);
-void s4c_echoVersionToFile(FILE* f);
+void s4c_animate_printVersionToFile(FILE* f);
+void s4c_animate_echoVersionToFile(FILE* f);
 
-#define S4C_PRINTVERSION() s4c_printVersionToFile(stdout); //Prints formatted version to stdout
-#define S4C_ECHOVERSION() s4c_echoVersionToFile(stdout); //Prints version to stdout
+#define S4C_ANIMATE_PRINTVERSION() s4c_animate_printVersionToFile(stdout); //Prints formatted version to stdout
+#define S4C_ANIMATE_ECHOVERSION() s4c_animate_echoVersionToFile(stdout); //Prints version to stdout
 
 /**
- * Returns current s4c version as an integer.
+ * Returns current s4c-animate version as an integer.
  */
-const int int_s4c_version(void);
+const int int_s4c_animate_version(void);
 
 void s4c_dbg_features(void);
 

@@ -21,7 +21,7 @@ PACK_NAME = $(TARGET)-$(VERSION)-$(OS)-$(MACHINE)
 #
 demo_SOURCES = src/s4c.c s4c-demo/demo.c
 
-demo_animate_SOURCES = src/s4c.c s4c-animate/palette.c s4c-demo/demo_animate.c
+demo_animate_SOURCES = src/s4c.c src/palette.c s4c-demo/demo_animate.c
 
 demo_gui_SOURCES = src/s4c.c s4c-demo/demo_gui.c
 
@@ -88,10 +88,10 @@ $(GUI_TARGET): $(demo_gui_SOURCES:.c=.o)
 	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
 	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_gui_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
 
-s4c-animate/palette.c:
+src/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "
-	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
-	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
+	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > src/palette.h
+	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > src/palette.c
 	@echo -e "Done."
 
 doc:
@@ -127,8 +127,8 @@ clean:
 	-rm $(GUI_TARGET)
 	-rm src/*.o
 	-rm s4c-animate/*.o
-	-rm s4c-animate/palette.h
-	-rm s4c-animate/palette.c
+	-rm src/palette.h
+	-rm src/palette.c
 	-rm s4c-demo/*.o
 	-rm ./*.o
 	-rm ./*.so

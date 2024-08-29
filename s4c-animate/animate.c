@@ -19,9 +19,9 @@
 #include "animate.h"
 
 /**
- * Prints formatted animate version.
+ * Prints formatted s4c-animate version.
  */
-void s4c_printVersionToFile(FILE* f) {
+void s4c_animate_printVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print formatted s4c version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
@@ -30,9 +30,9 @@ void s4c_printVersionToFile(FILE* f) {
 }
 
 /**
- * Prints animate version.
+ * Prints s4c-animate version.
  */
-void s4c_echoVersionToFile(FILE* f) {
+void s4c_animate_echoVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
@@ -44,7 +44,7 @@ void s4c_echoVersionToFile(FILE* f) {
  * Returns the constant int representing current version for s4c.
  * @return A constant int in numeric format for current s4c version.
  */
-const int int_s4c_version(void) {
+const int int_s4c_animate_version(void) {
     return S4C_ANIMATE_API_VERSION_INT;
 }
 
