@@ -45,7 +45,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-L/usr/x86_64-w64-mingw32/lib -lmenu -lncursesw -lm"])
         fi
         AC_SUBST([OS], ["w64-mingw32"])
-        AC_SUBST([TARGET], ["demo.exe"])
+        AC_SUBST([TARGET], ["demo_animate.exe"])
         AC_SUBST([SHARED_LIB], ["libs4c.dll"])
     ;;
     darwin*)
@@ -61,7 +61,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lmenu -lncurses -lm"])
         fi
         AC_SUBST([OS], ["darwin"])
-        AC_SUBST([TARGET], ["demo"])
+        AC_SUBST([TARGET], ["demo_animate"])
         AC_SUBST([SHARED_LIB], ["libs4c.so"])
     ;;
     linux*)
@@ -77,7 +77,7 @@ case "${host_os}" in
             AC_SUBST([S4C_LDFLAGS], ["-lmenu -lncurses -lm"])
         fi
         AC_SUBST([OS], ["Linux"])
-        AC_SUBST([TARGET], ["demo"])
+        AC_SUBST([TARGET], ["demo_animate"])
         AC_SUBST([SHARED_LIB], ["libs4c.so"])
     ;;
 esac

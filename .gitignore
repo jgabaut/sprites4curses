@@ -8,12 +8,12 @@
 *.a
 # ignore .dll files
 *.dll
-# ignore executable
-demo
-# ignore win executable
-demo.exe
-# ignore debug executable
-demo_debug
+# ignore animate executable
+demo_animate
+# ignore win animate executable
+demo_animate.exe
+# ignore win animate debug executable
+demo_animate_debug
 # ignore doxygen directory
 doxygen
 # ignore docs file

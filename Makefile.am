@@ -18,7 +18,7 @@ INSTALLER_LOG_FILE = "./installer.log"
 PACK_NAME = $(TARGET)-$(VERSION)-$(OS)-$(MACHINE)
 
 # Source files
-demo_SOURCES = src/s4c.c s4c-animate/palette.c s4c-demo/demo.c
+demo_animate_SOURCES = src/s4c.c s4c-animate/palette.c s4c-demo/demo_animate.c
 
 # Lib source files
 lib_SOURCES = src/s4c.c
@@ -67,10 +67,10 @@ libs4c.a: libs4c.o
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) $< -o $@
 
 # Build rule for the final binary
-$(TARGET): $(demo_SOURCES:.c=.o)
+$(TARGET): $(demo_animate_SOURCES:.c=.o)
 	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
 	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
-	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_animate_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
 
 s4c-animate/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "

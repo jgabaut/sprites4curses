@@ -7,12 +7,14 @@
 ## Table of Contents
 
 + [Scripts](#scripts)
++ [s4c.h](#s4c)
 + [animate.h](#animate)
   + [Prerequisites](#prerequisites_animate)
   + [A note about napms()](#napms_note)
   + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
-  + [demo.c](#demo_c)
+  + [demo_animate_c](#demo_animate_c)
++ [s4c-gui](#s4c_gui)
 + [palette.gpl](#palette_gpl)
 
 # Scripts <a name = "scripts"></a>
@@ -23,6 +25,14 @@
   - New stub scripts have been put at the old path in the repo.
   - An `init` target was added to the `Makefile.am`, so that you remember to initialise the submodule before trying to run any script.
   This will be removed in an upcoming minor version, so you should update your scripts to use the new path.
+
+## s4c.h <a name = "s4c"></a>
+
+  This is a C library offering some `ncurses/raylib` API extensions.
+
+  The main module is `s4c-animate`, supporting both `ncurses` and `raylib` separately.
+
+  There's also an early stage module `s4c-gui`, supporting only `ncurses`.
 
 ## animate.c and animate.h <a name = "animate"></a>
 
@@ -94,9 +104,9 @@
 
   You can find a doxyfile to generate documentation in `documentation`.
 
-### demo.c <a name = "demo_c"></a>
+### demo_animate.c <a name = "demo_animate_c"></a>
 
-  This is a demo program showing how to use the animate library functions. Check out its source code after running it!
+  This is a demo program showing how to use the s4c-animate module library functions. Check out its source code after running it!
 
   - To run the C demo program, do:
 
@@ -109,6 +119,13 @@
   - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
     `make; ./demo <( python sprites.py <directory> )
+
+## s4c-gui <a name = "s4c_gui"></a>
+
+  This is a C library offering a small collection of curses-based UI elements.
+
+  It's still in an early stage, but it has a minimal workable interface.
+
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
