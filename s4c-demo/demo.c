@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "../s4c-animate/animate.h"
+#include "../src/s4c.h"
 #include "../s4c-animate/palette.h"
 
 #define DEMOFRAMES 30 /**< Defines the number of sprites in the demo.*/

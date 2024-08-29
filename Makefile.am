@@ -18,10 +18,10 @@ INSTALLER_LOG_FILE = "./installer.log"
 PACK_NAME = $(TARGET)-$(VERSION)-$(OS)-$(MACHINE)
 
 # Source files
-demo_SOURCES = s4c-animate/animate.c s4c-animate/palette.c s4c-demo/demo.c
+demo_SOURCES = src/s4c.c s4c-animate/palette.c s4c-demo/demo.c
 
 # Lib source files
-lib_SOURCES = s4c-animate/animate.c
+lib_SOURCES = src/s4c.c
 
 # Linking rule
 LDADD = $(S4C_LDFLAGS)
@@ -107,6 +107,7 @@ run: $(TARGET)
 clean:
 	@echo -en "Cleaning build artifacts:  "
 	-rm $(TARGET)
+	-rm src/*.o
 	-rm s4c-animate/*.o
 	-rm s4c-animate/palette.h
 	-rm s4c-animate/palette.c
@@ -119,6 +120,7 @@ clean:
 
 cleanob:
 	@echo -en "Cleaning object build artifacts:  "
+	-rm src/*.o
 	-rm s4c-animate/*.o
 	-rm s4c-demo/*.o
 	@echo -e "\033[1;33mDone.\e[0m"
