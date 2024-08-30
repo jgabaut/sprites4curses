@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.4.8-dev"
+#define S4C_VERSION "0.4.8"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 4
 #define S4C_PATCH_VERSION 8
@@ -71,7 +71,7 @@ void s4c_dbg_features(void);
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.4.8-dev"
+#define S4C_ANIMATE_VERSION "0.4.8"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
 #define S4C_ANIMATE_PATCH_VERSION 8
