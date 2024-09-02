@@ -7,12 +7,14 @@
 ## Table of Contents
 
 + [Scripts](#scripts)
-+ [animate.h](#animate)
++ [s4c.h](#s4c)
++ [s4c-animate](#s4c_animate)
   + [Prerequisites](#prerequisites_animate)
   + [A note about napms()](#napms_note)
   + [Raylib extension](#raylib_ext)
   + [Terminal capabilities](#terminal_capabilities)
-  + [demo.c](#demo_c)
+  + [demo_animate.c](#demo_animate_c)
++ [s4c-gui](#s4c_gui)
 + [palette.gpl](#palette_gpl)
 
 # Scripts <a name = "scripts"></a>
@@ -24,7 +26,15 @@
   - An `init` target was added to the `Makefile.am`, so that you remember to initialise the submodule before trying to run any script.
   This will be removed in an upcoming minor version, so you should update your scripts to use the new path.
 
-## animate.c and animate.h <a name = "animate"></a>
+## s4c.h <a name = "s4c"></a>
+
+  This is a C library offering some `ncurses/raylib` API extensions.
+
+  The main module is `s4c-animate`, supporting both `ncurses` and `raylib` separately.
+
+  There's also an early stage module `s4c-gui`, supporting only `ncurses`.
+
+## s4c-animate <a name = "s4c_animate"></a>
 
   This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
 
@@ -39,7 +49,7 @@
   -------------------------------------------------------------------------------
   ```
 
-  You can look at the `demo.c` program to see how you can request the animation after setup.
+  You can look at the `demo_animate.c` program to see how you can request the animation after setup.
 
   Some APIs which rely on reading a file are compatible with `s4c-file` specs, see `s4c-scripts/s4c/core/sprites.py` or `s4c-scripts/s4c/core/sheet_converter.py` for info about the basic file format.
 
@@ -49,7 +59,7 @@
 
 #### `pip install Pillow`
 
-  To produce the `Makefile` needed to compile `./demo`, you will need:
+  To produce the `Makefile` needed to compile `./demo_animate`, you will need:
 
   - `automake`
   - `autoconf`
@@ -78,12 +88,13 @@
 
 ### Raylib extension <a name = "raylib_ext"></a>
 
-  To produce the Raylib `./demo`, run:
+  To produce the Raylib `./demo_animate`, run:
 
-  - `./configure --enable-raylib=yes && make rebuild`
+  - `./configure --enable-animate-raylib=yes && make rebuild`
 
-  In case you want to include `animate.h` as Raylib extension in a C file, you should define this macro to make sure the included declarations work as expected:
+  In case you want to include `s4c.h` as Raylib extension in a C file, you should define these macros to make sure the included declarations work as expected:
 
+  - `S4C_HAS_ANIMATE`
   - `S4C_RAYLIB_EXTENSION`
 
 ### Terminal capabilities <a name = "terminal_capabilities"></a>
@@ -94,9 +105,9 @@
 
   You can find a doxyfile to generate documentation in `documentation`.
 
-### demo.c <a name = "demo_c"></a>
+### demo_animate.c <a name = "demo_animate_c"></a>
 
-  This is a demo program showing how to use the animate library functions. Check out its source code after running it!
+  This is a demo program showing how to use the s4c-animate module library functions. Check out its source code after running it!
 
   - To run the C demo program, do:
 
@@ -104,16 +115,33 @@
 
     `autoreconf; automake --add-missing; autoreconf; automake --add-missing`
     `autoreconf; ./configure`
-    `make; ./demo demofile.txt`
+    `make; ./demo_animate demofile.txt`
 
   - To be fancy you can use process substitution in bash to give the python output (`demofile.txt`, from `sprites.py` and `sample-sprits`) directly as an argument:
 
-    `make; ./demo <( python sprites.py <directory> )
+    `make; ./demo_animate <( python sprites.py <directory> )
+
+## s4c-gui <a name = "s4c_gui"></a>
+
+  This is a C library offering a small collection of curses-based UI elements.
+
+  It's still in an early stage, but it has a minimal workable interface. It's not that big.
+
+  ```
+  -------------------------------------------------------------------------------
+  Language                     files          blank        comment           code
+  -------------------------------------------------------------------------------
+  C                                1             65             57            528
+  C/C++ Header                     1             41             33            157
+  -------------------------------------------------------------------------------
+  SUM:                             2            106             90            685
+  -------------------------------------------------------------------------------
+  ```
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
-This is a GIMP palette file.
-It's used by the library to initialise the color pairs for curses to display the sprites.
-It's also useful in the first place for exporting PNG with the correct color alignment.
-You can also use it to generate a C implementation file for you color palette.
-Info on how to use it are in the [palette-README.md](./palette-README.md) file.
+  This is a GIMP palette file.
+  It's used by the library to initialise the color pairs for curses to display the sprites.
+  It's also useful in the first place for exporting PNG with the correct color alignment.
+  You can also use it to generate a C implementation file for you color palette.
+  Info on how to use it are in the [palette-README.md](./palette-README.md) file.

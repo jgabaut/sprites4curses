@@ -19,9 +19,9 @@
 #include "animate.h"
 
 /**
- * Prints formatted animate version.
+ * Prints formatted s4c-animate version.
  */
-void s4c_printVersionToFile(FILE* f) {
+void s4c_animate_printVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print formatted s4c version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
@@ -30,9 +30,9 @@ void s4c_printVersionToFile(FILE* f) {
 }
 
 /**
- * Prints animate version.
+ * Prints s4c-animate version.
  */
-void s4c_echoVersionToFile(FILE* f) {
+void s4c_animate_echoVersionToFile(FILE* f) {
 	if (!f) {
 		fprintf(stderr,"Error while trying to print s4c version, invalid file pointer.\n");
 		exit(EXIT_FAILURE);
@@ -44,14 +44,14 @@ void s4c_echoVersionToFile(FILE* f) {
  * Returns the constant int representing current version for s4c.
  * @return A constant int in numeric format for current s4c version.
  */
-const int int_s4c_version(void) {
+const int int_s4c_animate_version(void) {
     return S4C_ANIMATE_API_VERSION_INT;
 }
 
 /**
- * Prints enabled s4c features to stderr.
+ * Prints enabled s4c-animate features to stderr.
  */
-void s4c_dbg_features(void)
+void s4c_animate_dbg_features(void)
 {
 #ifdef S4C_RAYLIB_EXTENSION
     bool s4c_raylib_extension = true;
@@ -94,22 +94,22 @@ void s4c_dbg_features(void)
         return;
     } else {
         if (s4c_raylib_extension) {
-            fprintf(stderr, "raylib%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-raylib%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_extension) {
-            fprintf(stderr, "ncurses%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_raylib_quieter) {
-            fprintf(stderr, "quieter%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_unchecked) {
-            fprintf(stderr, "unchecked%s", (total_enabled > 1 ? ", " : ""));
+            fprintf(stderr, "animate-unchecked%s", (total_enabled > 1 ? ", " : ""));
         }
         if (s4c_experimental) {
-            fprintf(stderr, "exper");
+            fprintf(stderr, "animate-exper");
         }
         fprintf(stderr, "}\n");
     }
@@ -1156,4 +1156,4 @@ int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 f
 int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSize) {
     return s4rl_draw_sprite_at_rect(sprite.data, rect, sprite.frame_height, sprite.frame_width, pixelSize, sprite.palette, sprite.palette_size);
 }
-#endif
+#endif // S4C_RAYLIB_EXTENSION

@@ -18,10 +18,15 @@ INSTALLER_LOG_FILE = "./installer.log"
 PACK_NAME = $(TARGET)-$(VERSION)-$(OS)-$(MACHINE)
 
 # Source files
-demo_SOURCES = s4c-animate/animate.c s4c-animate/palette.c s4c-demo/demo.c
+#
+demo_SOURCES = src/s4c.c s4c-demo/demo.c
+
+demo_animate_SOURCES = src/s4c.c src/palette.c s4c-demo/demo_animate.c
+
+demo_gui_SOURCES = src/s4c.c s4c-demo/demo_gui.c
 
 # Lib source files
-lib_SOURCES = s4c-animate/animate.c
+lib_SOURCES = src/s4c.c
 
 # Linking rule
 LDADD = $(S4C_LDFLAGS)
@@ -32,6 +37,8 @@ AM_LDFLAGS = -s
 # Compiler flags
 AM_CFLAGS = $(S4C_CFLAGS) -O2 -Werror -Wpedantic -Wall
 
+if S4C_ANIMATE_BUILD
+AM_CFLAGS += -DS4C_HAS_ANIMATE
 if S4C_RAYLIB_BUILD
 AM_CFLAGS += -DS4C_RAYLIB_EXTENSION
 else
@@ -44,6 +51,11 @@ endif
 if S4C_RL_QUIETER_BUILD
 AM_CFLAGS += -DS4C_RL_QUIETER
 endif
+endif # S4C_ANIMATE_BUILD
+
+if S4C_GUI_BUILD
+AM_CFLAGS += -DS4C_HAS_GUI
+endif # S4C_GUI_BUILD
 
 libs4c.o: $(lib_SOURCES)
 	@echo -e "\033[1;35m[Makefile]\e[0m    Building \"$@\":"
@@ -66,16 +78,27 @@ libs4c.a: libs4c.o
 %.o: %.c
 	$(CCOMP) -c $(CFLAGS) $(AM_CFLAGS) $< -o $@
 
-# Build rule for the final binary
+# Build rule for the final binaries
+#
 $(TARGET): $(demo_SOURCES:.c=.o)
 	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
 	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
 	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
 
-s4c-animate/palette.c:
+$(ANIMATE_TARGET): $(demo_animate_SOURCES:.c=.o)
+	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
+	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_animate_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
+
+$(GUI_TARGET): $(demo_gui_SOURCES:.c=.o)
+	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
+	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
+	$(CCOMP) $(CFLAGS) $(AM_CFLAGS) $(demo_gui_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS)
+
+src/palette.c:
 	@echo -en "Generating \033[1;35mpalette.c\e[0m and \033[1;35mpalette.h\e[0m from [$(PALETTE_PATH)]:  "
-	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > s4c-animate/palette.h
-	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > s4c-animate/palette.c
+	python -m s4c-scripts.s4c.core.palette C-header $(PALETTE_PATH) ../.. > src/palette.h
+	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > src/palette.c
 	@echo -e "Done."
 
 doc:
@@ -107,9 +130,12 @@ run: $(TARGET)
 clean:
 	@echo -en "Cleaning build artifacts:  "
 	-rm $(TARGET)
+	-rm $(ANIMATE_TARGET)
+	-rm $(GUI_TARGET)
+	-rm src/*.o
 	-rm s4c-animate/*.o
-	-rm s4c-animate/palette.h
-	-rm s4c-animate/palette.c
+	-rm src/palette.h
+	-rm src/palette.c
 	-rm s4c-demo/*.o
 	-rm ./*.o
 	-rm ./*.so
@@ -119,6 +145,7 @@ clean:
 
 cleanob:
 	@echo -en "Cleaning object build artifacts:  "
+	-rm src/*.o
 	-rm s4c-animate/*.o
 	-rm s4c-demo/*.o
 	@echo -e "\033[1;33mDone.\e[0m"
@@ -139,10 +166,14 @@ pack: rebuild
 	@echo -e "\033[1;32m[TREE] Done.\e[0m"
 	@echo -e "\033[1;35m[PACK] Installing:\e[0m"
 	install $(TARGET) ~/s4c-local/share/$(PACK_NAME)
+	install $(ANIMATE_TARGET) ~/s4c-local/share/$(PACK_NAME)
+	install $(GUI_TARGET) ~/s4c-local/share/$(PACK_NAME)
 	install ./demofile.txt ~/s4c-local/share/$(PACK_NAME)
 	install ./palette.gpl ~/s4c-local/share/$(PACK_NAME)
-	install ./s4c-animate/animate.c ~/s4c-local/share/$(PACK_NAME)/src
-	install ./s4c-animate/animate.h ~/s4c-local/share/$(PACK_NAME)/src
+	install ./src/s4c.c ~/s4c-local/share/$(PACK_NAME)/src
+	install ./src/s4c.h ~/s4c-local/share/$(PACK_NAME)/src
+	install ./s4c-demo/demo_animate.c ~/s4c-local/share/$(PACK_NAME)/demo-src
+	install ./s4c-demo/demo_gui.c ~/s4c-local/share/$(PACK_NAME)/demo-src
 	install ./s4c-demo/demo.c ~/s4c-local/share/$(PACK_NAME)/demo-src
 	install ./scripts/*.py ~/s4c-local/share/$(PACK_NAME)/scripts
 	install ./requirements.txt ~/s4c-local/share/$(PACK_NAME)
@@ -168,7 +199,7 @@ install: $(SHARED_LIB) doc
 	@echo -e "\n\033[1;33mDone.\e[0m"
 
 # Default target (builds everything)
-all: init $(TARGET) $(SHARED_LIB) libs4c.a
+all: init $(TARGET) $(ANIMATE_TARGET) $(GUI_TARGET) $(SHARED_LIB) libs4c.a
 
 # Target to clean and rebuild
 rebuild: clean all
