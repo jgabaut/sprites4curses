@@ -402,7 +402,6 @@ WINDOW* get_TextField_win(TextField txt_field);
 
 #ifndef TEXT_FIELD_H_
 #error "This should not happen. TEXT_FIELD_H_ is defined in this same file."
-#include "text_field.h"
 #endif // TEXT_FIELD_H_
 
 typedef enum {
