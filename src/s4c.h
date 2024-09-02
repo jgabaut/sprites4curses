@@ -15,8 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef S4C_H_
-#define S4C_H_
+#ifndef S4C_H
+#define S4C_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -507,4 +507,4 @@ void free_ToggleMenu(ToggleMenu toggle_menu);
 #endif // S4C_HAS_GUI
 #endif // S4C_RAYLIB_EXTENSION
 
-#endif // S4C_H_
+#endif // S4C_H
