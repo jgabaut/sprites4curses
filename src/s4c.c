@@ -1294,7 +1294,6 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 #endif // S4C_RAYLIB_EXTENSION
 #endif // S4C_ANIMATE_H
 
-#ifndef S4C_RAYLIB_EXTENSION
 #ifdef S4C_GUI_H_
 
 const char *string_s4c_gui_version(void)
@@ -1316,7 +1315,14 @@ s4c_gui_calloc_func* s4c_gui_inner_calloc = &S4C_GUI_CALLOC;
 #endif // TEXT_FIELD_H_
 
 struct TextField_s {
+#ifndef S4C_RAYLIB_EXTENSION
     WINDOW* win;
+#else
+    Rectangle area;
+    Color box_color;
+    Color txt_color;
+    bool on;
+#endif // S4C_RAYLIB_EXTENSION
     int height;
     int width;
     int start_x;
@@ -1342,7 +1348,12 @@ const void* default_linter_args[TEXTFIELD_DEFAULT_LINTERS_TOT+1] = {
     NULL,
 };
 
+
+#ifndef S4C_RAYLIB_EXTENSION
 TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y, const char* prompt, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
+#else
+TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y, const char* prompt, Color box_color, Color txt_color, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
+#endif // S4C_RAYLIB_EXTENSION
 {
     assert(height>=0);
     assert(width>=0);
@@ -1376,7 +1387,13 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
     res->width = width;
     res->start_x = start_x;
     res->start_y = start_y;
+#ifndef S4C_RAYLIB_EXTENSION
     res->win = newwin(height, width, start_y, start_x);
+#else
+    res->area = (Rectangle){ .x = start_x, .y = start_y, .height = height, .width = width };
+    res->box_color = box_color;
+    res->txt_color = txt_color;
+#endif // S4C_RAYLIB_EXTENSION
     res->length = 0;
     res->max_length = max_size;
     res->handler = full_buffer_handler;
@@ -1404,38 +1421,60 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
     return res;
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int bound_x, int bound_y, const char* prompt, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
+#else
+TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int bound_x, int bound_y, const char* prompt, Color box_color, Color txt_color, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
+#endif // S4C_RAYLIB_EXTENSION
 {
     int start_y = (bound_y - height) / 2;
     int start_x = (bound_x - width) / 2;
-    return new_TextField_(full_buffer_handler, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, prompt, malloc_func, calloc_func, free_func);
+    return new_TextField_(full_buffer_handler, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, prompt, box_color, txt_color, malloc_func, calloc_func, free_func);
 }
 
 TextField new_TextField(size_t max_size, int height, int width, int start_x, int start_y)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#else
+    return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, WHITE, BLACK, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#endif // S4C_RAYLIB_EXTENSION
 }
 
 TextField new_TextField_centered(size_t max_size, int height, int width, int bound_x, int bound_y)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     return new_TextField_centered_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, bound_x, bound_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#else
+    return new_TextField_centered_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, bound_x, bound_y, NULL, WHITE, BLACK, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#endif // S4C_RAYLIB_EXTENSION
 }
 
 TextField new_TextField_linted(TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     return new_TextField_(&warn_TextField, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#else
+    return new_TextField_(&warn_TextField, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, NULL, WHITE, BLACK, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
+#endif // S4C_RAYLIB_EXTENSION
 }
 
 TextField new_TextField_alloc(size_t max_size, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, malloc_func, calloc_func, free_func);
+#else
+    return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, WHITE, BLACK, malloc_func, calloc_func, free_func);
+#endif // S4C_RAYLIB_EXTENSION
 }
 
 void free_TextField(TextField txt_field)
 {
     assert(txt_field!=NULL);
     // Clean up
+#ifndef S4C_RAYLIB_EXTENSION
     delwin(txt_field->win);
+#endif // S4C_RAYLIB_EXTENSION
     if (txt_field->malloc_func == malloc && txt_field->calloc_func == calloc) {
         if (txt_field->linters != NULL) {
             free(txt_field->linters);
@@ -1482,6 +1521,7 @@ int get_TextField_len(TextField txt_field)
     return txt_field->length;
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 WINDOW* get_TextField_win(TextField txt_field)
 {
     assert(txt_field!=NULL);
@@ -1500,6 +1540,53 @@ void draw_TextField(TextField txt)
     }
     wrefresh(txt->win);
 }
+#else
+
+Rectangle get_TextField_rec(TextField txt_field)
+{
+    assert(txt_field!=NULL);
+    return txt_field->area;
+}
+
+void draw_TextField(TextField txt)
+{
+    assert(txt!=NULL);
+    DrawRectangleRec(txt->area, txt->box_color);
+    if (txt->on) {
+        DrawRectangleLines(txt->area.x, txt->area.y, txt->width, txt->height, txt->txt_color);
+        if (txt->prompt != NULL) {
+            if (txt->buffer[0] == '\0') {
+                DrawText(TextFormat("%s", txt->prompt), txt->start_x, txt->start_y, txt->width * 0.1f, txt->txt_color);
+            } else {
+                if (get_TextField_len(txt) < txt->max_length) {
+                    DrawText(TextFormat("%s", txt->buffer), txt->start_x, txt->start_y, txt->width * 0.1f, txt->txt_color);
+                } else {
+                    DrawText("BACKSPACE to delete", txt->start_x, txt->start_y, txt->width* 0.1f, txt->txt_color);
+                }
+            }
+        } else {
+            if (txt->buffer[0] == '\0') {
+            } else {
+                if (get_TextField_len(txt) < txt->max_length) {
+                    DrawText(TextFormat("%s", txt->buffer), txt->start_x, txt->start_y, txt->width * 0.1f, txt->txt_color);
+                } else {
+                    DrawText("BACKSPACE to delete", txt->start_x, txt->start_y, txt->width* 0.1f, txt->txt_color);
+                }
+            }
+        }
+    } else {
+        if (txt->buffer[0] == '\0') {
+                DrawText("HOVER to insert", txt->start_x, txt->start_y, txt->width* 0.1f, txt->txt_color);
+        } else {
+            if (get_TextField_len(txt) < txt->max_length) {
+                DrawText(TextFormat("%s", txt->buffer), txt->start_x, txt->start_y, txt->width * 0.1f, txt->txt_color);
+            } else {
+                DrawText("BACKSPACE to delete", txt->start_x, txt->start_y, txt->width* 0.1f, txt->txt_color);
+            }
+        }
+    }
+}
+#endif // S4C_RAYLIB_EXTENSION
 
 void clear_TextField(TextField txt)
 {
@@ -1509,6 +1596,7 @@ void clear_TextField(TextField txt)
     txt->length = 0;
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 void warn_TextField(TextField txt)
 {
     assert(txt!=NULL);
@@ -1526,6 +1614,17 @@ void warn_TextField(TextField txt)
     wrefresh(win);
 
 }
+#else
+void warn_TextField(TextField txt)
+{
+    assert(txt!=NULL);
+    Rectangle rec = get_TextField_rec(txt);
+
+    DrawRectangleRec(rec, RED);
+    DrawText("Input is full", rec.x, rec.y, rec.width / strlen("Input is full"), WHITE);
+    DrawText("Press Enter or Backspace", rec.x, rec.y + (rec.width / strlen("Press Enter or Backspace")), rec.width / strlen("Press Enter or Backspace"), WHITE);
+}
+#endif // S4C_RAYLIB_EXTENSION
 
 bool lint_TextField_not_empty(TextField txt, const void* unused)
 {
@@ -1589,6 +1688,7 @@ bool lint_TextField_printable_only(TextField txt)
     return lint_TextField_char_range(txt, ' ', '~');
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 static void get_userText(TextField txt_field)
 {
     assert(txt_field!=NULL);
@@ -1644,7 +1744,64 @@ static void get_userText(TextField txt_field)
         }
     }
 }
+#else
+void update_TextField(TextField txt_field)
+{
+    assert(txt_field!=NULL);
+    char* buffer = txt_field->buffer;
+    int* length = &(txt_field->length);
+    Rectangle area = txt_field->area;
 
+    const int max_length = txt_field->max_length;
+
+    bool mouseOnText = false;
+
+    if (CheckCollisionPointRec(GetMousePosition(), area)) mouseOnText = true;
+    else mouseOnText = false;
+
+    txt_field->on = mouseOnText;
+
+    if (mouseOnText)
+    {
+        // Set the window's cursor to the I-Beam
+        SetMouseCursor(MOUSE_CURSOR_IBEAM);
+
+        // Get char pressed (unicode character) on the queue
+        int key = GetCharPressed();
+
+        // Check if more characters have been pressed on the same frame
+        while (key > 0)
+        {
+            // NOTE: Only allow keys in range [32..125]
+            if ((key >= 32) && (key <= 125) && (*length < max_length))
+            {
+                buffer[*length] = (char)key;
+                buffer[*length+1] = '\0'; // Add null terminator at the end of the string.
+                (*length)++;
+            }
+
+            if (*length >= max_length) {
+                // Buffer is full
+                if (txt_field->handler != NULL) {
+                    txt_field->handler(txt_field);
+                }
+            }
+
+            key = GetCharPressed();  // Check next character in the queue
+        }
+
+        if (IsKeyPressed(KEY_BACKSPACE))
+        {
+            (*length)--;
+            if (*length < 0) *length = 0;
+            buffer[*length] = '\0';
+        }
+    }
+    else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+}
+#endif // S4C_RAYLIB_EXTENSION
+
+#ifndef S4C_RAYLIB_EXTENSION
 void use_clean_TextField(TextField txt_field)
 {
     assert(txt_field!=NULL);
@@ -1656,6 +1813,7 @@ void use_clean_TextField(TextField txt_field)
     wclear(txt_field->win);
     wrefresh(txt_field->win);
 }
+#endif // S4C_RAYLIB_EXTENSION
 // }
 // TEXT_FIELD_H_
 
@@ -1665,7 +1823,11 @@ void use_clean_TextField(TextField txt_field)
 #include "toggle.h"
 #endif // TOGGLE_H_
 
+#ifndef S4C_RAYLIB_EXTENSION
 static const int TOGGLE_MENU_DEFAULT_QUIT_KEY = KEY_F(1);
+#else
+static const int TOGGLE_MENU_DEFAULT_QUIT_KEY = KEY_F1;
+#endif // S4C_RAYLIB_EXTENSION
 
 static void cycle_toggle_state(Toggle *toggle)
 {
@@ -1698,12 +1860,15 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
         .key_right = conf.key_right,
         .key_down = conf.key_down,
         .key_left = conf.key_left,
+#ifndef S4C_RAYLIB_EXTENSION
         .get_mouse_events = conf.get_mouse_events,
         .mouse_handler = conf.mouse_handler,
         .mouse_events_mask = conf.mouse_events_mask,
+#endif // S4C_RAYLIB_EXTENSION
     };
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_event)
 {
     printw("[DEBUG] %s():    Got mouse event at {x: %i, y: %i, z: %i}\n", __func__, mouse_event->x, mouse_event->y, mouse_event->z);
@@ -1713,6 +1878,7 @@ void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_eve
     refresh();
     napms(2000);
 }
+#endif // S4C_RAYLIB_EXTENSION
 
 static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
     .start_x = 0,
@@ -1730,6 +1896,7 @@ ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles)
     return new_ToggleMenu_(toggles, num_toggles, TOGGLE_MENU_DEFAULT_CONF);
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 ToggleMenu new_ToggleMenu_with_mouse_mask(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler, mmask_t mouse_events_mask)
 {
     ToggleMenu res = new_ToggleMenu_(toggles, num_toggles, TOGGLE_MENU_DEFAULT_CONF);
@@ -1743,6 +1910,7 @@ ToggleMenu new_ToggleMenu_with_mouse(Toggle* toggles, int num_toggles, ToggleMen
 {
     return new_ToggleMenu_with_mouse_mask(toggles, num_toggles, mouse_events_handler, TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK);
 }
+#endif // S4C_RAYLIB_EXTENSION
 
 void free_ToggleMenu(ToggleMenu toggle_menu)
 {
@@ -1765,6 +1933,7 @@ void free_ToggleMenu(ToggleMenu toggle_menu)
     }
 }
 
+#ifndef S4C_RAYLIB_EXTENSION
 void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu)
 {
 
@@ -1926,7 +2095,19 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     delwin(menu_win);
     if (try_display_state) delwin(state_win);
 }
+#else
+void draw_ToggleMenu_states(Rectangle area, ToggleMenu toggle_menu)
+{
+    assert(false);
+}
+
+void handle_ToggleMenu(ToggleMenu toggle_menu)
+{
+    assert(false);
+    Toggle toggle = {0};
+    cycle_toggle_state(&toggle);
+}
+#endif // S4C_RAYLIB_EXTENSION
 // }
 // TOGGLE_H_
 #endif // S4C_GUI_H_
-#endif // S4C_RAYLIB_EXTENSION

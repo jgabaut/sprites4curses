@@ -20,10 +20,18 @@
 #ifdef S4C_GUI_H_
 int textfield_main(void)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     // Initialize ncurses
     initscr();
     cbreak(); // Disable line buffering
     noecho(); // Don't echo input to screen
+#else
+    const int screenWidth = 800;
+    const int screenHeight = 450;
+
+    InitWindow(screenWidth, screenHeight, "s4c demo_gui for raylib");
+    SetTargetFPS(60);
+#endif // S4C_RAYLIB_EXTENSION
 
     // Define the dimensions and position of the window
     int height = 5;
@@ -43,10 +51,15 @@ int textfield_main(void)
     size_t max_size = 10;
     char* prompt = "Start typing";
 
+#ifndef S4C_RAYLIB_EXTENSION
     TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, prompt, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
+#else
+    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height*10, width*10, screenWidth, screenHeight, prompt, GRAY, RED, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
+#endif // S4C_RAYLIB_EXTENSION
 
+
+#ifndef S4C_RAYLIB_EXTENSION
     use_clean_TextField(txt_field);
-
     // Print the input back to the screen
     mvprintw(LINES/2 +1, (COLS - strlen("You entered: ")) / 2, "You entered: %s", get_TextField_value(txt_field));
     mvprintw(LINES/2 +2, (COLS - strlen("len: ")) / 2, "len: %i", get_TextField_len(txt_field));
@@ -55,9 +68,32 @@ int textfield_main(void)
 
     // Wait for user input before exiting
     getch();
+#else
+    assert(txt_field != NULL);
+    clear_TextField(txt_field);
+    while (!WindowShouldClose()) {
+        // Update
+        update_TextField(txt_field);
+        BeginDrawing();
+        // Draw
+        ClearBackground(WHITE);
+        draw_TextField(txt_field);
+        EndDrawing();
+    }
+    /*
+        fprintf(stderr, "You entered: {%s}\n", get_TextField_value(txt_field));
+        fprintf(stderr, "Len: {%i}\n", get_TextField_len(txt_field));
+        fprintf(stderr, "Lint result: {%s}\n", (lint_TextField(txt_field) ? "pass" : "fail"));
+    */
+#endif // S4C_RAYLIB_EXTENSION
 
     free_TextField(txt_field);
+
+#ifndef S4C_RAYLIB_EXTENSION
     endwin();
+#else
+    CloseWindow();
+#endif // S4C_RAYLIB_EXTENSION
 
     return 0;
 }
@@ -86,16 +122,22 @@ const char* my_format(int val)
 
 int togglemenu_main(size_t argc, char** argv)
 {
+#ifndef S4C_RAYLIB_EXTENSION
     // Initialize ncurses
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+#endif // S4C_RAYLIB_EXTENSION
 
     // Define the dimensions and position of the textfield window
     int height = 5;
     int width = 30;
+#ifndef S4C_RAYLIB_EXTENSION
     int start_y = (LINES/2) +3;
+#else
+    int start_y = 2;
+#endif // S4C_RAYLIB_EXTENSION
     int start_x = 2;
 
     size_t txt_max_size_1 = 10;
@@ -117,14 +159,25 @@ int togglemenu_main(size_t argc, char** argv)
     int num_toggles = sizeof(toggles) / sizeof(toggles[0]);
     ToggleMenu toggle_menu = {0};
 
+#ifndef S4C_RAYLIB_EXTENSION
     if (argc > 2) {
         toggle_menu = new_ToggleMenu_with_mouse(toggles, num_toggles, &default_ToggleMenu_mousehandler__);
     } else {
         toggle_menu = new_ToggleMenu(toggles, num_toggles);
     }
+#else
+    toggle_menu = new_ToggleMenu(toggles, num_toggles);
+#endif // S4C_RAYLIB_EXTENSION
+
+#ifndef S4C_RAYLIB_EXTENSION
     toggle_menu.statewin_height = LINES;
     toggle_menu.statewin_width = COLS/2;
     toggle_menu.statewin_start_x = COLS/2;
+#else
+    toggle_menu.statewin_height = 50;
+    toggle_menu.statewin_width = 50;
+    toggle_menu.statewin_start_x = 50;
+#endif // S4C_RAYLIB_EXTENSION
     toggle_menu.statewin_start_y = 0;
     toggle_menu.statewin_boxed = true;
     toggle_menu.statewin_label = sidewin_label;
@@ -132,7 +185,9 @@ int togglemenu_main(size_t argc, char** argv)
     toggle_menu.key_down = 'k';
     handle_ToggleMenu(toggle_menu);
 
+#ifndef S4C_RAYLIB_EXTENSION
     endwin(); // End ncurses
+#endif // S4C_RAYLIB_EXTENSION
     free_ToggleMenu(toggle_menu);
     return 0;
 }
