@@ -533,10 +533,12 @@ ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles);
 ToggleMenu new_ToggleMenu_with_mouse_mask(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler, mmask_t mouse_events_mask);
 ToggleMenu new_ToggleMenu_with_mouse(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler);
 void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu);
+void handle_ToggleMenu(ToggleMenu toggle_menu);
 #else
 void draw_ToggleMenu_states(Rectangle area, ToggleMenu toggle_menu);
+void update_ToggleMenu(ToggleMenu toggle_menu);
+void draw_ToggleMenu(ToggleMenu toggle_menu);
 #endif // S4C_RAYLIB_EXTENSION
-void handle_ToggleMenu(ToggleMenu toggle_menu);
 void free_ToggleMenu(ToggleMenu toggle_menu);
 #endif // TOGGLE_H_
 

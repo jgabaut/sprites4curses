@@ -128,6 +128,12 @@ int togglemenu_main(size_t argc, char** argv)
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+#else
+    const int screenWidth = 800;
+    const int screenHeight = 450;
+
+    InitWindow(screenWidth, screenHeight, "s4c demo_gui for raylib");
+    SetTargetFPS(60);
 #endif // S4C_RAYLIB_EXTENSION
 
     // Define the dimensions and position of the textfield window
@@ -183,10 +189,25 @@ int togglemenu_main(size_t argc, char** argv)
     toggle_menu.statewin_label = sidewin_label;
     toggle_menu.key_up = 'j';
     toggle_menu.key_down = 'k';
+
+#ifndef S4C_RAYLIB_EXTENSION
     handle_ToggleMenu(toggle_menu);
+#else
+    while (!WindowShouldClose()) {
+        // Update
+        update_ToggleMenu(toggle_menu);
+        BeginDrawing();
+        // Draw
+        ClearBackground(WHITE);
+        draw_ToggleMenu(toggle_menu);
+        EndDrawing();
+    }
+#endif // S4C_RAYLIB_EXTENSION
 
 #ifndef S4C_RAYLIB_EXTENSION
     endwin(); // End ncurses
+#else
+    CloseWindow();
 #endif // S4C_RAYLIB_EXTENSION
     free_ToggleMenu(toggle_menu);
     return 0;

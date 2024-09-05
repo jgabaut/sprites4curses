@@ -1429,7 +1429,11 @@ TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, T
 {
     int start_y = (bound_y - height) / 2;
     int start_x = (bound_x - width) / 2;
+#ifndef S4C_RAYLIB_EXTENSION
+    return new_TextField_(full_buffer_handler, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, prompt, malloc_func, calloc_func, free_func);
+#else
     return new_TextField_(full_buffer_handler, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, prompt, box_color, txt_color, malloc_func, calloc_func, free_func);
+#endif // S4C_RAYLIB_EXTENSION
 }
 
 TextField new_TextField(size_t max_size, int height, int width, int start_x, int start_y)
@@ -2101,11 +2105,16 @@ void draw_ToggleMenu_states(Rectangle area, ToggleMenu toggle_menu)
     assert(false);
 }
 
-void handle_ToggleMenu(ToggleMenu toggle_menu)
+void update_ToggleMenu(ToggleMenu toggle_menu)
 {
     assert(false);
     Toggle toggle = {0};
     cycle_toggle_state(&toggle);
+}
+
+void draw_ToggleMenu(ToggleMenu toggle_menu)
+{
+    assert(false);
 }
 #endif // S4C_RAYLIB_EXTENSION
 // }
