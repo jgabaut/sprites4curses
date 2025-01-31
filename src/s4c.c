@@ -1552,6 +1552,11 @@ Rectangle get_TextField_rec(TextField txt_field)
     return txt_field->area;
 }
 
+/**
+ * Draw function for TextField. If the underlying buffer gets too full, draws a hint to delete a char to the user.
+ * @param txt The TextField to draw
+ * @see update_TextField()
+ */
 void draw_TextField(TextField txt)
 {
     assert(txt!=NULL);
@@ -1749,7 +1754,14 @@ static void get_userText(TextField txt_field)
     }
 }
 #else
-void update_TextField(TextField txt_field)
+/**
+ * Update function for TextField, gets keys from user in a loop and edits the underlying buffer.
+ * Supports backspace and enter.
+ * @param txt_field The TextField to update
+ * @return True if user pressed KEY_ENTER
+ * @see draw_TextField
+ */
+bool update_TextField(TextField txt_field)
 {
     assert(txt_field!=NULL);
     char* buffer = txt_field->buffer;
@@ -1762,6 +1774,10 @@ void update_TextField(TextField txt_field)
 
     if (CheckCollisionPointRec(GetMousePosition(), area)) mouseOnText = true;
     else mouseOnText = false;
+
+    if (IsKeyPressed(KEY_ENTER)) { // User sent enter
+        return true;
+    }
 
     txt_field->on = mouseOnText;
 
@@ -1802,6 +1818,7 @@ void update_TextField(TextField txt_field)
         }
     }
     else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+    return false;
 }
 #endif // S4C_RAYLIB_EXTENSION
 

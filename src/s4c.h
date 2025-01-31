@@ -391,7 +391,7 @@ void clear_TextField(TextField txt);
 #ifndef S4C_RAYLIB_EXTENSION
 void use_clean_TextField(TextField txt_field);
 #else
-void update_TextField(TextField txt_field);
+bool update_TextField(TextField txt_field);
 #endif // S4C_RAYLIB_EXTENSION
 void free_TextField(TextField txt_field);
 const char* get_TextField_value(TextField txt_field);

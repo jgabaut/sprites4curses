@@ -73,18 +73,17 @@ int textfield_main(void)
     clear_TextField(txt_field);
     while (!WindowShouldClose()) {
         // Update
-        update_TextField(txt_field);
+        if (update_TextField(txt_field)) {
+            fprintf(stderr, "You entered: {%s}\n", get_TextField_value(txt_field));
+            fprintf(stderr, "Len: {%i}\n", get_TextField_len(txt_field));
+            fprintf(stderr, "Lint result: {%s}\n", (lint_TextField(txt_field) ? "pass" : "fail"));
+        }
         BeginDrawing();
         // Draw
         ClearBackground(WHITE);
         draw_TextField(txt_field);
         EndDrawing();
     }
-    /*
-        fprintf(stderr, "You entered: {%s}\n", get_TextField_value(txt_field));
-        fprintf(stderr, "Len: {%i}\n", get_TextField_len(txt_field));
-        fprintf(stderr, "Lint result: {%s}\n", (lint_TextField(txt_field) ? "pass" : "fail"));
-    */
 #endif // S4C_RAYLIB_EXTENSION
 
     free_TextField(txt_field);
