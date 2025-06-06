@@ -1,5 +1,5 @@
 # Define the package name and version
-AC_INIT([sprites4curses], [0.4.8], [jgabaut@github.com])
+AC_INIT([sprites4curses], [0.4.9], [jgabaut@github.com])
 
 # Verify automake version and enable foreign option
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -20,7 +20,7 @@ AM_CONDITIONAL([S4C_ANIMATE_BUILD], [test "$enable_animate" = "yes"])
 AC_ARG_ENABLE([gui],
   [AS_HELP_STRING([--enable-gui], [Enable gui extension header])],
   [enable_gui=$enableval],
-  [enable_gui=no])
+  [enable_gui=yes])
 AM_CONDITIONAL([S4C_GUI_BUILD], [test "$enable_gui" = "yes"])
 
 AC_ARG_ENABLE([animate_raylib],
@@ -107,7 +107,7 @@ AM_CONDITIONAL([LINUX_BUILD], [test "$build_linux" = "yes"])
 # Set a default version number if not specified externally
 AC_ARG_VAR([VERSION], [Version number])
 if test -z "$VERSION"; then
-  VERSION="0.4.8"
+  VERSION="0.4.9"
 fi
 
 # Output variables to the config.h header

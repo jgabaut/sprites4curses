@@ -1,6 +1,7 @@
 #include "../src/s4c.h"
 
-int main(void) {
+int main(void)
+{
     printf("Using s4c v%s\n", string_s4c_version());
     printf("Using s4c-animate v%s\n", string_s4c_animate_version());
 #ifdef S4C_GUI_H_

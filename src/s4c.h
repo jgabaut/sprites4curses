@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.4.8"
+#define S4C_VERSION "0.4.9"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 4
-#define S4C_PATCH_VERSION 8
+#define S4C_PATCH_VERSION 9
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
@@ -33,9 +33,9 @@ static const int S4C_API_VERSION_INT =
     (S4C_MAJOR_VERSION * 1000000 + S4C_MINOR_VERSION * 10000 + S4C_PATCH_VERSION * 100);
 /**< Represents current version with numeric format.*/
 
-    /**
- * Returns current s4c version as an integer.
- */
+/**
+* Returns current s4c version as an integer.
+*/
 const int int_s4c_version(void);
 
 /**
@@ -140,38 +140,38 @@ void debug_s4c_color(S4C_Color* color);
  * @see init_s4c_color_pairs();
  */
 typedef enum S4C_Color_Index {
-	S4C_BLACK=S4C_BASE_COLOR_INDEX,
-	S4C_RED,
-	S4C_BRIGHT_GREEN,
-	S4C_BRIGHT_YELLOW,
-	S4C_BLUE,
-	S4C_MAGENTA,
-	S4C_CYAN,
-	S4C_WHITE,
-	S4C_ORANGE,
-	S4C_LIGHT_BROWN,
-	S4C_DARK_BROWN,
-	S4C_PURPLE,
-	S4C_DARK_GREEN,
-	S4C_GREY,
-	S4C_LIGHT_YELLOW,
-	S4C_LIGHT_BLUE,
-	S4C_DARK_YELLOW,
-	S4C_DARK_OLIVE,
-	S4C_LIGHT_OLIVE,
-	S4C_OLIVE,
-	S4C_DARK_CHERRY,
-	S4C_LIGHT_CHERRY,
-	S4C_CHERRY,
-	S4C_SALMON,
-	S4C_DARK_BLUE,
-	S4C_VIOLET,
-	S4C_INDIGO,
-	S4C_LIGHT_ORANGE,
-	S4C_TEAL,
-	S4C_DARK_CYAN,
-	S4C_DARK_PURPLE,
-	S4C_LIGHT_PURPLE
+    S4C_BLACK=S4C_BASE_COLOR_INDEX,
+    S4C_RED,
+    S4C_BRIGHT_GREEN,
+    S4C_BRIGHT_YELLOW,
+    S4C_BLUE,
+    S4C_MAGENTA,
+    S4C_CYAN,
+    S4C_WHITE,
+    S4C_ORANGE,
+    S4C_LIGHT_BROWN,
+    S4C_DARK_BROWN,
+    S4C_PURPLE,
+    S4C_DARK_GREEN,
+    S4C_GREY,
+    S4C_LIGHT_YELLOW,
+    S4C_LIGHT_BLUE,
+    S4C_DARK_YELLOW,
+    S4C_DARK_OLIVE,
+    S4C_LIGHT_OLIVE,
+    S4C_OLIVE,
+    S4C_DARK_CHERRY,
+    S4C_LIGHT_CHERRY,
+    S4C_CHERRY,
+    S4C_SALMON,
+    S4C_DARK_BLUE,
+    S4C_VIOLET,
+    S4C_INDIGO,
+    S4C_LIGHT_ORANGE,
+    S4C_TEAL,
+    S4C_DARK_CYAN,
+    S4C_DARK_PURPLE,
+    S4C_LIGHT_PURPLE
 } S4C_Color_Index;
 
 #define	S4C_MIN_COLOR_INDEX S4C_BLACK
@@ -288,7 +288,6 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 #endif // S4C_ANIMATE_H
 #endif // S4C_HAS_ANIMATE
 
-#ifndef S4C_RAYLIB_EXTENSION // At the moment, this conflicts.
 #ifdef S4C_HAS_GUI
 #ifndef S4C_GUI_H_
 #define S4C_GUI_H_
@@ -310,7 +309,7 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 
 #define S4C_GUI_MAJOR 0 /**< Represents current major release.*/
 #define S4C_GUI_MINOR 0 /**< Represents current minor release.*/
-#define S4C_GUI_PATCH 8 /**< Represents current patch release.*/
+#define S4C_GUI_PATCH 9 /**< Represents current patch release.*/
 
 /* Defines current API version number from KLS_MAJOR, KLS_MINOR and KLS_PATCH.
  */
@@ -321,7 +320,7 @@ static const int S4C_GUI_API_VERSION_INT =
 /**
  * Defines current API version string.
  */
-static const char S4C_GUI_API_VERSION_STRING[] = "0.0.8"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
+static const char S4C_GUI_API_VERSION_STRING[] = "0.0.9"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
 
 /**
  * Returns current s4c_gui version as a string.
@@ -343,11 +342,15 @@ extern s4c_gui_calloc_func* s4c_gui_inner_calloc;
 #ifndef TEXT_FIELD_H_
 #define TEXT_FIELD_H_
 
+#ifndef S4C_RAYLIB_EXTENSION
 #ifdef _WIN32
 #include <ncursesw/ncurses.h>
 #else
 #include <ncurses.h>
-#endif
+#endif // _WIN32
+#else
+#include <raylib.h>
+#endif // S4C_RAYLIB_EXTENSION
 
 #include <assert.h>
 #include <stdlib.h>
@@ -371,8 +374,13 @@ bool lint_TextField_equals_cstr(TextField txt, const void* cstr);
 bool lint_TextField_whitelist(TextField txt, const void* whitelist);
 bool lint_TextField_digits_only(TextField txt);
 bool lint_TextField_chars_only(TextField txt);
+#ifndef S4C_RAYLIB_EXTENSION
 TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y, const char* prompt, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
 TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int bound_x, int bound_y, const char* prompt, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+#else
+TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y, const char* prompt, Color box_color, Color txt_color, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int bound_x, int bound_y, const char* prompt, Color box_color, Color txt_color, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+#endif // S4C_RAYLIB_EXTENSION
 bool lint_TextField(TextField txt_field);
 TextField new_TextField(size_t max_size, int height, int width, int start_x, int start_y);
 TextField new_TextField_centered(size_t max_size, int height, int width, int bound_x, int bound_y);
@@ -380,23 +388,35 @@ TextField new_TextField_linted(TextField_Linter** linters, size_t num_linters, c
 TextField new_TextField_alloc(size_t max_size, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
 void draw_TextField(TextField txt);
 void clear_TextField(TextField txt);
+#ifndef S4C_RAYLIB_EXTENSION
 void use_clean_TextField(TextField txt_field);
+#else
+bool update_TextField(TextField txt_field);
+#endif // S4C_RAYLIB_EXTENSION
 void free_TextField(TextField txt_field);
 const char* get_TextField_value(TextField txt_field);
 int get_TextField_len(TextField txt_field);
+#ifndef S4C_RAYLIB_EXTENSION
 WINDOW* get_TextField_win(TextField txt_field);
+#else
+Rectangle get_TextField_rec(TextField txt_field);
+#endif // S4C_RAYLIB_EXTENSION
 #endif // TEXT_FIELD_H_
 
 #ifndef TOGGLE_H_
 #define TOGGLE_H_
 
+#ifndef S4C_RAYLIB_EXTENSION
 #ifdef _WIN32
 #include <ncursesw/ncurses.h>
 #include <ncursesw/menu.h>
 #else
 #include <ncurses.h>
 #include <menu.h>
-#endif
+#endif // _WIN32
+#else
+#include <raylib.h>
+#endif // S4C_RAYLIB_EXTENSION
 
 #include <stdlib.h>
 
@@ -434,6 +454,7 @@ typedef struct {
 
 struct ToggleMenu;
 
+#ifndef S4C_RAYLIB_EXTENSION
 typedef void(ToggleMenu_MouseEvent_Handler)(struct ToggleMenu, MEVENT* event);
 
 
@@ -441,6 +462,7 @@ typedef void(ToggleMenu_MouseEvent_Handler)(struct ToggleMenu, MEVENT* event);
 #ifndef TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
 #define TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK ALL_MOUSE_EVENTS
 #endif // !TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
+#endif // S4C_RAYLIB_EXTENSION
 
 typedef struct ToggleMenu_Conf {
     int height;
@@ -459,9 +481,11 @@ typedef struct ToggleMenu_Conf {
     int key_right;
     int key_down;
     int key_left;
+#ifndef S4C_RAYLIB_EXTENSION
     bool get_mouse_events;
     mmask_t mouse_events_mask;
     ToggleMenu_MouseEvent_Handler* mouse_handler;
+#endif // S4C_RAYLIB_EXTENSION
 } ToggleMenu_Conf;
 
 typedef struct ToggleMenu {
@@ -483,27 +507,42 @@ typedef struct ToggleMenu {
     int key_right;
     int key_down;
     int key_left;
+#ifndef S4C_RAYLIB_EXTENSION
     bool get_mouse_events;
     mmask_t mouse_events_mask;
     ToggleMenu_MouseEvent_Handler* mouse_handler;
+#endif // S4C_RAYLIB_EXTENSION
 } ToggleMenu;
 
+#ifndef S4C_RAYLIB_EXTENSION
 #define ToggleMenu_Fmt "ToggleMenu {\n  num_toggles: %i\n  height: %i\n  width: %i\n  start_x: %i\n  start_y: %i\n  boxed: %s\n  quit_key: %i\n  statewin_width: %i\n  statewin_height: %i\n  statewin_start_x: %i\n  statewin_start_y: %i\n  statewin_boxed: %s\n  statewin_label: %s\n  key_up: %i\n  key_right: %i\n  key_down: %i\n  key_left: %i\n  get_mouse_events: %s\n"
 
 #define ToggleMenu_Arg(tm) (tm).num_toggles, (tm).height, (tm).width, (tm).start_x, (tm).start_y, ((tm).boxed ? "true" : "false"), (tm).quit_key, (tm).statewin_width, (tm).statewin_height, (tm).statewin_start_x, (tm).statewin_start_y, ((tm).statewin_boxed ? "true" : "false"), ((tm).statewin_label != NULL ? (tm).statewin_label : "null"), (tm).key_up, (tm).key_right, (tm).key_down, (tm).key_left, ((tm).get_mouse_events ? "true" : "false")
+#else
+#define ToggleMenu_Fmt "ToggleMenu {\n  num_toggles: %i\n  height: %i\n  width: %i\n  start_x: %i\n  start_y: %i\n  boxed: %s\n  quit_key: %i\n  statewin_width: %i\n  statewin_height: %i\n  statewin_start_x: %i\n  statewin_start_y: %i\n  statewin_boxed: %s\n  statewin_label: %s\n  key_up: %i\n  key_right: %i\n  key_down: %i\n  key_left: %i\n"
 
+#define ToggleMenu_Arg(tm) (tm).num_toggles, (tm).height, (tm).width, (tm).start_x, (tm).start_y, ((tm).boxed ? "true" : "false"), (tm).quit_key, (tm).statewin_width, (tm).statewin_height, (tm).statewin_start_x, (tm).statewin_start_y, ((tm).statewin_boxed ? "true" : "false"), ((tm).statewin_label != NULL ? (tm).statewin_label : "null"), (tm).key_up, (tm).key_right, (tm).key_down, (tm).key_left)
+#endif // S4C_RAYLIB_EXTENSION
+
+#ifndef S4C_RAYLIB_EXTENSION
 void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_event);
+#endif // S4C_RAYLIB_EXTENSION
 ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf conf);
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles);
+#ifndef S4C_RAYLIB_EXTENSION
 ToggleMenu new_ToggleMenu_with_mouse_mask(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler, mmask_t mouse_events_mask);
 ToggleMenu new_ToggleMenu_with_mouse(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler);
 void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu);
 void handle_ToggleMenu(ToggleMenu toggle_menu);
+#else
+void draw_ToggleMenu_states(Rectangle area, ToggleMenu toggle_menu);
+void update_ToggleMenu(ToggleMenu toggle_menu);
+void draw_ToggleMenu(ToggleMenu toggle_menu);
+#endif // S4C_RAYLIB_EXTENSION
 void free_ToggleMenu(ToggleMenu toggle_menu);
 #endif // TOGGLE_H_
 
 #endif // S4C_GUI_H_
 #endif // S4C_HAS_GUI
-#endif // S4C_RAYLIB_EXTENSION
 
 #endif // S4C_H
