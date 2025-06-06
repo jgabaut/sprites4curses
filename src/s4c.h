@@ -33,9 +33,9 @@ static const int S4C_API_VERSION_INT =
     (S4C_MAJOR_VERSION * 1000000 + S4C_MINOR_VERSION * 10000 + S4C_PATCH_VERSION * 100);
 /**< Represents current version with numeric format.*/
 
-    /**
- * Returns current s4c version as an integer.
- */
+/**
+* Returns current s4c version as an integer.
+*/
 const int int_s4c_version(void);
 
 /**
@@ -140,38 +140,38 @@ void debug_s4c_color(S4C_Color* color);
  * @see init_s4c_color_pairs();
  */
 typedef enum S4C_Color_Index {
-	S4C_BLACK=S4C_BASE_COLOR_INDEX,
-	S4C_RED,
-	S4C_BRIGHT_GREEN,
-	S4C_BRIGHT_YELLOW,
-	S4C_BLUE,
-	S4C_MAGENTA,
-	S4C_CYAN,
-	S4C_WHITE,
-	S4C_ORANGE,
-	S4C_LIGHT_BROWN,
-	S4C_DARK_BROWN,
-	S4C_PURPLE,
-	S4C_DARK_GREEN,
-	S4C_GREY,
-	S4C_LIGHT_YELLOW,
-	S4C_LIGHT_BLUE,
-	S4C_DARK_YELLOW,
-	S4C_DARK_OLIVE,
-	S4C_LIGHT_OLIVE,
-	S4C_OLIVE,
-	S4C_DARK_CHERRY,
-	S4C_LIGHT_CHERRY,
-	S4C_CHERRY,
-	S4C_SALMON,
-	S4C_DARK_BLUE,
-	S4C_VIOLET,
-	S4C_INDIGO,
-	S4C_LIGHT_ORANGE,
-	S4C_TEAL,
-	S4C_DARK_CYAN,
-	S4C_DARK_PURPLE,
-	S4C_LIGHT_PURPLE
+    S4C_BLACK=S4C_BASE_COLOR_INDEX,
+    S4C_RED,
+    S4C_BRIGHT_GREEN,
+    S4C_BRIGHT_YELLOW,
+    S4C_BLUE,
+    S4C_MAGENTA,
+    S4C_CYAN,
+    S4C_WHITE,
+    S4C_ORANGE,
+    S4C_LIGHT_BROWN,
+    S4C_DARK_BROWN,
+    S4C_PURPLE,
+    S4C_DARK_GREEN,
+    S4C_GREY,
+    S4C_LIGHT_YELLOW,
+    S4C_LIGHT_BLUE,
+    S4C_DARK_YELLOW,
+    S4C_DARK_OLIVE,
+    S4C_LIGHT_OLIVE,
+    S4C_OLIVE,
+    S4C_DARK_CHERRY,
+    S4C_LIGHT_CHERRY,
+    S4C_CHERRY,
+    S4C_SALMON,
+    S4C_DARK_BLUE,
+    S4C_VIOLET,
+    S4C_INDIGO,
+    S4C_LIGHT_ORANGE,
+    S4C_TEAL,
+    S4C_DARK_CYAN,
+    S4C_DARK_PURPLE,
+    S4C_LIGHT_PURPLE
 } S4C_Color_Index;
 
 #define	S4C_MIN_COLOR_INDEX S4C_BLACK
