@@ -1,6 +1,21 @@
 # Changelog
 
-## [0.4.9] - 2025-06-03
+## [0.4.9] - 2025-06-06
+
+### Added
+
+- Adapted `TextField` for raylib (`ToggleMenu` is WIP)
+
+### Changed
+
+- Now `update_TextField()` returns true on `KEY_ENTER`
+- Made `requirements.txt` include from `s4c-scripts`
+- Bump `s4c-scripts` to `0.1.5`
+- Fix missing `curs_set()` calls in some `animate_` APIs
+- Fix extra `box()` calls
+  - Closes #104
+- Formatted library code with `astyle`
+
 ## [0.4.8] - 2024-09-02
 ## [0.4.7] - 2024-08-09
 ## [0.4.6] - 2024-06-12

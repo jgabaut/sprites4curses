@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.4.9-dev"
+#define S4C_VERSION "0.4.9"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 4
 #define S4C_PATCH_VERSION 9
