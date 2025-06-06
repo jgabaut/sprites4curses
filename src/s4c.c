@@ -681,11 +681,10 @@ int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, i
    	// Run the animation loop
    	while ( current_rep < repetitions ) {
 		for (int i=0; i<num_frames+1;i++) {
+			box(w,0,0);
 			for (int j=0; j<rows; j++) {
 				// Print current frame
 				s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
-				box(w,0,0);
-				wrefresh(w);
 			}
 			wrefresh(w);
 			// Refresh the screen
@@ -718,6 +717,13 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
 	int startX = args->startX;
 	int startY = args->startY;
 
+    int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
+
+    if (cursorCheck == ERR) {
+		//return S4C_ERR_CURSOR; //fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+        return NULL; // FIXME: should maybe return a meaningful constant pointer denoting the specific error?
+	}
+
 	int rows = frameheight;
 	int cols = framewidth;
 
@@ -743,9 +749,9 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
    	do {
 		for (int i=0; i<num_frames+1;i++) {
 			box(w,0,0);
-            		if (args->stop_thread == 1) {
-                		break;
-            		}
+            if (args->stop_thread == 1) {
+                break;
+            }
 			for (int j=0; j<rows; j++) {
                			if (args->stop_thread == 1) {
                     			break;
@@ -758,6 +764,9 @@ void *s4c_animate_sprites_thread_at(void *args_ptr) {
 			napms(frametime);
 		};
 	} while ( args->stop_thread != 1);
+
+    // We make the cursor normal again
+	curs_set(1);
 
     pthread_exit(NULL);
     //FIXME
@@ -792,6 +801,12 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
 		return S4C_ERR_RANGE;
 	}
 
+    int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
+
+    if (cursorCheck == ERR) {
+		return S4C_ERR_CURSOR; //fprintf(stderr,"animate => Terminal does not support cursor visibility state.\n");
+	}
+
 	int rows = frameheight;
 	int cols = framewidth;
 
@@ -808,11 +823,10 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
    	while ( current_rep < repetitions ) {
 		//+1 to include toFrame index
 		for (int i=fromFrame; i<toFrame+1 ;i++) {
-			for (int j=0; j<rows; j++) {
+            box(w,0,0);
+            for (int j=0; j<rows; j++) {
 				// Print current frame
 				s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
-				box(w,0,0);
-				wrefresh(w);
 			}
 			wrefresh(w);
 			// Refresh the screen
@@ -822,6 +836,9 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
 		// We finished a whole cycle
 		current_rep++;
 	}
+
+	// We make the cursor normal again
+	curs_set(1);
 	return 1;
 }
 
