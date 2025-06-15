@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.4.9"
+#define S4C_VERSION "0.5.0"
 #define S4C_MAJOR_VERSION 0
-#define S4C_MINOR_VERSION 4
-#define S4C_PATCH_VERSION 9
+#define S4C_MINOR_VERSION 5
+#define S4C_PATCH_VERSION 0
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
@@ -51,7 +51,6 @@ void s4c_echoVersionToFile(FILE* f);
 
 void s4c_dbg_features(void);
 
-#ifdef S4C_HAS_ANIMATE
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
 #include <stdio.h>
@@ -71,10 +70,10 @@ void s4c_dbg_features(void);
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.4.8"
+#define S4C_ANIMATE_VERSION "0.5.0"
 #define S4C_ANIMATE_MAJOR_VERSION 0
-#define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 8
+#define S4C_ANIMATE_MINOR_VERSION 5
+#define S4C_ANIMATE_PATCH_VERSION 0
 
 /**
  * Defines current API version number from S4C_ANIMATE_{MAJOR,MINOR,PATCH}.
@@ -286,7 +285,6 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 #endif // S4C_RAYLIB_EXTENSION
 
 #endif // S4C_ANIMATE_H
-#endif // S4C_HAS_ANIMATE
 
 #ifdef S4C_HAS_GUI
 #ifndef S4C_GUI_H_
