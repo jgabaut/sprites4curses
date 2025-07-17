@@ -11,12 +11,6 @@ build_windows=no
 build_mac=no
 echo "Host os:  $host_os"
 
-AC_ARG_ENABLE([animate],
-  [AS_HELP_STRING([--enable-animate], [Enable animate extension header])],
-  [enable_animate=$enableval],
-  [enable_animate=yes])
-AM_CONDITIONAL([S4C_ANIMATE_BUILD], [test "$enable_animate" = "yes"])
-
 AC_ARG_ENABLE([gui],
   [AS_HELP_STRING([--enable-gui], [Enable gui extension header])],
   [enable_gui=$enableval],
