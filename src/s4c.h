@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.4.9"
+#define S4C_VERSION "0.4.10"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 4
-#define S4C_PATCH_VERSION 9
+#define S4C_PATCH_VERSION 10
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
@@ -51,7 +51,6 @@ void s4c_echoVersionToFile(FILE* f);
 
 void s4c_dbg_features(void);
 
-#ifdef S4C_HAS_ANIMATE
 #ifndef S4C_ANIMATE_H
 #define S4C_ANIMATE_H
 #include <stdio.h>
@@ -71,10 +70,10 @@ void s4c_dbg_features(void);
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.4.8"
+#define S4C_ANIMATE_VERSION "0.4.9"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 4
-#define S4C_ANIMATE_PATCH_VERSION 8
+#define S4C_ANIMATE_PATCH_VERSION 9
 
 /**
  * Defines current API version number from S4C_ANIMATE_{MAJOR,MINOR,PATCH}.
@@ -185,11 +184,21 @@ const char* s4c_color_name(S4C_Color_Index color_index);
  */
 extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 
+#ifndef MAX_LINE_LENGTH
 #define MAX_LINE_LENGTH 1024
+#endif // MAX_LINE_LENGTH
 
+#ifndef MAXFRAMES
 #define MAXFRAMES 121 /**< Defines the maximum number of sprites.*/
+#endif // MAXFRAMES
+
+#ifndef MAXROWS
 #define MAXROWS 26 /**< Defines the maximum number of rows per sprite.*/
+#endif // MAXROWS
+
+#ifndef MAXCOLS
 #define MAXCOLS 84 /**< Defines the maximum number of colums per sprite.*/
+#endif //MAXCOLS
 
 #define S4C_ERR_SMALL_WIN -1 /**< Defines the error value for a window too small for the animation.*/
 #define S4C_ERR_FILEVERSION -2 /**< Defines the error value for a file version mismatch.*/
@@ -251,12 +260,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
 
 int s4c_display_sprite_at_coords_checked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
-
-#ifdef S4C_UNCHECKED
-#define s4c_display_sprite_at_coords(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY) s4c_display_sprite_at_coords_unchecked((sprites), (sprite_index), (w), (num_frames), (frameheight), (framewidth), (startX), (startY))
-#else
-#define s4c_display_sprite_at_coords(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY) s4c_display_sprite_at_coords_checked((sprites), (sprite_index), (w), (num_frames), (frameheight), (framewidth), (startX), (startY))
-#endif // S4C_UNCHECKED
+int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
 
 #ifdef S4C_EXPERIMENTAL
 int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
@@ -286,7 +290,6 @@ int s4rl_draw_s4c_sprite_at_rect(S4C_Sprite sprite, Rectangle rect, int pixelSiz
 #endif // S4C_RAYLIB_EXTENSION
 
 #endif // S4C_ANIMATE_H
-#endif // S4C_HAS_ANIMATE
 
 #ifdef S4C_HAS_GUI
 #ifndef S4C_GUI_H_

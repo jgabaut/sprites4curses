@@ -941,6 +941,32 @@ int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int
     return 1;
 }
 
+/**
+ * Takes a WINDOW pointer to print into and an animation array, plus the index of requested frame to print.
+ * Contrary to other of these functions, this one does not touch cursor settings.
+ * Depending on if S4C_UNCHECKED is defined, it may or may not check if the passed WINDOW is big enough
+ * for the requested frame.
+ * Color-character map is define in s4c_print_spriteline().
+ * @see s4c_print_spriteline()
+ * @param sprites The sprites array.
+ * @param sprite_index The index of requested sprite.
+ * @param w The window to print into.
+ * @param num_frames How many frames the animation will have.
+ * @param frameheight Height of the frame.
+ * @param framewidth Width of the frame.
+ * @param startY Y coord of the window to start printing to.
+ * @param startY X coord of the window to start printing to.
+ * @return 1 if successful, a negative value for errors.
+ */
+int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+#ifdef S4C_UNCHECKED
+    return s4c_display_sprite_at_coords_unchecked(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY);
+#else
+    return s4c_display_sprite_at_coords_checked(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY);
+#endif // S4C_UNCHECKED
+}
+
 #ifdef S4C_EXPERIMENTAL
 /**
  * Takes an S4C_Animation pointer as src and a WINDOW pointer to print into, plus the index of requested frame to print.
