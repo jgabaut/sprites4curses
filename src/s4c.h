@@ -184,11 +184,21 @@ const char* s4c_color_name(S4C_Color_Index color_index);
  */
 extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 
+#ifndef MAX_LINE_LENGTH
 #define MAX_LINE_LENGTH 1024
+#endif // MAX_LINE_LENGTH
 
+#ifndef MAXFRAMES
 #define MAXFRAMES 121 /**< Defines the maximum number of sprites.*/
+#endif // MAXFRAMES
+
+#ifndef MAXROWS
 #define MAXROWS 26 /**< Defines the maximum number of rows per sprite.*/
+#endif // MAXROWS
+
+#ifndef MAXCOLS
 #define MAXCOLS 84 /**< Defines the maximum number of colums per sprite.*/
+#endif //MAXCOLS
 
 #define S4C_ERR_SMALL_WIN -1 /**< Defines the error value for a window too small for the animation.*/
 #define S4C_ERR_FILEVERSION -2 /**< Defines the error value for a file version mismatch.*/
