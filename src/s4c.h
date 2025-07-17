@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.5.0"
+#define S4C_VERSION "0.4.10"
 #define S4C_MAJOR_VERSION 0
-#define S4C_MINOR_VERSION 5
-#define S4C_PATCH_VERSION 0
+#define S4C_MINOR_VERSION 4
+#define S4C_PATCH_VERSION 10
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
@@ -70,10 +70,10 @@ void s4c_dbg_features(void);
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.5.0"
+#define S4C_ANIMATE_VERSION "0.4.9"
 #define S4C_ANIMATE_MAJOR_VERSION 0
-#define S4C_ANIMATE_MINOR_VERSION 5
-#define S4C_ANIMATE_PATCH_VERSION 0
+#define S4C_ANIMATE_MINOR_VERSION 4
+#define S4C_ANIMATE_PATCH_VERSION 9
 
 /**
  * Defines current API version number from S4C_ANIMATE_{MAJOR,MINOR,PATCH}.
