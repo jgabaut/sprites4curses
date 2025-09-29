@@ -151,7 +151,7 @@ int demo(FILE* mainthread_file, FILE* newthread_file)
 #endif
 
     // Prepare the frames
-    char sprites[MAXFRAMES][MAXROWS][MAXCOLS];
+    char sprites[S4C_MAXFRAMES][S4C_MAXROWS][S4C_MAXCOLS];
     int loadCheck = s4c_load_sprites(sprites, mainthread_file, num_frames, frame_height-1, frame_width-1);
 
     // Check for possible loadCheck() errors and in this case we return early if we couldn't load

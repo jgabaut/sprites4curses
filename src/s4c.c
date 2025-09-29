@@ -282,7 +282,7 @@ void debug_s4c_color(S4C_Color* color)
 }
 
 /**
- * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the S4C_Color palette pointer and the palette size.
+ * Takes a char matrix (maximum line size is S4C_MAXCOLS), the height of each frame, the width of each frame, the S4C_Color palette pointer and the palette size.
  * Contructs and returns an S4C_Sprite with its fields using the passed arguments.
  * @param data The char matrix to wrap.
  * @param frameheight The height of each frame.
@@ -290,7 +290,7 @@ void debug_s4c_color(S4C_Color* color)
  * @param palette The pointer to s4c color palette/array.
  * @param palette_size The size of s4c color palette/array.
  */
-S4C_Sprite s4c_new_sprite(char data[][MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size)
+S4C_Sprite s4c_new_sprite(char data[][S4C_MAXCOLS], int frameheight, int framewidth, S4C_Color* palette, int palette_size)
 {
     S4C_Sprite res = {0};
     res.frame_height = frameheight;
@@ -414,10 +414,10 @@ const char* s4c_color_name(S4C_Color_Index color_index)
 void init_s4c_color_pairs(FILE* palette)
 {
 
-    char line[MAX_LINE_LENGTH];
+    char line[S4C_MAX_LINE_LENGTH];
     int color_index = 9;
 
-    while (fgets(line, MAX_LINE_LENGTH, palette) != NULL) {
+    while (fgets(line, S4C_MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
         if (strncmp(line, "#", 1) == 0 || strncmp(line, "GIMP Palette", 12) == 0 ||
             strncmp(line, "Name:", 5) == 0 || strncmp(line, "Columns:", 8) == 0) {
@@ -455,7 +455,7 @@ void test_s4c_color_pairs(WINDOW* win)
 {
     for (int i = S4C_MIN_COLOR_INDEX; i < S4C_MAX_COLOR_INDEX +1; i++) {
         int color_index = i;
-        if (color_index >= 0 && color_index < MAX_COLORS) {
+        if (color_index >= 0 && color_index < S4C_MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, 2, 2+i-S4C_MIN_COLOR_INDEX, ' ' | A_REVERSE);
             wattroff(win, COLOR_PAIR(color_index));
@@ -632,7 +632,7 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
         int color_index = c - '0' + 8;
-        if (color_index >= 0 && color_index < MAX_COLORS) {
+        if (color_index >= 0 && color_index < S4C_MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
             wattroff(win, COLOR_PAIR(color_index));
@@ -656,7 +656,7 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth)
+int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth)
 {
     return s4c_animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
 }
@@ -681,7 +681,7 @@ int s4c_animate_sprites(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetit
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
 
@@ -819,7 +819,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr)
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
@@ -884,7 +884,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][MAXROWS][MAXCOLS], WIND
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords_checked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (sprite_index < 0 || sprite_index > num_frames ) {
@@ -925,7 +925,7 @@ int s4c_display_sprite_at_coords_checked(char sprites[][MAXROWS][MAXCOLS], int s
  * @param startY X coord of the window to start printing to.
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (sprite_index < 0 || sprite_index > num_frames ) {
@@ -958,7 +958,7 @@ int s4c_display_sprite_at_coords_unchecked(char sprites[][MAXROWS][MAXCOLS], int
  * @param startY X coord of the window to start printing to.
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
 #ifdef S4C_UNCHECKED
     return s4c_display_sprite_at_coords_unchecked(sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY);
@@ -1021,14 +1021,14 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][MAXROWS][MAXCOLS], int frames, int rows, int cols)
+void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][S4C_MAXROWS][S4C_MAXCOLS], int frames, int rows, int cols)
 {
     if (rows > MAXROWS) {
-        fprintf(stderr,"{s4c} Error at [%s]: rows number was bigger than MAXROWS: [%i > %i]\n",__func__,rows,MAXROWS);
+        fprintf(stderr,"{s4c} Error at [%s]: rows number was bigger than S4C_MAXROWS: [%i > %i]\n",__func__,rows,S4C_MAXROWS);
         exit(EXIT_FAILURE);
     }
     if (cols > MAXCOLS) {
-        fprintf(stderr,"{s4c} Error at [%s]: cols number was bigger than MAXCOLS: [%i > %i]\n",__func__,cols,MAXCOLS);
+        fprintf(stderr,"{s4c} Error at [%s]: cols number was bigger than S4C_MAXCOLS: [%i > %i]\n",__func__,cols,S4C_MAXCOLS);
         exit(EXIT_FAILURE);
     }
     *dest = malloc(frames * sizeof(char**));
@@ -1088,7 +1088,7 @@ void s4c_free_animation(S4C_Animation* animation, int frames, int rows)
  * @see S4C_FILEFORMAT_VERSION
  * @return A negative error value if loading fails or the number of sprites read.
  */
-int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int rows, int columns)
+int s4c_load_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], FILE* f, int frames, int rows, int columns)
 {
 
     if (frames == 0) {
@@ -1172,7 +1172,7 @@ int s4c_load_sprites(char sprites[][MAXROWS][MAXCOLS], FILE* f, int frames, int 
  * @param source The source sprites array.
  * @param dest The destination sprites array.
  */
-void s4c_copy_animation(char source[][MAXROWS][MAXCOLS], char dest[MAXFRAMES][MAXROWS][MAXCOLS], int frames, int rows, int cols)
+void s4c_copy_animation(char source[][S4C_MAXROWS][S4C_MAXCOLS], char dest[S4C_MAXFRAMES][S4C_MAXROWS][S4C_MAXCOLS], int frames, int rows, int cols)
 {
     //Copy all frames
     for (int i = 0 ; i < frames+1; i++ ) {
@@ -1224,7 +1224,7 @@ bool test_s4c_color_pairs(Rectangle* area, S4C_Color* palette)
         if ( i % row == 0 ) {
             line++;
         }
-        if (color_index >= 0 && color_index < MAX_COLORS) {
+        if (color_index >= 0 && color_index < S4C_MAX_COLORS) {
             DrawRectangle(area->x + (((i-S4C_MIN_COLOR_INDEX)%row) * size), area->y + (line) * size, size, size, ColorFromS4CPalette(palette, color_index));
         }
     }
@@ -1279,7 +1279,7 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
 }
 
 /**
- * Takes a char matrix (maximum line size is MAXCOLS), the height of each frame, the width of each frame, the X and Y coordinates to draw at, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Takes a char matrix (maximum line size is S4C_MAXCOLS), the height of each frame, the width of each frame, the X and Y coordinates to draw at, the pixel size (square side), the S4C_Color palette pointer and the palette size.
  * Calls s4rl_draw_spriteline on each line of the passed frame.
  * @param sprite The char matrix to draw.
  * @param frameheight The height of each frame.
@@ -1291,7 +1291,7 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
  * @param palette_size The size of s4c color palette/array.
  * @see s4rl_draw_spriteline()
  */
-void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size)
+void s4rl_draw_sprite_at_coords(char sprite[][S4C_MAXCOLS], int frameheight, int framewidth, int startX, int startY, int pixelSize, S4C_Color* palette, int palette_size)
 {
 
     int rows = frameheight;
@@ -1311,7 +1311,7 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
 }
 
 /**
- * Takes a char matrix (maximum line size is MAXCOLS), the Rectangle to print into, the height of each frame, the width of each frame, the pixel size (square side), the S4C_Color palette pointer and the palette size.
+ * Takes a char matrix (maximum line size is S4C_MAXCOLS), the Rectangle to print into, the height of each frame, the width of each frame, the pixel size (square side), the S4C_Color palette pointer and the palette size.
  * Calls s4rl_draw_sprite_at_coords() and checks if the wanted Rectangle is big enough for the wanted animation.
  * @param sprite The char matrix to draw.
  * @param rect The Rectangle to print into.
@@ -1323,7 +1323,7 @@ void s4rl_draw_sprite_at_coords(char sprite[][MAXCOLS], int frameheight, int fra
  * @return 0 if successful, negative values otherwise.
  * @see s4rl_draw_sprite_at_coords()
  */
-int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size)
+int s4rl_draw_sprite_at_rect(char sprite[][S4C_MAXCOLS], Rectangle rect, int frameheight, int framewidth, int pixelSize, S4C_Color* palette, int palette_size)
 {
     float r_x = rect.x;
     float r_y = rect.y;
@@ -1357,7 +1357,7 @@ int s4rl_draw_sprite_at_rect(char sprite[][MAXCOLS], Rectangle rect, int framehe
  * @return 0 if successful, negative values otherwise.
  * @see s4rl_draw_sprite_at_rect()
  */
-int s4rl_draw_sprite_at_rect_V(char sprite[][MAXCOLS], Rectangle rect, Vector2 framesize, int pixelSize, S4C_Color* palette, int palette_size)
+int s4rl_draw_sprite_at_rect_V(char sprite[][S4C_MAXCOLS], Rectangle rect, Vector2 framesize, int pixelSize, S4C_Color* palette, int palette_size)
 {
     return s4rl_draw_sprite_at_rect(sprite, rect, framesize.y, framesize.x, pixelSize, palette, palette_size);
 }
