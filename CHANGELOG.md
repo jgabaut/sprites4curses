@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.0] - 2026-01-11
+
+### Changed
+
+- Add `S4C_` prefix to `MAXCOLS`, `MAXROWS`, `MAXFRAMES` macros
+- Drop `scripts`, `s4c-animate` folders
+- Drop `S4C_RL_QUIETER`, `--enable-animate-quieter`
+- Bump `S4C_FILEFORMAT_VERSION` to `0.2.3`
+- Bump `s4c-scripts` to `0.2.0`
+
 ## [0.4.9] - 2025-06-06
 
 ### Added

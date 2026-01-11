@@ -6,7 +6,6 @@
 
 ## Table of Contents
 
-+ [Scripts](#scripts)
 + [s4c.h](#s4c)
 + [s4c-animate](#s4c_animate)
   + [Prerequisites](#prerequisites_animate)
@@ -16,15 +15,6 @@
   + [demo_animate.c](#demo_animate_c)
 + [s4c-gui](#s4c_gui)
 + [palette.gpl](#palette_gpl)
-
-# Scripts <a name = "scripts"></a>
-
-  From version 0.5, all python scripts have been moved to a separate repo ([s4c-scripts](https://github.com/jgabaut/s4c-scripts)), included as a submodule.
-
-  To maintain backwards compatibility:
-  - New stub scripts have been put at the old path in the repo.
-  - An `init` target was added to the `Makefile.am`, so that you remember to initialise the submodule before trying to run any script.
-  This will be removed in an upcoming minor version, so you should update your scripts to use the new path.
 
 ## s4c.h <a name = "s4c"></a>
 
@@ -37,17 +27,6 @@
 ## s4c-animate <a name = "s4c_animate"></a>
 
   This is a C library offering some functions to display an animation read from a formatted text file. It's rather small.
-
-  ```
-  -------------------------------------------------------------------------------
-  Language                     files          blank        comment           code
-  -------------------------------------------------------------------------------
-  C                                2            114            385            651
-  C/C++ Header                     2             47             50            167
-  -------------------------------------------------------------------------------
-  SUM:                             4            161            435            818
-  -------------------------------------------------------------------------------
-  ```
 
   You can look at the `demo_animate.c` program to see how you can request the animation after setup.
 
@@ -82,7 +61,7 @@
   In the meantime, you can use
 
   ```c
-  s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+  s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
   ```
   (actually a macro, defined depending on the presence of `S4C_UNCHECKED` definition), as an interrupt-safe way of doing animation.
 
@@ -126,17 +105,6 @@
   This is a C library offering a small collection of curses-based UI elements.
 
   It's still in an early stage, but it has a minimal workable interface. It's not that big.
-
-  ```
-  -------------------------------------------------------------------------------
-  Language                     files          blank        comment           code
-  -------------------------------------------------------------------------------
-  C                                1             65             57            528
-  C/C++ Header                     1             41             33            157
-  -------------------------------------------------------------------------------
-  SUM:                             2            106             90            685
-  -------------------------------------------------------------------------------
-  ```
 
 ## palette.gpl <a name = "palette_gpl"></a>
 

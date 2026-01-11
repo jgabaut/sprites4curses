@@ -42,6 +42,6 @@ jobs:
       - name: Build ./demo
         run: make
 
-      - name: Try (sprites.py ./sample-sprites/alt-chest-animation) -> demofile.txt
+      - name: Try (s4c-scripts.s4c.core.sprites ./sample-sprites/alt-chest-animation) -> demofile.txt
         run: |
-          python ./scripts/sprites.py s4c-file "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
+          python -m s4c-scripts.s4c.core.sprites s4c-file "./sample-sprites/alt-chest-animation" && echo -e "\n\033[1;32mSuccess.\e[0m\n"
