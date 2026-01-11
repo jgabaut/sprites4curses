@@ -23,12 +23,6 @@ AC_ARG_ENABLE([animate_raylib],
   [enable_animate_raylib=no])
 AM_CONDITIONAL([S4C_RAYLIB_BUILD], [test "$enable_animate_raylib" = "yes"])
 
-AC_ARG_ENABLE([animate_quieter],
-  [AS_HELP_STRING([--enable-animate-quieter], [Enable animate raylib quieter output extension])],
-  [enable_animate_quieter=$enableval],
-  [enable_quieter=no])
-AM_CONDITIONAL([S4C_RL_QUIETER_BUILD], [test "$enable_animate_quieter" = "yes"])
-
 AC_ARG_ENABLE([animate_exp],
   [AS_HELP_STRING([--enable-animate_exp], [Enable animate experimental extensions])],
   [enable_animate_exp=$enableval],

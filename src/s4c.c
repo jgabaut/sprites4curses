@@ -81,11 +81,6 @@ void s4c_dbg_features(void)
     bool s4c_raylib_extension = false;
     bool s4c_ncurses_extension = true;
 #endif
-#ifdef S4C_RL_QUIETER
-    bool s4c_raylib_quieter = true;
-#else
-    bool s4c_raylib_quieter = false;
-#endif
 #ifdef S4C_UNCHECKED
     bool s4c_ncurses_unchecked = true;
 #else
@@ -96,17 +91,16 @@ void s4c_dbg_features(void)
 #else
     bool s4c_experimental = false;
 #endif
-    bool features[7] = {
+    bool features[6] = {
         [0] = s4c_has_animate,
         [1] = s4c_has_gui,
         [2] = s4c_ncurses_extension,
         [3] = s4c_ncurses_unchecked,
         [4] = s4c_raylib_extension,
-        [5] = s4c_raylib_quieter,
-        [6] = s4c_experimental,
+        [5] = s4c_experimental,
     };
     int total_enabled = 0;
-    for (int i=0; i<7; i++) {
+    for (int i=0; i<6; i++) {
         if (features[i]) {
             total_enabled += 1;
         }
@@ -130,10 +124,6 @@ void s4c_dbg_features(void)
         }
         if (s4c_ncurses_extension) {
             fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
-            total_enabled -= 1;
-        }
-        if (s4c_raylib_quieter) {
-            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_unchecked) {
@@ -201,11 +191,6 @@ void s4c_animate_dbg_features(void)
     bool s4c_raylib_extension = false;
     bool s4c_ncurses_extension = true;
 #endif
-#ifdef S4C_RL_QUIETER
-    bool s4c_raylib_quieter = true;
-#else
-    bool s4c_raylib_quieter = false;
-#endif
 #ifdef S4C_UNCHECKED
     bool s4c_ncurses_unchecked = true;
 #else
@@ -216,15 +201,14 @@ void s4c_animate_dbg_features(void)
 #else
     bool s4c_experimental = false;
 #endif
-    bool features[5] = {
+    bool features[4] = {
         [0] = s4c_ncurses_extension,
         [1] = s4c_ncurses_unchecked,
         [2] = s4c_raylib_extension,
-        [3] = s4c_raylib_quieter,
-        [4] = s4c_experimental,
+        [3] = s4c_experimental,
     };
     int total_enabled = 0;
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<4; i++) {
         if (features[i]) {
             total_enabled += 1;
         }
@@ -240,10 +224,6 @@ void s4c_animate_dbg_features(void)
         }
         if (s4c_ncurses_extension) {
             fprintf(stderr, "animate-ncurses%s", (total_enabled > 1 ? ", " : ""));
-            total_enabled -= 1;
-        }
-        if (s4c_raylib_quieter) {
-            fprintf(stderr, "animate-quieter%s", (total_enabled > 1 ? ", " : ""));
             total_enabled -= 1;
         }
         if (s4c_ncurses_unchecked) {
@@ -1267,9 +1247,7 @@ void s4rl_draw_spriteline(char* line, int coordY, int line_length, int startX, i
         int color_index = c - '1';
         Color color;
         if (color_index < 0 || color_index > palette_size) {
-#ifndef S4C_RL_QUIETER
             fprintf(stderr,"%s():    Can't print at [x: %i, y: %i], invalid color index -> {%i}. Palette size: {%i}. Using BLACK instead.\n", __func__, (startX + i), coordY, color_index, palette_size);
-#endif // S4C_RL_QUIETER
             color = BLACK;
         } else {
             color = color_from_s4c_color(palette[color_index]);

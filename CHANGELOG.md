@@ -7,6 +7,7 @@
 - Add `S4C_` prefix to `MAXCOLS`, `MAXROWS`, `MAXFRAMES` macros
 - Drop `scripts`, `s4c-animate` folders
 - Bump `s4c-scripts` to `0.2.0`
+- Drop `S4C_RL_QUIETER`, `--enable-animate-quieter`
 
 ## [0.4.9] - 2025-06-06
 
