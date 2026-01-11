@@ -61,7 +61,7 @@
   In the meantime, you can use
 
   ```c
-  s4c_display_sprite_at_coords(char sprites[][MAXROWS][MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+  s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
   ```
   (actually a macro, defined depending on the presence of `S4C_UNCHECKED` definition), as an interrupt-safe way of doing animation.
 
@@ -105,17 +105,6 @@
   This is a C library offering a small collection of curses-based UI elements.
 
   It's still in an early stage, but it has a minimal workable interface. It's not that big.
-
-  ```
-  -------------------------------------------------------------------------------
-  Language                     files          blank        comment           code
-  -------------------------------------------------------------------------------
-  C                                1             65             57            528
-  C/C++ Header                     1             41             33            157
-  -------------------------------------------------------------------------------
-  SUM:                             2            106             90            685
-  -------------------------------------------------------------------------------
-  ```
 
 ## palette.gpl <a name = "palette_gpl"></a>
 
