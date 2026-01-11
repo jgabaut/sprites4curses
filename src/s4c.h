@@ -85,7 +85,7 @@ static const int S4C_ANIMATE_API_VERSION_INT =
 /**
  * Defines current version for s4c files.
  */
-#define S4C_FILEFORMAT_VERSION "0.2.2"
+#define S4C_FILEFORMAT_VERSION "0.2.3"
 
 void s4c_animate_printVersionToFile(FILE* f);
 void s4c_animate_echoVersionToFile(FILE* f);
