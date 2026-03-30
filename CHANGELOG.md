@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1] - Unreleased
+
+### Changed
+
+- Bump `s4c-scripts` to `0.2.1`
+
 ## [0.5.0] - 2026-01-11
 
 ### Changed
