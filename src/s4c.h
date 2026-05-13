@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.5.0"
+#define S4C_VERSION "0.5.1"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 5
-#define S4C_PATCH_VERSION 0
+#define S4C_PATCH_VERSION 1
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
