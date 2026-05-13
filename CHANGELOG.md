@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Bump `s4c-scripts` to `0.2.1`
+- Bump `s4c-scripts` to `0.2.2`
 
 ## [0.5.0] - 2026-01-11
 
