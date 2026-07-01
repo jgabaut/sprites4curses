@@ -25,6 +25,8 @@ demo_animate_SOURCES = src/s4c.c src/palette.c s4c-demo/demo_animate.c
 
 demo_gui_SOURCES = src/s4c.c s4c-demo/demo_gui.c
 
+cap_test_SOURCES = src/s4c.c s4c-demo/cap.c
+
 # Lib source files
 lib_SOURCES = src/s4c.c
 
@@ -93,6 +95,11 @@ src/palette.c:
 	python -m s4c-scripts.s4c.core.palette C-impl $(PALETTE_PATH) ../.. > src/palette.c
 	@echo -e "Done."
 
+$(CAP_TEST_TARGET): $(cap_test_SOURCES:.c=.o)
+	@echo -e "    \033[1;35mAM_CFLAGS\e[0m: [ \"\033[1;34m$(AM_CFLAGS)\e[0m\" ]"
+	@echo -e "    \033[1;35mLDADD\e[0m: [ \"\033[1;34m$(LDADD)\e[0m\" ]"
+	$(CCOMP) -D_GNU_SOURCE $(CFLAGS) $(AM_CFLAGS) $(cap_test_SOURCES:.c=.o) -o $@ $(LDADD) $(AM_LDFLAGS) -lncursesw
+
 doc:
 	@echo -e "Using doxygen to create tex + html from $(VERSION) src/:    "
 	doxygen ./documentation/s4c.doxyfile
@@ -124,6 +131,7 @@ clean:
 	-rm $(TARGET)
 	-rm $(ANIMATE_TARGET)
 	-rm $(GUI_TARGET)
+	-rm $(CAP_TEST_TARGET)
 	-rm src/*.o
 	-rm s4c-animate/*.o
 	-rm src/palette.h

@@ -32,6 +32,11 @@ demo_gui.exe
 demo_gui_debug.exe
 # ignore gui debug executable
 demo_gui_debug
+# ignore cap test
+s4c_cap_test
+# ignore win cap test
+s4c_cap_test.exe
+
 # ignore doxygen directory
 doxygen
 # ignore docs file
