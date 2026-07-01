@@ -576,8 +576,8 @@ void slideshow_s4c_color_pairs(WINDOW* win)
         switch(c) {
         case 'q': { /*Enter*/
             quit = 1;
-
         };
+        break;
         case 10: { /*Enter*/
             picked = 1;
         };
