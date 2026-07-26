@@ -36,7 +36,7 @@ static const int S4C_API_VERSION_INT =
 /**
 * Returns current s4c version as an integer.
 */
-const int int_s4c_version(void);
+int int_s4c_version(void);
 
 /**
  * Returns current s4c version as a string.
@@ -96,7 +96,7 @@ void s4c_animate_echoVersionToFile(FILE* f);
 /**
  * Returns current s4c-animate version as an integer.
  */
-const int int_s4c_animate_version(void);
+int int_s4c_animate_version(void);
 
 /**
  * Returns current s4c-animate version as a string.
