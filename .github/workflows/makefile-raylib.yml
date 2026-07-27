@@ -21,7 +21,7 @@ jobs:
     - name: Prep raylib
       run: |
         cd src && make PLATFORM=PLATFORM_DESKTOP && sudo make install
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
     - name: Run aclocal
