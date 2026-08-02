@@ -58,7 +58,7 @@ case "${host_os}" in
         if test "$enable_animate_raylib" = "yes"; then
             echo "Building with raylib header"
             AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/raylib/include"])
-            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/raylib/lib -lraylib -lm"])
+            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/raylib/lib -lraylib -lm -lX11"])
         else
             AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/ncurses/include"])
             AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lmenu -lncurses -lm"])
@@ -77,7 +77,7 @@ case "${host_os}" in
         if test "$enable_animate_raylib" = "yes"; then
             echo "Building with raylib header"
             AC_SUBST([S4C_CFLAGS], [""])
-            AC_SUBST([S4C_LDFLAGS], ["-lraylib -lm"])
+            AC_SUBST([S4C_LDFLAGS], ["-lraylib -lm -lX11"])
         else
             AC_SUBST([S4C_CFLAGS], [""])
             AC_SUBST([S4C_LDFLAGS], ["-lmenu -lncurses -lm"])

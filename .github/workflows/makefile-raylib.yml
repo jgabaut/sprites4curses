@@ -30,7 +30,7 @@ jobs:
       run: autoconf
     - name: Run automake --add-missing
       run: automake --add-missing
-    - name: Run ./configure --enable-raylib=yes
-      run: ./configure --enable-raylib=yes
+    - name: Run ./configure --enable-animate-raylib=yes
+      run: ./configure --enable-animate-raylib=yes
     - name: Run make
       run: make
