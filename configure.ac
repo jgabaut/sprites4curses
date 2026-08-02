@@ -1,5 +1,5 @@
 # Define the package name and version
-AC_INIT([sprites4curses], [0.5.2], [jgabaut@github.com])
+AC_INIT([sprites4curses], [0.5.3], [jgabaut@github.com])
 
 # Verify automake version and enable foreign option
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -58,7 +58,7 @@ case "${host_os}" in
         if test "$enable_animate_raylib" = "yes"; then
             echo "Building with raylib header"
             AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/raylib/include"])
-            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/raylib/lib -lraylib -lm"])
+            AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/raylib/lib -lraylib -lm -lX11"])
         else
             AC_SUBST([S4C_CFLAGS], ["-I/opt/homebrew/opt/ncurses/include"])
             AC_SUBST([S4C_LDFLAGS], ["-L/opt/homebrew/opt/ncurses/lib -lmenu -lncurses -lm"])
@@ -77,7 +77,7 @@ case "${host_os}" in
         if test "$enable_animate_raylib" = "yes"; then
             echo "Building with raylib header"
             AC_SUBST([S4C_CFLAGS], [""])
-            AC_SUBST([S4C_LDFLAGS], ["-lraylib -lm"])
+            AC_SUBST([S4C_LDFLAGS], ["-lraylib -lm -lX11"])
         else
             AC_SUBST([S4C_CFLAGS], [""])
             AC_SUBST([S4C_LDFLAGS], ["-lmenu -lncurses -lm"])
@@ -98,7 +98,7 @@ AM_CONDITIONAL([LINUX_BUILD], [test "$build_linux" = "yes"])
 # Set a default version number if not specified externally
 AC_ARG_VAR([VERSION], [Version number])
 if test -z "$VERSION"; then
-  VERSION="0.5.2"
+  VERSION="0.5.3"
 fi
 
 # Output variables to the config.h header
