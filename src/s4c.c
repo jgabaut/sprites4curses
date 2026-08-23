@@ -395,7 +395,7 @@ void init_s4c_color_pairs(FILE* palette)
 {
 
     char line[S4C_MAX_LINE_LENGTH];
-    int color_index = 9;
+    int color_index = S4C_BASE_COLOR_INDEX;
 
     while (fgets(line, S4C_MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
@@ -616,18 +616,18 @@ void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int c
         int starting_byte = '0';
         switch (mode) {
             case S4C_COLOR_LEGACY: {
-                starting_byte = '0';
+                starting_byte = '1';
             }
             break;
             case S4C_COLOR_EXTENDED: {
-                starting_byte = ' ';
+                starting_byte = '!';
             }
             break;
             default: {
             }
             break;
         }
-        int color_index = c - starting_byte + 8;
+        int color_index = c - starting_byte + S4C_BASE_COLOR_INDEX;
         if (color_index >= 0 && color_index < S4C_MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
