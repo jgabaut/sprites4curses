@@ -234,6 +234,7 @@ S4C_Sprite s4c_new_sprite(char data[][S4C_MAXCOLS], int frameheight, int framewi
  * WIP.
  */
 typedef struct animate_args {
+    // S4C_Color_Mode mode; /**< Version 0.6 will add this field.*/
     int stop_thread; /**< Stops the thread when false.*/
     WINDOW* win;/**< WINDOW to animate to.*/
     char sprites[S4C_MAXFRAMES][S4C_MAXROWS][S4C_MAXCOLS];/**< Array for the animation.*/
@@ -261,20 +262,26 @@ void slideshow_s4c_color_pairs(WINDOW* win);
 void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int curr_line_num, int line_length, int startX); /**< Version 0.6 will rename this to s4c_print_spriteline and upgrade signatures to expect an S4C_Color_Mode*/
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
-int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+int s4c_animate_sprites_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
+int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
 
 void *s4c_animate_sprites_thread_at(void *animate_args); /**< This function uses S4C_COLOR_MODE_DEFAULT internally. Version 0.6 will update animate_args to hold a S4C_Color_Mode argument.*/
 
-int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_sprites_at_coords_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
 
-int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_rangeof_sprites_at_coords_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
 
-int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
-int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
-int s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords_checked_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
+int s4c_display_sprite_at_coords_unchecked_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
+int s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
 
 #ifdef S4C_EXPERIMENTAL
-int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_frame_ex(S4C_Color_Mode mode, S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY);
+int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY); /**< Version 0.6 will add a S4C_Color_Mode argument.*/
 void s4c_copy_animation_alloc(S4C_Animation* dest, char source[][S4C_MAXROWS][S4C_MAXCOLS], int frames, int rows, int cols);
 void s4c_free_animation(S4C_Animation* animation, int frames, int rows);
 #endif

@@ -668,9 +668,14 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
+int s4c_animate_sprites_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth)
+{
+    return s4c_animate_sprites_at_coords_ex(mode, sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
+}
+
 int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth)
 {
-    return s4c_animate_sprites_at_coords(sprites, w,repetitions, frametime, num_frames, frameheight, framewidth, 0, 0);
+    return s4c_animate_sprites_ex(S4C_COLOR_MODE_DEFAULT, sprites, w, repetitions, frametime, num_frames, frameheight, framewidth);
 }
 
 /**
