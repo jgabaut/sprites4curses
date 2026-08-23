@@ -395,7 +395,7 @@ void init_s4c_color_pairs(FILE* palette)
 {
 
     char line[S4C_MAX_LINE_LENGTH];
-    int color_index = 9;
+    int color_index = S4C_BASE_COLOR_INDEX;
 
     while (fgets(line, S4C_MAX_LINE_LENGTH, palette) != NULL) {
         // Check if the line starts with "#", "GIMP Palette", "Name:" or "Columns:"
@@ -602,16 +602,36 @@ void slideshow_s4c_color_pairs(WINDOW* win)
 
 /**
  * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
+ * Color mode dictates the starting byte of the palette.
+ * @param mode Dictates starting byte of the palette.
  * @param line The string to print
  * @param line_num The y value to print at in win
  * @param line_len The length of line to print
  * @param startX X coord of the win to start printing to.
  */
-void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX)
+void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int curr_line_num, int line_length, int startX)
 {
     for (int i = 0; i < line_length; i++) {
         char c = line[i];
-        int color_index = c - '0' + 8;
+        int starting_byte = '0';
+        switch (mode) {
+            case S4C_COLOR_LEGACY: {
+                starting_byte = '1';
+            }
+            break;
+            case S4C_COLOR_EXTENDED: {
+                starting_byte = '!';
+            }
+            break;
+            case S4C_COLOR_256: {
+                starting_byte = '\x00';
+            }
+            break;
+            default: {
+            }
+            break;
+        }
+        int color_index = c - starting_byte + S4C_BASE_COLOR_INDEX;
         if (color_index >= 0 && color_index < S4C_MAX_COLORS) {
             wattron(win, COLOR_PAIR(color_index));
             mvwaddch(win, curr_line_num, startX + 1 + i, ' ' | A_REVERSE);
@@ -619,6 +639,18 @@ void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_l
         }
 
     }
+}
+
+/**
+ * Takes a string and a int and prints it in curses sdtscr at the y value passed as line_num.
+ * @param line The string to print
+ * @param line_num The y value to print at in win
+ * @param line_len The length of line to print
+ * @param startX X coord of the win to start printing to.
+ */
+void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX)
+{
+    s4c_print_spriteline_ex(win, S4C_COLOR_LEGACY, line, curr_line_num, line_length, startX);
 }
 
 /**

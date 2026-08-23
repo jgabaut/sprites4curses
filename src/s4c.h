@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define S4C_VERSION "0.5.3"
+#define S4C_VERSION "0.5.4"
 #define S4C_MAJOR_VERSION 0
 #define S4C_MINOR_VERSION 5
-#define S4C_PATCH_VERSION 3
+#define S4C_PATCH_VERSION 4
 
 /**
  * Defines current API version number from S4C_{MAJOR,MINOR,PATCH}.
@@ -70,10 +70,10 @@ void s4c_dbg_features(void);
 #endif // S4C_RAYLIB_EXTENSION
 
 
-#define S4C_ANIMATE_VERSION "0.5.1"
+#define S4C_ANIMATE_VERSION "0.5.2"
 #define S4C_ANIMATE_MAJOR_VERSION 0
 #define S4C_ANIMATE_MINOR_VERSION 5
-#define S4C_ANIMATE_PATCH_VERSION 1
+#define S4C_ANIMATE_PATCH_VERSION 2
 
 /**
  * Defines current API version number from S4C_ANIMATE_{MAJOR,MINOR,PATCH}.
@@ -184,6 +184,12 @@ const char* s4c_color_name(S4C_Color_Index color_index);
  */
 extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 
+typedef enum S4C_Color_Mode {
+    S4C_COLOR_LEGACY = 0,
+    S4C_COLOR_EXTENDED,
+    S4C_COLOR_256,
+} S4C_Color_Mode;
+
 #ifndef S4C_MAX_LINE_LENGTH
 #define S4C_MAX_LINE_LENGTH 1024
 #endif // MAX_LINE_LENGTH
@@ -248,6 +254,7 @@ int s4c_check_win(WINDOW* win, int rows, int cols, int startX, int startY);
 
 void slideshow_s4c_color_pairs(WINDOW* win);
 
+void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int curr_line_num, int line_length, int startX); /**< Version 0.6 will rename this to s4c_print_spriteline and upgrade signatures to expect an S4C_Color_Mode*/
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
 int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
