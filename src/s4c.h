@@ -187,6 +187,7 @@ extern const char* s4c_color_strings[S4C_MAX_COLOR_INDEX+1];
 typedef enum S4C_Color_Mode {
     S4C_COLOR_LEGACY = 0,
     S4C_COLOR_EXTENDED,
+    S4C_COLOR_256,
 } S4C_Color_Mode;
 
 #ifndef S4C_MAX_LINE_LENGTH

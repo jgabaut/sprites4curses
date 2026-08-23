@@ -623,6 +623,10 @@ void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int c
                 starting_byte = '!';
             }
             break;
+            case S4C_COLOR_256: {
+                starting_byte = '\x00';
+            }
+            break;
             default: {
             }
             break;
