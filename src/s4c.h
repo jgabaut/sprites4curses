@@ -254,7 +254,7 @@ int s4c_check_win(WINDOW* win, int rows, int cols, int startX, int startY);
 
 void slideshow_s4c_color_pairs(WINDOW* win);
 
-void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int curr_line_num, int line_length, int startX);
+void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int curr_line_num, int line_length, int startX); /**< Version 0.6 will rename this to s4c_print_spriteline and upgrade signatures to expect an S4C_Color_Mode*/
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX);
 
 int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth);
