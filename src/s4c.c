@@ -650,7 +650,7 @@ void s4c_print_spriteline_ex(WINDOW* win, S4C_Color_Mode mode, char* line, int c
  */
 void s4c_print_spriteline(WINDOW* win, char* line, int curr_line_num, int line_length, int startX)
 {
-    s4c_print_spriteline_ex(win, S4C_COLOR_LEGACY, line, curr_line_num, line_length, startX);
+    s4c_print_spriteline_ex(win, S4C_COLOR_MODE_DEFAULT, line, curr_line_num, line_length, startX);
 }
 
 /**
@@ -693,7 +693,7 @@ int s4c_animate_sprites(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_animate_sprites_at_coords_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     int cursorCheck = curs_set(0); // We make the cursor invisible or return early with the error
 
@@ -719,7 +719,7 @@ int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WIND
             box(w,0,0);
             for (int j=0; j<rows; j++) {
                 // Print current frame
-                s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
+                s4c_print_spriteline_ex(w, mode, sprites[i][j], j+startY+1, cols, startX);
             }
             wrefresh(w);
             // Refresh the screen
@@ -733,6 +733,11 @@ int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WIND
     curs_set(1);
 
     return 1;
+}
+
+int s4c_animate_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+   return s4c_animate_sprites_at_coords_ex(S4C_COLOR_MODE_DEFAULT, sprites, w, repetitions, frametime, num_frames, frameheight, framewidth, startX, startY);
 }
 
 /**
@@ -793,7 +798,9 @@ void *s4c_animate_sprites_thread_at(void *args_ptr)
                     break;
                 }
                 // Print current line for current frame
-                s4c_print_spriteline(w,(args->sprites)[i][j], j+startY+1, cols, startX);
+                // TODO: pass mode from animate_args here
+                // instead of S4C_COLOR_MODE_DEFAULT
+                s4c_print_spriteline_ex(w, S4C_COLOR_MODE_DEFAULT, (args->sprites)[i][j], j+startY+1, cols, startX);
             }
             wrefresh(w);
             // Refresh the screen
@@ -831,7 +838,7 @@ void *s4c_animate_sprites_thread_at(void *args_ptr)
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_animate_rangeof_sprites_at_coords_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (fromFrame < 0 || toFrame < 0 || fromFrame > toFrame || toFrame > num_frames ) {
@@ -863,7 +870,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOL
             box(w,0,0);
             for (int j=0; j<rows; j++) {
                 // Print current frame
-                s4c_print_spriteline(w,sprites[i][j], j+startY+1, cols, startX);
+                s4c_print_spriteline_ex(w, mode, sprites[i][j], j+startY+1, cols, startX);
             }
             wrefresh(w);
             // Refresh the screen
@@ -877,6 +884,11 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOL
     // We make the cursor normal again
     curs_set(1);
     return 1;
+}
+
+int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], WINDOW* w, int fromFrame, int toFrame, int repetitions, int frametime, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+    return s4c_animate_rangeof_sprites_at_coords_ex(S4C_COLOR_MODE_DEFAULT, sprites, w, fromFrame, toFrame, repetitions, frametime, num_frames, frameheight, framewidth, startX, startY);
 }
 
 /**
@@ -896,7 +908,7 @@ int s4c_animate_rangeof_sprites_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOL
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_sprite_at_coords_checked_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (sprite_index < 0 || sprite_index > num_frames ) {
@@ -914,11 +926,16 @@ int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS
     }
     for (int j=0; j<rows; j++) {
         // Print current frame
-        s4c_print_spriteline(w,sprites[sprite_index][j], j+startY+1, cols, startX);
+        s4c_print_spriteline_ex(w, mode, sprites[sprite_index][j], j+startY+1, cols, startX);
     }
     box(w,0,0);
     wrefresh(w);
     return 1;
+}
+
+int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+    return s4c_display_sprite_at_coords_checked_ex(S4C_COLOR_MODE_DEFAULT, sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY);
 }
 
 /**
@@ -937,7 +954,7 @@ int s4c_display_sprite_at_coords_checked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS
  * @param startY X coord of the window to start printing to.
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_sprite_at_coords_unchecked_ex(S4C_Color_Mode mode, char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
     //Validate requested range
     if (sprite_index < 0 || sprite_index > num_frames ) {
@@ -946,11 +963,16 @@ int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCO
 
     for (int j=0; j<frameheight; j++) {
         // Print current frame
-        s4c_print_spriteline(w,sprites[sprite_index][j], j+startY+1, framewidth, startX);
+        s4c_print_spriteline_ex(w, mode, sprites[sprite_index][j], j+startY+1, framewidth, startX);
     }
     box(w,0,0);
     wrefresh(w);
     return 1;
+}
+
+int s4c_display_sprite_at_coords_unchecked(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int sprite_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+    return s4c_display_sprite_at_coords_unchecked_ex(S4C_COLOR_MODE_DEFAULT, sprites, sprite_index, w, num_frames, frameheight, framewidth, startX, startY);
 }
 
 /**
@@ -996,7 +1018,7 @@ int s4c_display_sprite_at_coords(char sprites[][S4C_MAXROWS][S4C_MAXCOLS], int s
  * @see S4C_ERR_SMALL_WIN
  * @return 1 if successful, a negative value for errors.
  */
-int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+int s4c_display_frame_ex(S4C_Color_Mode mode, S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
 {
 
     char*** anim = *src;
@@ -1016,11 +1038,16 @@ int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_fr
     }
     for (int j=0; j<rows; j++) {
         // Print current frame
-        s4c_print_spriteline(w,anim[frame_index][j], j+startY+1, cols, startX);
+        s4c_print_spriteline_ex(w, mode, anim[frame_index][j], j+startY+1, cols, startX);
     }
     box(w,0,0);
     wrefresh(w);
     return 1;
+}
+
+int s4c_display_frame(S4C_Animation* src, int frame_index, WINDOW* w, int num_frames, int frameheight, int framewidth, int startX, int startY)
+{
+    return s4c_display_frame_ex(S4C_COLOR_MODE_DEFAULT, src, frame_index, w, num_frames, frameheight, framewidth, startX, startY);
 }
 
 /**
