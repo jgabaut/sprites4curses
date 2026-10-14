@@ -357,8 +357,8 @@ typedef void*(s4c_gui_malloc_func)(size_t size); /**< Used to select an allocati
 typedef void*(s4c_gui_calloc_func)(size_t count, size_t size); /**< Used to select a counted allocation function.*/
 typedef void(s4c_gui_free_func)(void* obj); /**< Used to select a free function.*/
 
-extern s4c_gui_malloc_func* s4c_gui_inner_malloc;
-extern s4c_gui_calloc_func* s4c_gui_inner_calloc;
+extern s4c_gui_malloc_func* s4c_gui_inner_malloc; /**< Deprecated. Next version will hide this from the header. To select a custom s4c_gui_malloc, use signatures with per-usage function pointers or S4C_GUI_MALLOC al lib build time.*/
+extern s4c_gui_calloc_func* s4c_gui_inner_calloc; /**< Deprecated. Next version will hide this from the header. To select a custom s4c_gui_calloc, use signatures with per-usage function pointers or S4C_GUI_CALLOC al lib build time.*/
 
 #ifndef TEXT_FIELD_H_
 #define TEXT_FIELD_H_
