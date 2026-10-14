@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.6] - Unreleased
+
+### Changed
+
+- Bump `s4c-scripts` to `0.2.8`
+
 ## [0.5.5] - 2026-08-24
 
 ### Added
