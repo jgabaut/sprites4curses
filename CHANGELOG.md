@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.5.6] - 2026-10-24
+
+### Changed
+
+- Deprecate visibility of `s4c_gui_inner_malloc`, `s4c_gui_inner_calloc`
+- Bump `s4c-scripts` to `0.2.10`
+
+## [0.5.5] - 2026-08-24
+
+### Added
+
+- Add `S4C_COLOR_MODE_DEFAULT`
+- Add new `_ex()` methods expecting `S4C_Color_Mode`
+
+### Changed
+
+- Bump `s4c-scripts` to `0.2.7`
+
+## [0.5.4] - 2026-08-23
+
+### Added
+
+- Add `S4C_Color_Mode`
+- Add `s4c_print_spriteline_ex()`
+  - Version `0.6` will rename this to `s4c_print_spriteline` and upgrade signatures to expect an `S4C_Color_Mode`
+- Add `S4C_COLOR_256`
+
+### Changed
+
+- Use `S4C_BASE_COLOR_INDEX` rather than hardcoding `9`
+- Bump `s4c-scripts` to `0.2.5`
+
+## [0.5.3] - 2026-08-02
+
+### Changed
+
+- Bump `s4c-scripts` to `0.2.4`
+- Update `raylib` build flags
+
+## [0.5.2] - 2026-07-27
+
+### Added
+
+- Add `s4c_cap_test`
+
+### Changed
+
+- Fix missing `break` in `slideshow_s4c_color_pairs()`
+- Avoid `const int` return type
+- Bump `s4c-scripts` to `0.2.3`
+
 ## [0.5.1] - 2026-05-13
 
 ### Changed
