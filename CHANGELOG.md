@@ -5,7 +5,7 @@
 ### Changed
 
 - Deprecate visibility of `s4c_gui_inner_malloc`, `s4c_gui_inner_calloc`
-- Bump `s4c-scripts` to `0.2.9`
+- Bump `s4c-scripts` to `0.2.10`
 
 ## [0.5.5] - 2026-08-24
 
